@@ -1,86 +1,65 @@
-import { Component } from 'react'
-import io from 'socket.io-client'
 
-class HomePage extends Component {
-  // fetch old messages data from the server
-  static async getInitialProps({ req }) {
-    const messages = []
-    return { messages }
-  }
+import React, { Component } from 'react'
+import socketIOClient from 'socket.io-client'
 
-  static defaultProps = {
-    messages: [],
-  }
+class App extends Component {
+  constructor() {
+    super()
 
-  // init state with the prefetched messages
-  state = {
-    field: '',
-    messages: this.props.messages,
-  }
-
-  // connect to WS server and listen event
-  componentDidMount() {
-    this.socket = io()
-    this.socket.on('message', this.handleMessage)
-  }
-
-  // close socket connection
-  componentWillUnmount() {
-    this.socket.off('message', this.handleMessage)
-    this.socket.close()
-  }
-
-  // add messages from server to the state
-  handleMessage = (message) => {
-    this.setState(state => ({ messages: state.messages.concat(message) }))
-  }
-
-  handleChange = event => {
-    this.setState({ field: event.target.value });
-  }
-
-  // send messages to server and add them to the state
-  handleSubmit = event => {
-    event.preventDefault()
-
-    // create message object
-    const message = {
-      id: (new Date()).getTime(),
-      value: this.state.field,
+    this.state = {
+      input: '',
+      message: [],
+      endpoint: "http://localhost:5000" // เชื่อมต่อไปยัง url ของ realtime server
     }
+  }
 
-    // send object to WS server
-    this.socket.emit('message', message)
+  componentDidMount = () => {
+    this.response()
+  }
 
-    // add it to state and clean current input value
-    this.setState(state => ({
-      field: '',
-      messages: state.messages.concat(message)
-    }))
+  // เมื่อมีการส่งข้อมูลไปยัง server
+  send = (message) => {
+    const { endpoint, input } = this.state
+    const socket = socketIOClient(endpoint)
+    socket.emit('sent-message', input)
+    this.setState({ input: '' })
+  }
+
+  // รอรับข้อมูลเมื่อ server มีการ update
+  response = () => {
+    const { endpoint, message } = this.state
+    const temp = message
+    const socket = socketIOClient(endpoint)
+    socket.on('new-message', (messageNew) => {
+      temp.push(messageNew)
+      this.setState({ message: temp })
+    })
+  }
+
+  changeInput = (e) => {
+    this.setState({ input: e.target.value })
   }
 
   render() {
+    const { input, message } = this.state
     return (
-      <main>
-        <div>
-          <ul>
-            {this.state.messages.map(message =>
-              <li key={message.id}>{message.value}</li>
-            )}
-          </ul>
-          <form onSubmit={this.handleSubmit}>
-            <input
-              onChange={this.handleChange}
-              type="text"
-              placeholder="Hello world!"
-              value={this.state.field}
-            />
-            <button>Send</button>
-          </form>
+      <div>
+        <div style={style}>
+          <input value={input} onChange={this.changeInput} />
+          <button onClick={() => this.send()}>Send</button>
         </div>
-      </main>
+        {
+          message.map((data, i) =>
+            <div key={i} style={style} >
+              {i + 1} : {data}
+            </div>
+          )
+        }
+      </div>
     )
   }
 }
 
-export default HomePage
+const style = { marginTop: 20, paddingLeft: 50 }
+
+export default App
