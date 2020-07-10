@@ -5,11 +5,16 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "NODE_ENV=production node .next/production-server/index.js"
   },
   "dependencies": {
+    "@babel/core": "^7.10.4",
+    "@zeit/next-typescript": "^1.1.1",
+    "babel-loader": "^8.1.0",
     "next": "9.4.4",
+    "next-pwa": "^3.0.2",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "typescript": "^3.9.6"
   }
 }
