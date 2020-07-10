@@ -24,6 +24,6 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx", "components/nav.js"
+    "**/*.tsx", "components/nav.js", "index.js", "pages/socket/index.js"
   ]
 }
