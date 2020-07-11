@@ -8,11 +8,11 @@ passport.use(
 			clientID: '7247cd65-5e8c-4114-a15f-a4538cf03bde',
 			clientSecret: 'A-FwBepRC14lo~.-g98TuMf6O_J8-2t2Zf',
 			callbackURL: 'http://localhost:3050/auth/microsoft/callback',
-			scope: ['user.read'],
+			scope: ['user.read']
 		},
 		function (accessToken: any, refreshToken: any, profile: any, done: any) {
 			// console.log(accessToken, refreshToken, profile)
-			done(null, profile.name.givenName)
+			done(null, profile)
 		}
 	)
 )
