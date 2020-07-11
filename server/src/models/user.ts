@@ -18,6 +18,12 @@ const userSchema = new Schema({
 			type: Schema.Types.ObjectId,
 			ref: 'hint'
 		}
+	],
+	badges: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'element'
+		}
 	]
 })
 
