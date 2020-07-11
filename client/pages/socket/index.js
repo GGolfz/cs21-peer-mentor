@@ -1,65 +1,59 @@
 
-import React, { Component } from 'react'
+import React, { useState , useEffect} from 'react'
 import socketIOClient from 'socket.io-client'
-
-class App extends Component {
-  constructor() {
-    super()
-
-    this.state = {
-      input: '',
-      message: [],
-      endpoint: "http://localhost:5000" // เชื่อมต่อไปยัง url ของ realtime server
+import Router from 'next/router'
+let socket
+function Home() {
+  const [room,setRoom] = useState(
+    [{
+    id: "2500",
+    name: "สองพันห้าพี่ว่าไง",
+    notify: 0,
+    message: ""
+    },{
+      id: "3500",
+      name: "ที่นี่สามพันห้า",
+      notify: 0,
+      message: ""
+      },{
+    id: "4500",
+    name: "ขอสี่พันห้า",
+    notify: 0,
+    message: ""
     }
+  ]
+  )
+  useEffect(() => {
+    socket= socketIOClient("http://localhost:5000")
+  }, []);
+  const join = (id) => {
+    Router.push(`/socket/${id}`)
   }
-
-  componentDidMount = () => {
-    this.response()
-  }
-
-  // เมื่อมีการส่งข้อมูลไปยัง server
-  send = (message) => {
-    const { endpoint, input } = this.state
-    const socket = socketIOClient(endpoint)
-    socket.emit('sent-message', input)
-    this.setState({ input: '' })
-  }
-
-  // รอรับข้อมูลเมื่อ server มีการ update
-  response = () => {
-    const { endpoint, message } = this.state
-    const temp = message
-    const socket = socketIOClient(endpoint)
-    socket.on('new-message', (messageNew) => {
-      temp.push(messageNew)
-      this.setState({ message: temp })
-    })
-  }
-
-  changeInput = (e) => {
-    this.setState({ input: e.target.value })
-  }
-
-  render() {
-    const { input, message } = this.state
-    return (
-      <div>
-        <div style={style}>
-          <input value={input} onChange={this.changeInput} />
-          <button onClick={() => this.send()}>Send</button>
-        </div>
-        {
-          message.map((data, i) =>
-            <div key={i} style={style} >
-              {i + 1} : {data}
-            </div>
-          )
+  useEffect(() => {
+    socket.on('notify', (data) => {
+      const {roomID,message,username} = data
+      const temp = [... room]
+      temp.map((r)=>{
+        if(r.id === roomID){
+          r.message = `${username} : ${message}`
+          r.notify +=1
         }
-      </div>
-    )
-  }
+      })
+      setRoom(temp)
+    })
+  }, []);
+  
+  return (
+    <div>
+        {
+          room.map(
+              (rooms)=>{
+                return <div key={room.id}><button onClick={() => join(rooms.id)}>{rooms.name}</button>{rooms.notify} {rooms.message}</div>
+              }
+            )
+        }
+    </div>
+  )
 }
 
-const style = { marginTop: 20, paddingLeft: 50 }
-
-export default App
+export default Home
