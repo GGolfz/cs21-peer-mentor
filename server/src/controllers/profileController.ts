@@ -27,7 +27,7 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 	}
 	try {
 		// Optimize the image
-		const imageBuffer = await sharp(originalFilePath)
+		await sharp(originalFilePath)
 			.resize({
 				height: 200,
 				width: 200,
