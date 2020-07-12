@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { User } from '../models/user'
-import { Storage } from '@google-cloud/storage'
+import { Storage, UploadResponse } from '@google-cloud/storage'
 import fs from 'fs'
 import sharp from 'sharp'
 
@@ -18,7 +18,7 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 	const originalFilePath = `uploads/${req.file.filename}`
 	const optimizedFilePath = `${originalFilePath}_1`
 
-	const filetypeTest = /.*\.(jpeg|jpg|png)/.test(req.file.originalname)
+	const filetypeTest = /.*\.(jpeg|jpg|png)/i.test(req.file.originalname)
 
 	if (filetypeTest == false) {
 		fs.unlinkSync(originalFilePath)
@@ -32,7 +32,7 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 				height: 200,
 				width: 200,
 			})
-			.jpeg()
+			.webp()
 			.toFile(optimizedFilePath)
 
 		// const student_id = req.user
@@ -41,14 +41,18 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 		// Upload to Google Cloud Storage
 		const storage = new Storage({ keyFilename: 'GCS-service-account.json' })
 		const bucketName = 'cs21-peer-mentor'
-		await storage.bucket(bucketName).upload(optimizedFilePath, {
-			destination: `profile_img/${student_id}.jpeg`,
+		const gcsFile: UploadResponse = await storage.bucket(bucketName).upload(optimizedFilePath, {
+			destination: `profile_img/${req.file.filename}.webp`,
 			gzip: true,
 		})
 
-		res.status(201).send({ success: true })
+		const gcsFilePath = `https://storage.googleapis.com/cs21-peer-mentor/${gcsFile[0].name}`
+		// Write image url to db
+		await User.findOneAndUpdate({ student_id }, { profile_img: gcsFilePath })
+		const profile = await User.findOne({ student_id })
+		res.status(201).send(profile)
 	} catch (err) {
-		res.status(500).send()
+		res.status(500).send({ error: err })
 	}
 	// Clean up the temp file
 	fs.unlinkSync(originalFilePath)
