@@ -6,11 +6,8 @@ export default function Home() {
       <Nav/>
 
       <main>
-        <h1 className="title">
-          Welcome to Next PWA Application
-          </h1>
+        
       </main>
-
     </div>
   )
 }
