@@ -5,31 +5,43 @@ import fs from 'fs'
 import sharp from 'sharp'
 
 export const getProfileController = async (req: Request, res: Response): Promise<void> => {
-	const userProfile = await User.findOne({ student_id: req.user })
-	res.send(userProfile)
+	const student_id = req.user
+	const userProfile = await User.findOne({ student_id })
+	res.send(toProfileRes(userProfile))
 }
 
-export const updateProfileController = async (req: Request, res: Response): Promise<void> => {
-	const fectedUser = await User.findOne({ student_id: req.user })
-	if(!fectedUser) {
-		res.status(404).send({"Error": "User not found."})
+interface profileResBody {
+	display_name: String
+	name: String
+	profile_url: String
+	bio: String
+	year: String
+}
+
+interface updatedFields {
+	bio: String
+	display_name: String
+}
+
+export const updateProfileController = async (req: Request<{}, {}, updatedFields>, res: Response): Promise<void> => {
+	//Temporarily checking
+	const student_id = req.user
+	if (!req.body.bio && !req.body.display_name) {
+		res.status(400).send({ Error: 'Input is empty. Please includes' })
 		return
 	}
 
-	//Temporarily checking 
-	if(!req.body.bio && !req.body.name && !req.body.display_name) {
-		res.status(400).send({"Error": "Input is empty. Please includes"})
-	}
-
-	await fectedUser.updateOne({
-		bio: req.body.bio,
-		name: req.body.name,
-		display_name: req.body.display_name
-	})
-
-	await fectedUser.save()
-	
-	res.send(fectedUser)
+	const profile = await User.findOneAndUpdate(
+		{ student_id },
+		{
+			bio: req.body.bio,
+			display_name: req.body.display_name
+		},
+		{
+			new: true
+		}
+	)
+	res.send(toProfileRes(profile))
 }
 
 export const newProfilePicController = async (req: Request, res: Response): Promise<void> => {
@@ -53,7 +65,7 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 		await sharp(originalFilePath)
 			.resize({
 				height: 200,
-				width: 200,
+				width: 200
 			})
 			.webp()
 			.toFile(optimizedFilePath)
@@ -66,18 +78,27 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 		const bucketName = 'cs21-peer-mentor'
 		const gcsFile: UploadResponse = await storage.bucket(bucketName).upload(optimizedFilePath, {
 			destination: `profile_img/${req.file.filename}.webp`,
-			gzip: true,
+			gzip: true
 		})
 
 		const gcsFilePath = `https://storage.googleapis.com/cs21-peer-mentor/${gcsFile[0].name}`
 		// Write image url to db
-		await User.findOneAndUpdate({ student_id }, { profile_img: gcsFilePath })
-		const profile = await User.findOne({ student_id })
-		res.status(201).send(profile)
+		const profile = await User.findOneAndUpdate({ student_id }, { profile_img: gcsFilePath }, { new: true })
+		res.status(201).send(toProfileRes(profile))
 	} catch (err) {
 		res.status(500).send({ error: err })
 	}
 	// Clean up the temp file
 	fs.unlinkSync(originalFilePath)
 	fs.unlinkSync(optimizedFilePath)
+}
+
+const toProfileRes = (profile: any): profileResBody => {
+	return {
+		display_name: profile.display_name,
+		name: profile.name,
+		profile_url: profile.profile_url,
+		bio: profile.bio,
+		year: profile.year
+	}
 }
