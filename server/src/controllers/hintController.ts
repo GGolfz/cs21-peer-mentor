@@ -14,7 +14,7 @@ interface HintResBody {
 
 export const createHintController = async (req: Request<{}, {}, newHintReqBody>, res: Response): Promise<void> => {
 	// const owner = req.user
-	const owner = '62130500230'
+	const owner = '62130500216'
 	const reciever = '63' + owner.substring(2)
 
 	if (!req.body.message) {
@@ -30,4 +30,14 @@ export const createHintController = async (req: Request<{}, {}, newHintReqBody>,
 
 	const hints = await Hint.find({ owner, reciever })
 	res.status(201).send(hints)
+}
+
+export const getHintByRecieverController = async (req: Request, res: Response): Promise<void> => {
+	const findedHint = await Hint.find({ reciever: 62130500216 })
+	res.send(findedHint)
+}
+
+export const getHintByOwnerController = async (req: Request, res: Response): Promise<void> => {
+	const findedHint = await Hint.find({ owner: 62130500230 })
+	res.send(findedHint)
 }
