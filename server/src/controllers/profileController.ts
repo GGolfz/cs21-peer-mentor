@@ -9,7 +9,6 @@ export const getProfileController = async (req: Request, res: Response): Promise
 	res.send(userProfile)
 }
 
-<<<<<<< HEAD
 export const updateProfileController = async (req: Request, res: Response): Promise<void> => {
 	const fectedUser = await User.findOne({ student_id: req.user })
 	if(!fectedUser) {
@@ -31,7 +30,8 @@ export const updateProfileController = async (req: Request, res: Response): Prom
 	await fectedUser.save()
 	
 	res.send(fectedUser)
-=======
+}
+
 export const newProfilePicController = async (req: Request, res: Response): Promise<void> => {
 	// Verify the existing of a image file
 	if (!req.file) {
@@ -80,5 +80,4 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 	// Clean up the temp file
 	fs.unlinkSync(originalFilePath)
 	fs.unlinkSync(optimizedFilePath)
->>>>>>> dc7138c96270c5d8edd6b89c9c412b5e9b2f045a
 }
