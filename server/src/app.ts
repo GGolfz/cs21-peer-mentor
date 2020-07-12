@@ -6,13 +6,15 @@ import mongoose from 'mongoose'
 import { testRouter } from './routers/testRoute'
 import { authRoute } from './routers/authRoute'
 import { profileRoute } from './routers/profileRoute'
+import { hintRoute } from './routers/hintRoute'
+
 export const app: express.Application = express.default()
 
 const connectionString = `mongodb+srv://node-api:m42J1btjwCqRdlCp@cluster0.z5cnc.mongodb.net/cs21PeerMentor?retryWrites=true&w=majority`
 mongoose.connect(connectionString, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-	useFindAndModify: false,
+	useFindAndModify: false
 })
 
 passport.serializeUser((user, cb) => {
@@ -29,7 +31,7 @@ app.use(
 		secret: 'foobar',
 		resave: true,
 		saveUninitialized: true,
-		cookie: { maxAge: 3600000 },
+		cookie: { maxAge: 3600000 }
 	})
 )
 
@@ -39,3 +41,4 @@ app.use(bodyParser.json())
 app.use(testRouter)
 app.use(authRoute)
 app.use(profileRoute)
+app.use(hintRoute)

@@ -3,7 +3,7 @@ import { Schema, model } from 'mongoose'
 const hintSchema = new Schema({
 	owner: String,
 	reciever: String,
-	messange: String,
+	message: String,
 	created_at: {
 		type: Schema.Types.Date,
 		default: new Date()
