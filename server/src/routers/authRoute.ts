@@ -45,7 +45,11 @@ authRoute.get(
 		// Successful authentication, redirect home.
 		if (req.user) {
 			const user: any = req.user
-			console.log(user)
+			// console.log(user)
+			if (user.name.familyName != 'SIT-STUDENT') {
+				res.redirect('/')
+				return
+			}
 
 			const existingUser = await User.findOne({
 				student_id: user.name.givenName
@@ -60,6 +64,7 @@ authRoute.get(
 					year: determineYear(user.name.givenName)
 				})
 			}
+			req.user = user.name.givenName
 		}
 
 		res.redirect('/test')
