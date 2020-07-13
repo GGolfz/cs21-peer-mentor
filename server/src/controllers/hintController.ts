@@ -12,9 +12,14 @@ interface HintResBody {
 }
 
 export const createHintController = async (req: Request<{}, {}, newHintReqBody>, res: Response): Promise<void> => {
-	// const owner = req.user
-	const owner = '62130500216'
+	const owner = req.user as String
+	// const owner = '62130500216'
 	const reciever = '63' + owner.substring(2)
+
+	if (owner.substring(0, 2) != '62') {
+		res.status(400).send({ error: 'Only 62 student can create a hint' })
+		return
+	}
 
 	if (!req.body.message) {
 		res.status(400).send({ error: 'Message is required' })
@@ -32,8 +37,8 @@ export const createHintController = async (req: Request<{}, {}, newHintReqBody>,
 }
 
 export const getHintController = async (req: Request, res: Response): Promise<void> => {
-	// const user = req.user
-	const user = '62130500230'
+	const user = req.user as String
+	// const user = '62130500230'
 	const yearNumber = user.substring(0, 2)
 	let hints
 	if (yearNumber == '63') {
