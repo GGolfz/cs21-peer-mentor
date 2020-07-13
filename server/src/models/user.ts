@@ -11,20 +11,14 @@ const userSchema = new Schema({
 	token: String,
 	element: {
 		type: Schema.Types.ObjectId,
-		ref: 'element'
+		ref: 'element',
 	},
-	hints: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: 'hint'
-		}
-	],
 	badges: [
 		{
 			type: Schema.Types.ObjectId,
-			ref: 'element'
-		}
-	]
+			ref: 'element',
+		},
+	],
 })
 
 export const User = model('user', userSchema)
