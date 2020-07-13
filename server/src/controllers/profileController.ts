@@ -6,7 +6,8 @@ import sharp from 'sharp'
 
 export const getProfileController = async (req: Request, res: Response): Promise<void> => {
 	const student_id = req.user
-	const userProfile = await User.findOne({ student_id })
+	const userProfile = await User.findOne({ student_id }).populate('element')
+	console.log(userProfile)
 	res.send(toProfileRes(userProfile))
 }
 
@@ -16,6 +17,11 @@ interface profileResBody {
 	profile_url: String
 	bio: String
 	year: String
+	element: {
+		name: String
+		thai_name: String
+		image_url: String
+	}
 }
 
 interface updatedFields {
@@ -35,10 +41,10 @@ export const updateProfileController = async (req: Request<{}, {}, updatedFields
 		{ student_id },
 		{
 			bio: req.body.bio,
-			display_name: req.body.display_name
+			display_name: req.body.display_name,
 		},
 		{
-			new: true
+			new: true,
 		}
 	)
 	res.send(toProfileRes(profile))
@@ -65,20 +71,20 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 		await sharp(originalFilePath)
 			.resize({
 				height: 200,
-				width: 200
+				width: 200,
 			})
 			.webp()
 			.toFile(optimizedFilePath)
 
-		// const student_id = req.user
-		const student_id = 62130500230 // Placeholder
+		const student_id = req.user
+		// const student_id = 62130500230 // Placeholder
 
 		// Upload to Google Cloud Storage
 		const storage = new Storage({ keyFilename: 'GCS-service-account.json' })
 		const bucketName = 'cs21-peer-mentor'
 		const gcsFile: UploadResponse = await storage.bucket(bucketName).upload(optimizedFilePath, {
 			destination: `profile_img/${req.file.filename}.webp`,
-			gzip: true
+			gzip: true,
 		})
 
 		const gcsFilePath = `https://storage.googleapis.com/cs21-peer-mentor/${gcsFile[0].name}`
@@ -99,6 +105,11 @@ const toProfileRes = (profile: any): profileResBody => {
 		name: profile.name,
 		profile_url: profile.profile_url,
 		bio: profile.bio,
-		year: profile.year
+		year: profile.year,
+		element: {
+			name: profile.element.name,
+			thai_name: profile.element.thai_name,
+			image_url: profile.element.image_url,
+		},
 	}
 }

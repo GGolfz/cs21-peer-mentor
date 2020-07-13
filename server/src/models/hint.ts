@@ -1,15 +1,17 @@
 import { Schema, model } from 'mongoose'
 
 const hintSchema = new Schema({
-	owner: {
-		type: Schema.Types.ObjectId,
-		ref: 'user'
+	owner: String,
+	reciever: String,
+	message: String,
+	created_at: {
+		type: Schema.Types.Date,
+		default: new Date()
 	},
-	reciever: {
-		type: Schema.Types.ObjectId,
-		ref: 'user'
-	},
-	messange: String
+	seen: {
+		type: Boolean,
+		default: false
+	}
 })
 
 export const Hint = model('hint', hintSchema)

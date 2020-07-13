@@ -16,11 +16,17 @@ Run `yarn dev` to start the server
 
 > Serve as a test route to check if server is working
 
+---
+
 ### Authen Routes
 
 **GET**  `/auth/microsoft`
 
 > Redirect user to this url to get user to the login process
+>
+> // Right now after authen it redirect user to /test (I would change to the frontend page later)
+
+---
 
 ### Profile Route
 
@@ -34,11 +40,16 @@ Run `yarn dev` to start the server
 > 	"name": "String",
 > 	"profile_url": "String",
 > 	"bio": "String",
-> 	"year": "String"
+> 	"year": "String",
+>   "element": {
+>    	"name": "String",
+> 		"thai_name": "String",
+> 		"image_url": "String"
+>   }
 > }
 > ```
 >
-> 
+> User came from req.user (Cookie)
 
 **PATCH** `/profile`
 
@@ -53,7 +64,7 @@ Run `yarn dev` to start the server
 >
 > Success Response `200`
 >
-> Return the same thing as GET
+> Return the same thing as **GET** `/profile`
 >
 > Error Response `400 401 404`
 
@@ -61,15 +72,51 @@ Run `yarn dev` to start the server
 
 > Request content-type: multipart/formdata
 >
+> Only support jpeg, jpg, png 
+>
 > New profile picture must be in a key called `profile_pic`
 >
 > Success Response `201`
 >
-> Return the same thing as GET
+> Return the same thing as **GET** `/profile`
 >
 > Error Response `400 401 404`
 
+---
 
+### Hint Route
+
+**GET** `/hint`
+
+> Response Body
+>
+> ```json
+> [
+>   {
+>     "message": "String",
+>     "created_at": "Date",
+>     "seen": "Boolean"
+> 	}
+> ]
+> ```
+>
+> Error Response `400 401`
+
+**POST** `/hint`
+
+> Request Body
+>
+> ```json
+> {
+>   "message": "String"
+> }
+> ```
+>
+> Success Response Status `201`
+>
+> Also return the same thing as **GET** `/hint`
+>
+> Error Response `400 401`
 
 ### 
 
