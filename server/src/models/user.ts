@@ -19,6 +19,10 @@ const userSchema = new Schema({
 			ref: 'element',
 		},
 	],
+	created_at: {
+		type: Date,
+		default: new Date(),
+	},
 })
 
 export const User = model('user', userSchema)
