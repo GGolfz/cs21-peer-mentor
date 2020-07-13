@@ -1,0 +1,76 @@
+[{
+        "name": "Fire",
+        "thai_name": "ไฟ",
+        "image_url": ""
+    },
+    {
+        "name": "Thunderbolt",
+        "thai_name": "สายฟ้า",
+        "image_url": ""
+    },
+    {
+        "name": "Water",
+        "thai_name": "น้ำ",
+        "image_url": ""
+    },
+    {
+        "name": "Earth",
+        "thai_name": "ดิน",
+        "image_url": ""
+    },
+    {
+        "name": "Wind",
+        "thai_name": "ลม",
+        "image_url": ""
+    },
+    {
+        "name": "Darkness",
+        "thai_name": "ความมืด",
+        "image_url": ""
+    },
+    {
+        "name": "Bright Light",
+        "thai_name": "แสง",
+        "image_url": ""
+    },
+    {
+        "name": "Sun",
+        "thai_name": "พระอาทิตย์",
+        "image_url": ""
+    },
+    {
+        "name": "Moon",
+        "thai_name": "พระจันทร์",
+        "image_url": ""
+    },
+    {
+        "name": "Star",
+        "thai_name": "ดาว",
+        "image_url": ""
+    },
+    {
+        "name": "Vampire",
+        "thai_name": "แวมไพร์",
+        "image_url": ""
+    },
+    {
+        "name": "Gem",
+        "thai_name": "อัญมณี",
+        "image_url": ""
+    },
+    {
+        "name": "Forest",
+        "thai_name": "ป่า",
+        "image_url": ""
+    },
+    {
+        "name": "Dimension",
+        "thai_name": "มิติ",
+        "image_url": ""
+    },
+    {
+        "name": "Cat-lover",
+        "thai_name": "ธาตุแมว",
+        "image_url": ""
+    }
+]
