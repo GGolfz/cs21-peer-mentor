@@ -17,7 +17,7 @@ passport.use(
 			const existingUser = await User.findOne({
 				student_id: profile.name.givenName,
 			})
-
+			console.log(profile)
 			if (!existingUser) {
 				// TODOS
 				// Add element

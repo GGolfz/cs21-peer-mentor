@@ -4,7 +4,7 @@ function ControlButton({data,icon,color}){
     return(
         <Link href={`/${data}`}>
         <div className="control-button">
-            <span class="material-icons" style={{color,fontSize:"2em"}}>
+            <span className="material-icons" style={{color,fontSize:"2em"}}>
                 {icon}
             </span>
             <style jsx>
