@@ -6,7 +6,8 @@ import sharp from 'sharp'
 
 export const getProfileController = async (req: Request, res: Response): Promise<void> => {
 	const student_id = req.user
-	const userProfile = await User.findOne({ student_id })
+	const userProfile = await User.findOne({ student_id }).populate('element')
+	console.log(userProfile)
 	res.send(toProfileRes(userProfile))
 }
 
@@ -16,6 +17,11 @@ interface profileResBody {
 	profile_url: String
 	bio: String
 	year: String
+	element: {
+		name: String
+		thai_name: String
+		image_url: String
+	}
 }
 
 interface updatedFields {
@@ -100,5 +106,10 @@ const toProfileRes = (profile: any): profileResBody => {
 		profile_url: profile.profile_url,
 		bio: profile.bio,
 		year: profile.year,
+		element: {
+			name: profile.element.name,
+			thai_name: profile.element.thai_name,
+			image_url: profile.element.image_url,
+		},
 	}
 }

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { User } from '../models/user'
+import { Element } from '../models/element'
 
 export const authCallbackController = async (req: Request, res: Response): Promise<void> => {
 	if (req.user) {
@@ -22,32 +23,50 @@ export const verifyAuth = async (req: Request, res: Response, next: NextFunction
 	next()
 }
 
+interface UserAttributes {
+	student_id: String
+	email: String
+	year: String
+	name: String
+	display_name: String
+	bio: String
+	profile_img: String
+	element: String
+}
+
 export const passportCallback = async (accessToken: String, refreshToken: String, profile: any, done: Function) => {
 	if (profile.name.familyName != 'SIT-STUDENT') {
 		const error = 'Please sign-in using @ad.sit.kmutt.ac.th'
 		done(error, null)
 		return
 	}
-	const existingUser = await User.findOne({
-		student_id: profile.name.givenName,
-	})
+	const student_id: String = profile.name.givenName
+	const existingUser = await User.findOne({ student_id })
 
 	if (!existingUser) {
-		// TODOS
-		// Add element
-		// Test badges
-		await User.create({
-			student_id: profile.name.givenName,
+		const year = determineYear(student_id)
+		const element = await Element.findOne({ member: student_id.substring(9) })
+		if (!element) {
+			done(`Element for ${student_id} is not found`, null)
+			return
+		}
+		const newUser: UserAttributes = {
+			student_id,
 			email: profile.emails[0].value,
-			year: determineYear(profile.name.givenName),
+			year,
 			name: '',
 			display_name: '',
 			bio: '',
 			profile_img: '',
-		})
+			element: element._id,
+		}
+		// TODOS
+		console.log(newUser)
+		// Test badges
+		await User.create(newUser)
 	}
 
-	done(null, profile.name.givenName)
+	done(null, student_id)
 }
 
 const determineYear = (id: String): String => {
