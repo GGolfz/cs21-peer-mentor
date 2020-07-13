@@ -13,7 +13,11 @@ passport.use(
 			scope: ['user.read'],
 		},
 		async function (accessToken: String, refreshToken: String, profile: any, done: Function) {
-			// console.log(accessToken, refreshToken, profile)
+			if (profile.name.familyName != 'SIT-STUDENT') {
+				const error = 'Please sign-in using @ad.sit.kmutt.ac.th'
+				done(error, null)
+				return
+			}
 			const existingUser = await User.findOne({
 				student_id: profile.name.givenName,
 			})
