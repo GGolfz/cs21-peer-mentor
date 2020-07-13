@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { Hint } from '../models/hint'
-import { DocumentQuery } from 'mongoose'
 
 interface newHintReqBody {
 	message: String
