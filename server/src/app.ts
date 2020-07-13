@@ -1,21 +1,28 @@
-import * as express from 'express'
-import * as bodyParser from 'body-parser'
+import express from 'express'
+import bodyParser from 'body-parser'
 import passport from 'passport'
 import session from 'express-session'
 import mongoose from 'mongoose'
+import cors from 'cors'
 import { testRouter } from './routers/testRoute'
 import { authRoute } from './routers/authRoute'
 import { profileRoute } from './routers/profileRoute'
 import { hintRoute } from './routers/hintRoute'
 
-export const app: express.Application = express.default()
+export const app: express.Application = express()
 
 const connectionString = `mongodb+srv://node-api:m42J1btjwCqRdlCp@cluster0.z5cnc.mongodb.net/cs21PeerMentor?retryWrites=true&w=majority`
 mongoose.connect(connectionString, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-	useFindAndModify: false
+	useFindAndModify: false,
 })
+
+const corsOptions: cors.CorsOptions = {
+	origin: ['http://localhost:3000'],
+	methods: ['GET', 'POST', 'PUT', 'PATCH'],
+	credentials: true,
+}
 
 passport.serializeUser((user, cb) => {
 	cb(null, user)
@@ -31,10 +38,12 @@ app.use(
 		secret: 'foobar',
 		resave: true,
 		saveUninitialized: true,
-		cookie: { maxAge: 3600000 }
+		cookie: { maxAge: 3600000 },
 	})
 )
 
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(bodyParser.json())
