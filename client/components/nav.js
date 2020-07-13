@@ -1,41 +1,48 @@
 import React from 'react'
 import Link from 'next/link'
-import Head from 'next/head'
+import Header from './header'
+import { Button } from 'antd'
 
-
-const Nav = () => (
+const Nav = () => {
+  return (
   <nav>
-    <Head>
-      <meta charset='utf-8' />
-      <meta http-equiv='X-UA-Compatible' content='IE=edge' />
-      <meta name='viewport' content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no' />
-      <meta name='description' content='Description' />
-      <meta name='keywords' content='Keywords' />
-      <title>CS21 Peer Mentor</title>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></link>
-      <link rel='manifest' href='/manifest.json' />
-      <link href='/favicon-16x16.png' rel='icon' type='image/png' sizes='16x16' />
-      <link href='/favicon-32x32.png' rel='icon' type='image/png' sizes='32x32' />
-      <link rel='apple-touch-icon' href='/apple-icon.png'></link>
-      <meta name='theme-color' content='#317EFB' />
-    </Head>
+    <Header/>
     <div className="nav-bar">
-      WAIT FOR NAV BAR
+        <span className="material-icons noti" style={{fontSize:"2em"}}>
+          notifications
+        </span>
+      <div className="button-list">
+        <Button type="dashed" style={{marginRight:"5%"}}>EDIT PROFILE</Button>
+        <Link href="/"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></Link>
+      </div>
     </div>
     <style jsx>{`
-      @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap");  
-      :global(body) {
-        margin: 0;
-        font-family: "Nunito", sans-serif;
-        padding: 0px;
-        background:#121212;
+      :global(#ant-button-danger:hover) {
+        color: #ff7875 !important;
+        border-color: #ff7875 !important;
+      }
+      :global(#ant-button-danger:active) {
+        color: #ff7875 !important;
+        border-color: #ff7875 !important;
       }
       .nav-bar {
-        text-align:center;
+        display:flex;
         height:7vh !important;
+        padding: 2% 3% 0% 3%;
+      }
+      .noti {
+        align-self:center;
+        cursor:pointer;
+      }
+      .button-list {
+        display:flex;
+        justify-content:space-around;
+        align-self:center;
+        margin-left:auto;
       }
     `}</style>
   </nav>
-)
+  )
+}
 
 export default Nav

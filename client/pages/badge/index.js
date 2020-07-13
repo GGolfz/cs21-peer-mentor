@@ -1,17 +1,14 @@
 import Nav from '../../components/nav'
 import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
-function Profile() {
+function Badge() {
   return (
     <div className="container">
       <BlackScreen />
       <Nav />
       <div className="content">
-        <div className="inside-content">
-          TEST
-        </div>
         CONTENT ZONE
-        PROFILE
+        BADGE
       </div>
       <ControlBar/>
       <style jsx>{
@@ -35,15 +32,9 @@ function Profile() {
             background:white;
             height:100vh;
           }
-          .inside-content{
-            text-align:center;
-            background: #FFFFFF;
-
-          }
           .content {
             height:85vh !important;
             text-align:center;
-            background: #d4af5f44;
           }
           `
         }</style>
@@ -51,4 +42,4 @@ function Profile() {
   )
 }
 
-export default Profile;
+export default Badge;
