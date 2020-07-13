@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { Hint } from '../models/hint'
-import { BoolEnum } from 'sharp'
+import { DocumentQuery } from 'mongoose'
 
 interface newHintReqBody {
 	message: String
@@ -9,7 +9,7 @@ interface newHintReqBody {
 interface HintResBody {
 	message: String
 	created_at: Date
-	seen: BoolEnum
+	seen: Boolean
 }
 
 export const createHintController = async (req: Request<{}, {}, newHintReqBody>, res: Response): Promise<void> => {
@@ -25,19 +25,37 @@ export const createHintController = async (req: Request<{}, {}, newHintReqBody>,
 	await Hint.create({
 		owner,
 		reciever,
-		message: req.body.message
+		message: req.body.message,
 	})
 
 	const hints = await Hint.find({ owner, reciever })
 	res.status(201).send(hints)
 }
 
-export const getHintByRecieverController = async (req: Request, res: Response): Promise<void> => {
-	const findedHint = await Hint.find({ reciever: 62130500216 })
-	res.send(findedHint)
+export const getHintController = async (req: Request, res: Response): Promise<void> => {
+	// const user = req.user
+	const user = '62130500230'
+	const yearNumber = user.substring(0, 2)
+	let hints
+	if (yearNumber == '63') {
+		hints = await Hint.find({ reciever: user })
+	} else if (yearNumber == '62') {
+		hints = await Hint.find({ owner: user })
+	} else {
+		res.status(400).send({ error: 'No hint allow for other year' })
+		return
+	}
+	res.send(toHintRes(hints))
 }
 
-export const getHintByOwnerController = async (req: Request, res: Response): Promise<void> => {
-	const findedHint = await Hint.find({ owner: 62130500230 })
-	res.send(findedHint)
+const toHintRes = (hints: Array<any>): Array<HintResBody> => {
+	const arr: Array<HintResBody> = []
+	hints.forEach(ele => {
+		arr.push({
+			message: ele.message,
+			created_at: ele.created_at,
+			seen: ele.seen,
+		})
+	})
+	return arr
 }
