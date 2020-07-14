@@ -1,10 +1,17 @@
+import React, { useEffect } from 'react'
 import Nav from '../../components/nav'
 import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
 import ShowProfile from '../../components/profile/show-profile'
 import axios from '../../axios/axios'
 import ProfileImg from '../../components/profile/edit-image'
+import Router from 'next/router'
 function Profile({data}) {
+  useEffect(()=>{
+    if(data.err){
+      Router.push('/')
+    }
+  })
   return (
     <div className="container">
       <BlackScreen />
@@ -54,9 +61,15 @@ function Profile({data}) {
   )
 }
 export async function getServerSideProps(ctx) {
-    const res = await axios.get('/profile',{headers: ctx.req ? { cookie: ctx.req.headers.cookie } : undefined})
+  if(ctx.req.headers.cookie){
+    const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
     const data = await res.data
     return { props: { data } }
+  }
+  else{
+    return { props: { data: {err:true}}}
+  }
+    
 }
 
 export default Profile;

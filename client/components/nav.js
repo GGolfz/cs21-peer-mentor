@@ -1,8 +1,9 @@
 import React, {useState} from 'react'
 import Link from 'next/link'
 import Header from './header'
-import { Button,Modal } from 'antd'
+import { Button, Modal,Input } from 'antd'
 import Hint from './hint'
+const {Search} = Input
 const hint = [
   {
     message:"Hello4",
@@ -28,6 +29,7 @@ const hint = [
 
 const Nav = ({year}) => {
   const [visible,setVisible] = useState(false)
+  const [addVisible,setAddVisible] = useState(false)
   const [notify,setNotify] = useState(()=>{
     let temp = 0
     hint.map(el=>{
@@ -44,6 +46,15 @@ const Nav = ({year}) => {
   const handleClose = ()=>{
     setVisible(false)
   }
+  const addHint = ()=>{
+    setAddVisible(true)
+  }
+  const closeAdd = () => {
+    setAddVisible(false)
+  }
+  const handleSubmit =() =>{
+    setAddVisible(false)
+  }
   return (
   <nav>
     <Header/>
@@ -55,8 +66,20 @@ const Nav = ({year}) => {
       <div className="button-list">
         <Link href="/"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></Link>
       </div>
+      <Modal onCancel={closeAdd} visible={addVisible} width="auto" footer={null} style={{textAlign:"center",padding:"2%"}}>
+        <h2 style={{fontSize:"1.4em"}}>ADD HINT</h2>
+        <Search enterButton="ADD" onSearch={handleSubmit}/>
+      </Modal>
       <Modal onCancel={handleClose} visible={visible} width="auto" footer={null} style={{textAlign:"center"}}>
-        <h2 style={{fontSize:"1.8em"}}>HINT</h2><br/>
+        <h2 style={{fontSize:"1.8em"}}>HINT</h2>
+        {
+          year !== "1" && 
+            (
+              <div style={{display:"flex",justifyContent:"flex-end"}}>
+              <Button type="primary" style={{fontSize:"1.4em",padding:"0% 3%",borderRadius:"10px",marginBottom:"3%"}} onClick={addHint}>+</Button> <br/>
+              </div>
+            )
+        }
         { 
           hint.map((el,index)=>{
           return <Hint key={index} message={el.message} time={el.time} />
