@@ -2,11 +2,10 @@ import { Request, Response, NextFunction } from 'express'
 import { User } from '../models/user'
 import { Name } from '../models/name'
 import { Element } from '../models/element'
-import { match } from 'assert'
 
 export const authCallbackController = async (req: Request, res: Response): Promise<void> => {
 	if (req.user) {
-		res.redirect('/test')
+		res.redirect('/profile')
 		return
 	}
 	res.redirect('/')
@@ -68,10 +67,10 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 			email: profile.emails[0].value,
 			year,
 			name: match_name.name,
-			display_name: '',
+			display_name: match_name.name,
 			bio: '',
 			profile_img: '',
-			element: element._id,
+			element: element._id
 		}
 		// TODOS
 		// Test badges
