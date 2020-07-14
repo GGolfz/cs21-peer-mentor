@@ -63,12 +63,17 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 			return
 		}
 		// Create new user
+		const firstname = /(\w*).(\w*) (\w*)/.exec(match_name.name)
+		if (!firstname) {
+			done(`${match_name.name} cannot pass the regex`, null)
+			return
+		}
 		const newUser: UserAttributes = {
 			student_id,
 			email: profile.emails[0].value,
 			year,
 			name: match_name.name,
-			display_name: match_name.name,
+			display_name: firstname[2],
 			bio: '',
 			profile_img: '',
 			element: element._id
