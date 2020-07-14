@@ -5,14 +5,13 @@ import ShowProfile from '../../components/profile/show-profile'
 import axios from '../../axios/axios'
 import ProfileImg from '../../components/profile/edit-image'
 function Profile({data}) {
-  console.log(data)
   return (
     <div className="container">
       <BlackScreen />
-      <Nav />
+      <Nav year = {data.year}/>
       <div className="content">
         <div className="inside-content" >
-          <h1 style={{fontSize:"1.8em",marginBottom:"2vh"}}>PROFILE</h1>
+          <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>PROFILE</h1>
           <ProfileImg img={data.profile_img} />
           <ShowProfile display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
         </div>
@@ -55,22 +54,9 @@ function Profile({data}) {
   )
 }
 export async function getServerSideProps(ctx) {
-    //Fetch data from external API
-    // const res = await fetch(`http://localhost:3050/profile`, {
-    //   method: 'GET',
-    //   credentials: 'include'
-    // })
     const res = await axios.get('/profile',{headers: ctx.req ? { cookie: ctx.req.headers.cookie } : undefined})
     const data = await res.data
-  
-    // Pass data to the page via props
-    // const data = {
-    //   name: "WISARUT KITTICHAROENPHONNGAM",
-    //   year: "2",
-    //   bio: "JUST A LAZY GUY",
-    //   display_name: "ggolfz_"
-    // }
-     return { props: { data } }
+    return { props: { data } }
 }
 
 export default Profile;

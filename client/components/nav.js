@@ -1,19 +1,67 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Link from 'next/link'
 import Header from './header'
-import { Button } from 'antd'
+import { Button,Modal } from 'antd'
+import Hint from './hint'
+const hint = [
+  {
+    message:"Hello4",
+    time:"15:00:00",
+    seen:false
+  },
+  {
+    message:"Hello3",
+    time:"14:00:00",
+    seen:false
+  },
+  {
+    message:"Hello2",
+    time:"13:00:00",
+    seen:false
+  },
+  {
+    message:"Hello2",
+    time:"12:00:00",
+    seen:true
+  }
+]
 
-const Nav = () => {
+const Nav = ({year}) => {
+  const [visible,setVisible] = useState(false)
+  const [notify,setNotify] = useState(()=>{
+    let temp = 0
+    hint.map(el=>{
+      if(!el.seen){
+        temp+=1
+      }
+    })
+    return temp;
+  })
+  const showHint = ()=>{
+    setVisible(true)
+    setNotify(0)
+  }
+  const handleClose = ()=>{
+    setVisible(false)
+  }
   return (
   <nav>
     <Header/>
     <div className="nav-bar">
-        <span className="material-icons noti" style={{fontSize:"2em"}}>
+        <span className="material-icons noti" style={{fontSize:"2em",color:notify>0?"#ff4d4f":""}} onClick={showHint}>
           notifications
         </span>
+        <span style={{cursor:"pointer",position:"relative",left:"-1%",top:"2%",color:"#ff4d4f" }} onClick={showHint}>{notify>0?notify:""}</span>
       <div className="button-list">
         <Link href="/"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></Link>
       </div>
+      <Modal onCancel={handleClose} visible={visible} width="auto" footer={null} style={{textAlign:"center"}}>
+        <h2 style={{fontSize:"1.8em"}}>HINT</h2><br/>
+        { 
+          hint.map((el,index)=>{
+          return <Hint key={index} message={el.message} time={el.time} />
+        })}
+      </Modal>
     </div>
     <style jsx>{`
       :global(#ant-button-danger:hover) {

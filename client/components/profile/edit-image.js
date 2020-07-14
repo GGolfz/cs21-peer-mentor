@@ -125,7 +125,7 @@ function EditImage() {
                       margin:0% 36%;
                     }
                 }
-                :global(.ant-modal-close) {
+                .ant-modal-close {
                     display:none;
                 }
                 .modal-element {
