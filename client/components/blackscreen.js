@@ -5,8 +5,7 @@ export default ()=>{
             <style jsx>
                 {
                     `
-                    @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap");  
-                    :global(body) {
+                      :global(body) {
                       margin: 0;
                       font-family: "Nunito", sans-serif;
                       padding: 0px;

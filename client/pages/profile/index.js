@@ -11,8 +11,8 @@ function Profile({data}) {
       <BlackScreen />
       <Nav />
       <div className="content">
-        <div className="inside-content">
-          <h1 style={{fontSize:"1.8em"}}>PROFILE</h1>
+        <div className="inside-content" >
+          <h1 style={{fontSize:"1.8em",marginBottom:"2vh"}}>PROFILE</h1>
           <ProfileImg img={data.profile_img} />
           <ShowProfile display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
         </div>
@@ -45,7 +45,7 @@ function Profile({data}) {
 
           }
           .content {
-            height:85vh !important;
+            height:82vh !important;
             text-align:center;
             background: #d4af5f44;
           }

@@ -12,7 +12,6 @@ const Nav = () => {
           notifications
         </span>
       <div className="button-list">
-        <Link href="/profile/edit"><Button type="dashed" style={{marginRight:"5%"}}>EDIT PROFILE</Button></Link>
         <Link href="/"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></Link>
       </div>
     </div>
@@ -29,6 +28,7 @@ const Nav = () => {
         display:flex;
         height:7vh !important;
         padding: 2% 3% 0% 3%;
+        margin-bottom: 3vh;
       }
       .noti {
         align-self:center;

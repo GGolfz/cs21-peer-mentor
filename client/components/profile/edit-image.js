@@ -85,7 +85,7 @@ function EditImage() {
         <div>
             <input type='file' id='profile_pic' 
             onChange={handleFile} accept="image/*" hidden />
-            <img width="30%" style={{borderRadius:"200px",cursor:"pointer"}} src={prosrc} onClick={()=>{
+            <img width="30%" style={{borderRadius:"200px",cursor:"pointer",marginBottom:"5%"}} src={prosrc} onClick={()=>{
                 document.getElementById('profile_pic').click()
             }}/>
             <Modal visible={visible}  footer={null} width="auto">
