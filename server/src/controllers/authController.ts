@@ -2,14 +2,13 @@ import { Request, Response, NextFunction } from 'express'
 import { User } from '../models/user'
 import { Name } from '../models/name'
 import { Element } from '../models/element'
-import { match } from 'assert'
 
 export const authCallbackController = async (req: Request, res: Response): Promise<void> => {
 	if (req.user) {
 		res.redirect('http://localhost:3000/profile')
 		return
 	}
-	res.redirect('/')
+	res.redirect('http://localhost:3000')
 }
 
 export const verifyAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -63,15 +62,20 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 			return
 		}
 		// Create new user
+		const firstname = /(\w*).(\w*) (\w*)/.exec(match_name.name)
+		if (!firstname) {
+			done(`${match_name.name} cannot pass the regex`, null)
+			return
+		}
 		const newUser: UserAttributes = {
 			student_id,
 			email: profile.emails[0].value,
 			year,
 			name: match_name.name,
-			display_name: '',
+			display_name: firstname[2],
 			bio: '',
 			profile_img: '',
-			element: element._id,
+			element: element._id
 		}
 		// TODOS
 		// Test badges
