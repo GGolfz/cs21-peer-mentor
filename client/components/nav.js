@@ -12,7 +12,7 @@ const Nav = () => {
           notifications
         </span>
       <div className="button-list">
-        <Button type="dashed" style={{marginRight:"5%"}}>EDIT PROFILE</Button>
+        <Link href="/profile/edit"><Button type="dashed" style={{marginRight:"5%"}}>EDIT PROFILE</Button></Link>
         <Link href="/"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></Link>
       </div>
     </div>

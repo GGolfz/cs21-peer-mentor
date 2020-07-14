@@ -1,17 +1,20 @@
 import Nav from '../../components/nav'
 import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
-function Profile() {
+import ShowProfile from '../../components/profile/show-profile'
+import axios from '../../axios/axios'
+function Profile({data}) {
+  console.log(data)
   return (
     <div className="container">
       <BlackScreen />
       <Nav />
       <div className="content">
         <div className="inside-content">
-          TEST
+          <h1 style={{fontSize:"1.8em"}}>PROFILE</h1>
+          <ShowProfile img={data.profile_img} display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
+          
         </div>
-        CONTENT ZONE
-        PROFILE
       </div>
       <ControlBar/>
       <style jsx>{
@@ -49,6 +52,14 @@ function Profile() {
         }</style>
     </div>
   )
+}
+export async function getServerSideProps() {
+    // Fetch data from external API
+    const res = await axios.get('/profile',{withCredentials:true})
+    const data = await res.data
+  
+    // Pass data to the page via props
+    return { props: { data } }
 }
 
 export default Profile;
