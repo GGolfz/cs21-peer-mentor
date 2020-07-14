@@ -6,7 +6,7 @@ import { match } from 'assert'
 
 export const authCallbackController = async (req: Request, res: Response): Promise<void> => {
 	if (req.user) {
-		res.redirect('/test')
+		res.redirect('http://localhost:3000/profile')
 		return
 	}
 	res.redirect('/')
