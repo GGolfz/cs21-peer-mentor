@@ -9,9 +9,6 @@ function EditImage() {
     const [crop,setCrop] = useState({unit: "%",width: 50,aspect: 1 / 1})
     const [croppedImg,setCroppedImg] = useState(null)
     const [visible,setVisible] = useState(false)
-    const showModal = () => {
-        setVisible(true)
-    }
     const handleFile = e => {
         const fileReader = new FileReader()
         fileReader.onloadend = () => {

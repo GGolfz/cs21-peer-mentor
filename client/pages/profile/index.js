@@ -3,7 +3,7 @@ import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
 import ShowProfile from '../../components/profile/show-profile'
 import axios from '../../axios/axios'
-import EditImage from '../../components/profile/edit-image'
+import ProfileImg from '../../components/profile/edit-image'
 function Profile({data}) {
   console.log(data)
   return (
@@ -13,8 +13,8 @@ function Profile({data}) {
       <div className="content">
         <div className="inside-content">
           <h1 style={{fontSize:"1.8em"}}>PROFILE</h1>
-          <ShowProfile img={data.profile_img} display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
-          <EditImage/>
+          <ProfileImg img={data.profile_img} />
+          <ShowProfile display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
         </div>
       </div>
       <ControlBar/>
@@ -54,13 +54,23 @@ function Profile({data}) {
     </div>
   )
 }
-export async function getServerSideProps() {
-    // Fetch data from external API
-    // const res = await axios.get('/profile',{withCredentials:true})
-    // const data = await res.data
+export async function getServerSideProps(ctx) {
+    //Fetch data from external API
+    // const res = await fetch(`http://localhost:3050/profile`, {
+    //   method: 'GET',
+    //   credentials: 'include'
+    // })
+    const res = await axios.get('/profile',{headers: ctx.req ? { cookie: ctx.req.headers.cookie } : undefined})
+    const data = await res.data
   
-    // // Pass data to the page via props
-     return { props: { data:"" } }
+    // Pass data to the page via props
+    // const data = {
+    //   name: "WISARUT KITTICHAROENPHONNGAM",
+    //   year: "2",
+    //   bio: "JUST A LAZY GUY",
+    //   display_name: "ggolfz_"
+    // }
+     return { props: { data } }
 }
 
 export default Profile;
