@@ -70,14 +70,14 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 		// Optimize the image
 		await sharp(originalFilePath)
 			.resize({
-				height: 200,
-				width: 200,
+				height: 400,
+				width: 400,
 			})
-			.webp()
+			.webp({})
 			.toFile(optimizedFilePath)
 
 		const student_id = req.user
-		// const student_id = 62130500230 // Placeholder
+		// const student_id = '62130500230' // Placeholder
 
 		// Upload to Google Cloud Storage
 		const storage = new Storage({ keyFilename: 'GCS-service-account.json' })
@@ -95,8 +95,8 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 		res.status(500).send({ error: err })
 	}
 	// Clean up the temp file
-	fs.unlinkSync(originalFilePath)
-	fs.unlinkSync(optimizedFilePath)
+	// fs.unlinkSync(originalFilePath)
+	// fs.unlinkSync(optimizedFilePath)
 }
 
 const toProfileRes = (profile: any): profileResBody => {
