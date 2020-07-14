@@ -5,10 +5,11 @@ import { Element } from '../models/element'
 
 export const authCallbackController = async (req: Request, res: Response): Promise<void> => {
 	if (req.user) {
-		res.redirect('/profile')
+		// res.redirect('/profile')
+		res.redirect('http://localhost:3000/profile')
 		return
 	}
-	res.redirect('/')
+	res.redirect('http://localhost:3000')
 }
 
 export const verifyAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
