@@ -3,6 +3,7 @@ import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
 import ShowProfile from '../../components/profile/show-profile'
 import axios from '../../axios/axios'
+import EditImage from '../../components/profile/edit-image'
 function Profile({data}) {
   console.log(data)
   return (
@@ -13,7 +14,7 @@ function Profile({data}) {
         <div className="inside-content">
           <h1 style={{fontSize:"1.8em"}}>PROFILE</h1>
           <ShowProfile img={data.profile_img} display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
-          
+          <EditImage/>
         </div>
       </div>
       <ControlBar/>
@@ -55,11 +56,11 @@ function Profile({data}) {
 }
 export async function getServerSideProps() {
     // Fetch data from external API
-    const res = await axios.get('/profile',{withCredentials:true})
-    const data = await res.data
+    // const res = await axios.get('/profile',{withCredentials:true})
+    // const data = await res.data
   
-    // Pass data to the page via props
-    return { props: { data } }
+    // // Pass data to the page via props
+     return { props: { data:"" } }
 }
 
 export default Profile;

@@ -3,6 +3,7 @@ import BlackScreen from '../components/blackscreen'
 import AppLogo from '../components/applogo'
 import LoginButton from '../components/login-button'
 import Header from '../components/header'
+
 export default function Home() {
   return (
     <div className="container">
