@@ -132,7 +132,7 @@ function Badge({data}) {
   return (
     <div className="container">
       <BlackScreen />
-      <Nav />
+      <Nav year = {data.year}/>
       <div className="content">
       <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>BADGE</h1>
         <Row>
@@ -181,9 +181,11 @@ function Badge({data}) {
 export async function getServerSideProps(ctx) {
   try{
     if(ctx.req.headers.cookie){
-      const res = await axios.get('/badge',{headers: { cookie: ctx.req.headers.cookie }})
-      const data = await res.data
-      return { props: { data:{badge:data} } }
+      const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
+      const data1 = await res.data
+      const res2 = await axios.get('/badge',{headers: { cookie: ctx.req.headers.cookie }})
+      const data2 = await res2.data
+      return { props: { data:{badge:data2,year:data1.year} } }
     }
     else{
       return { props: { data: {err:true}}}

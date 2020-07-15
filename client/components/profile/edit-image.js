@@ -2,8 +2,7 @@ import React, { useState , useEffect} from 'react'
 import ReactCrop from 'react-image-crop'
 import {  Modal, Button  } from 'antd'
 import axios from '../../axios/axios'
-let imageRef =null
-let profile_pic = null
+let imageRef = null
 function EditImage({img}) {
     const [prosrc,setPro] = useState(img?img:"")
     const [src,setSrc] = useState('')
@@ -20,6 +19,7 @@ function EditImage({img}) {
     }
     const handleCancel = e => {
         e.preventDefault()
+        imageRef = null
         setVisible(false)
     }
     const handleSubmit = e => {
@@ -95,15 +95,15 @@ function EditImage({img}) {
         setCroppedImg(croppedImage) 
     }
     return (
-        <div>
+        <div id="edit">
             <input type='file' id='profile_pic' 
             onChange={handleFile} accept="image/*" hidden />
             <img width="30%" style={{borderRadius:"200px",cursor:"pointer",marginBottom:"5%"}} src={prosrc} onClick={()=>{
                 document.getElementById('profile_pic').click()
             }}/>
-            <Modal visible={visible}  footer={null} width="auto">
+            <Modal wrapClassName="edit_profile_modal" visible={visible}  footer={null} width="auto">
                 <div className="back-button">
-                <span className="material-icons" style={{fontSize:"2em"}} onClick={handleCancel}>
+                <span className="material-icons" style={{fontSize:"2em",cursor:"pointer"}} onClick={handleCancel}>
                 arrow_back_ios
             </span>
                 </div>
@@ -123,23 +123,8 @@ function EditImage({img}) {
             <style jsx>
             {
                 `
-                @media only screen and (max-width:480px){
-                    :global(.ant-modal) {
-                    margin: 2%
-                    }
-                }
-                @media only screen and (max-width:1024px) and (min-width:481px){
-                    :global(.ant-modal) {
-                      margin:0% 26%;
-                    }
-                }
-                @media only screen and (min-width: 1025px) {
-                    :global(.ant-modal) {
-                      margin:0% 36%;
-                    }
-                }
-                .ant-modal-close {
-                    display:none;
+                :global(.edit_profile_modal .ant-modal-close) {
+                    display:none !important;
                 }
                 .modal-element {
                     display:flex;

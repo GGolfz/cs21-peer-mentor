@@ -1,11 +1,18 @@
+import React, {useEffect} from 'react'
 import Nav from '../../components/nav'
 import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
-function Chat() {
+import axios from '../../axios/axios'
+function Chat({data}) {
+  useEffect(()=>{
+    if(data.err){
+      Router.push('/')
+    }
+  })
   return (
     <div className="container">
       <BlackScreen />
-      <Nav />
+      <Nav year = {data.year}/>
       <div className="content">
         CONTENT ZONE
         CHAT
@@ -40,6 +47,17 @@ function Chat() {
         }</style>
     </div>
   )
+}
+export async function getServerSideProps(ctx) {
+  if(ctx.req.headers.cookie){
+    const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
+    const data1 = await res.data
+    return { props: { data:{year:data1.year} }}
+  }
+  else{
+    return { props: { data: {err:true}}}
+  }
+
 }
 
 export default Chat;

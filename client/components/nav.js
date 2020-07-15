@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, Fragment} from 'react'
 import Link from 'next/link'
 import Header from './header'
 import { Button, Modal,Input } from 'antd'
@@ -59,13 +59,15 @@ const Nav = ({year}) => {
   <nav>
     <Header/>
     <div className="nav-bar">
+      { (year=== '1' || year==='2') && (
+        <Fragment>
         <span className="material-icons noti" style={{fontSize:"2em",color:notify>0?"#ff4d4f":""}} onClick={showHint}>
           notifications
         </span>
         <span style={{cursor:"pointer",position:"relative",left:"-1%",top:"2%",color:"#ff4d4f" }} onClick={showHint}>{notify>0?notify:""}</span>
-      <div className="button-list">
-        <a href="http://localhost:3050/logout"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></a>
-      </div>
+        </Fragment>
+      )   
+      }  
       <Modal onCancel={closeAdd} visible={addVisible} width="auto" footer={null} style={{textAlign:"center",padding:"2%"}}>
         <h2 style={{fontSize:"1.4em"}}>ADD HINT</h2>
         <Search enterButton="ADD" onSearch={handleSubmit}/>
@@ -85,8 +87,28 @@ const Nav = ({year}) => {
           return <Hint key={index} message={el.message} time={el.time} />
         })}
       </Modal>
+      
+      <div className="button-list">
+        <a href="http://localhost:3050/logout"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></a>
+      </div>
     </div>
     <style jsx>{`
+
+      @media only screen and (max-width:480px){
+          :global(.ant-modal) {
+          margin: 2%
+          }
+      }
+      @media only screen and (max-width:1024px) and (min-width:481px){
+          :global(.ant-modal) {
+          margin:0% 26%;
+          }
+      }
+      @media only screen and (min-width: 1025px) {
+          :global(.ant-modal) {
+          margin:0% 36%;
+          }
+      }
       :global(#ant-button-danger:hover) {
         color: #ff7875 !important;
         border-color: #ff7875 !important;

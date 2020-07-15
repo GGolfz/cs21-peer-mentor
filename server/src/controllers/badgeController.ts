@@ -11,7 +11,7 @@ export const getTokenController = async (req: Request, res: Response): Promise<v
 	// const student_id = '62130500212'
 	try {
 		const hashed = crypto.MD5(student_id).toString()
-		let token = '059a7'
+		let token = ''
 		let unique = false
 		while (!unique) {
 			for (let i = 0; i < 5; i++) {
@@ -19,7 +19,6 @@ export const getTokenController = async (req: Request, res: Response): Promise<v
 				token += hashed.charAt(index)
 			}
 			const cache = await redis.get(token)
-			console.log(cache)
 			if (!cache) {
 				unique = true
 				break

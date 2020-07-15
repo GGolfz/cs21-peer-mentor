@@ -45,6 +45,7 @@ function ShowProfile ({img,display,name,bio,year}) {
     return (
     <div className="show-profile">
         <div className="displayName" id="showdisplay">
+            <span><img src={img} width="20%" /></span>
             <span>{displayName} </span>
             <span className="material-icons" style={{fontSize:"0.9em",cursor:"pointer"}} onClick={editDisplay}>edit</span>
         </div>
