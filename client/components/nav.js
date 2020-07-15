@@ -3,36 +3,26 @@ import Link from 'next/link'
 import Header from './header'
 import { Button, Modal,Input } from 'antd'
 import Hint from './hint'
+import axios from '../axios/axios'
 const {Search} = Input
-const hint = [
-  {
-    message:"Hello4",
-    time:"15:00:00",
-    seen:false
-  },
-  {
-    message:"Hello3",
-    time:"14:00:00",
-    seen:false
-  },
-  {
-    message:"Hello2",
-    time:"13:00:00",
-    seen:false
-  },
-  {
-    message:"Hello2",
-    time:"12:00:00",
-    seen:true
-  }
-]
 
-const Nav = ({year}) => {
+const Nav = ({year,hint}) => {
+  const [hints,setHints] = useState(hint)
+  const [message,setHint] = useState('')
   const [visible,setVisible] = useState(false)
   const [addVisible,setAddVisible] = useState(false)
+  const calculateNotify = (h)=>{
+    let temp = 0
+    h.map(el=>{
+      if(!el.seen){
+        temp+=1
+      }
+    })
+    return temp;
+  }
   const [notify,setNotify] = useState(()=>{
     let temp = 0
-    hint.map(el=>{
+    hints.map(el=>{
       if(!el.seen){
         temp+=1
       }
@@ -41,10 +31,19 @@ const Nav = ({year}) => {
   })
   const showHint = ()=>{
     setVisible(true)
-    setNotify(0)
+    axios.patch('/hint').then(async res=>{
+      await setHints(res.data)
+      await setNotify(calculateNotify(res.data))
+    })
+    .catch(err=>{
+      console.log(err)
+    })
   }
   const handleClose = ()=>{
     setVisible(false)
+  }
+  const handleChange = (e)=>{
+    setHint(e.target.value)
   }
   const addHint = ()=>{
     setAddVisible(true)
@@ -54,6 +53,14 @@ const Nav = ({year}) => {
   }
   const handleSubmit =() =>{
     setAddVisible(false)
+    axios.post('/hint',{message}).then(
+      async (res)=>{
+        await setHints(res.data)
+        await setNotify(calculateNotify(res.data))
+      }
+    ).catch(err=>{
+      console.log(err)
+    })
   }
   return (
   <nav>
@@ -70,7 +77,7 @@ const Nav = ({year}) => {
       }  
       <Modal onCancel={closeAdd} visible={addVisible} width="auto" footer={null} style={{textAlign:"center",padding:"2%"}}>
         <h2 style={{fontSize:"1.4em"}}>ADD HINT</h2>
-        <Search enterButton="ADD" onSearch={handleSubmit}/>
+        <Search onChange={handleChange} enterButton="ADD" onSearch={handleSubmit}/>
       </Modal>
       <Modal onCancel={handleClose} visible={visible} width="auto" footer={null} style={{textAlign:"center"}}>
         <h2 style={{fontSize:"1.8em"}}>HINT</h2>
@@ -83,8 +90,8 @@ const Nav = ({year}) => {
             )
         }
         { 
-          hint.map((el,index)=>{
-          return <Hint key={index} message={el.message} time={el.time} />
+          hints.map((el,index)=>{
+          return <Hint key={index} message={el.message} time={new Date(el.created_at).toLocaleDateString()} />
         })}
       </Modal>
       
