@@ -1,7 +1,7 @@
 import passport from 'passport'
 import { Router } from 'express'
 import { Strategy as MicrosoftStrategy } from 'passport-microsoft'
-import { authCallbackController, passportCallback } from '../controllers/authController'
+import { authCallbackController, passportCallback, logoutController, verifyAuth } from '../controllers/authController'
 
 passport.use(
 	new MicrosoftStrategy(
@@ -18,6 +18,8 @@ passport.use(
 export const authRoute = Router()
 
 authRoute.get('/auth/microsoft', passport.authenticate('microsoft'))
+
+authRoute.get('/logout', verifyAuth, logoutController)
 
 authRoute.get(
 	'/auth/microsoft/callback',

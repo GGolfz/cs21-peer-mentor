@@ -16,12 +16,17 @@ export const verifyAuth = async (req: Request, res: Response, next: NextFunction
 		res.status(401).send({ error: 'User not authen' })
 		return
 	}
-	const user = await User.findOne({ student_id: req.user })
-	if (user == null) {
-		res.status(404).send({ error: 'User not founded' })
-		return
-	}
+	// const user = await User.findOne({ student_id: req.user })
+	// if (user == null) {
+	// 	res.status(404).send({ error: 'User not founded' })
+	// 	return
+	// }
 	next()
+}
+
+export const logoutController = (req: Request, res: Response): void => {
+	req.logout()
+	res.send({ success: true })
 }
 
 interface UserAttributes {
@@ -75,7 +80,7 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 			display_name: firstname[2],
 			bio: '',
 			profile_img: '',
-			element: element._id
+			element: element._id,
 		}
 		// TODOS
 		// Test badges
