@@ -5,11 +5,9 @@ import { User } from '../models/user'
 import { Element } from '../models/element'
 import { determineYear } from '../util/determineYear'
 
-// const sercre = process.env.JWT_SECRET
-
 export const getTokenController = async (req: Request, res: Response): Promise<void> => {
 	const student_id = req.user as string
-	// const student_id = '60130500217'
+	// const student_id = '62130500226'
 	try {
 		const hashed = crypto.MD5(student_id).toString()
 		let token = ''
@@ -41,7 +39,7 @@ interface newBadgeReqBody {
 
 export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody>, res: Response): Promise<void> => {
 	const student_id = req.user as String
-	// const student_id = '63130500230'
+	// const student_id = '62130500230'
 	const year = determineYear(student_id)
 	if (year != '1') {
 		res.status(400).send({ error: 'Only first year student can get badge' })
@@ -59,15 +57,14 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 		return
 	}
 
-	// Get the target user
-	const user: any = await User.findOne({ student_id }).populate('badges')
+	// Get the user
+	const user: any = await User.findOne({ student_id }).populate('badges').populate('friends')
 	if (!user) {
 		res.status(404).send({ error: 'User is not found' })
 		return
 	}
-	if (!user.badges) {
-		user.badges = []
-	}
+	if (!user.badges) user.badges = []
+	if (!user.friends) user.friends = []
 
 	// Check of element or year badge
 	const targetYear = determineYear(targetID)
@@ -85,14 +82,16 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 			return
 		}
 	}
-
+	console.log(user)
 	// Check if user aleady own that element badge
-	let ownedElement = user.badges.find((ele: any) => ele._id.toString() == badge._id.toString())
-	if (!ownedElement) {
-		user.badges.push(badge)
+	const isOwnedElement = addIfNotExistOnId(badge, user.badges)
+	if (isOwnedElement) {
+		const targetUser = await User.findOne({ student_id: targetID })
+		addIfNotExistOnId(targetUser, user.friends)
+		console.log(user)
 		await user.save()
-	} // TODO
-	// What to return?
+	}
+
 	res.status(201).send(user)
 }
 
@@ -105,4 +104,13 @@ export const getBadgesController = async (req: Request, res: Response): Promise<
 		return
 	}
 	res.send(user.badges)
+}
+
+const addIfNotExistOnId = (element: any, array: Array<any>): Array<any> | undefined => {
+	let ownedElement = array.find((ele: any) => ele._id.toString() == element._id.toString())
+	if (!ownedElement) {
+		array.push(element)
+		return array
+	}
+	return undefined
 }
