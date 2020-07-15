@@ -23,6 +23,12 @@ const userSchema = new Schema({
 		type: Date,
 		default: new Date(),
 	},
+	friends: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'user',
+		},
+	],
 })
 
 export const User = model('user', userSchema)
