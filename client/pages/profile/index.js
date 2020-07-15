@@ -16,18 +16,23 @@ function Profile({data}) {
   return (
     <div className="container">
       <BlackScreen />
-      <Nav year = {data.year}/>
-      <div className="content">
-        <div className="inside-content" >
-          <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>PROFILE</h1>
-          <ProfileImg img={data.profile_img} />
-          <ShowProfile display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
-        </div>
-        <div className="qr-content">
-        <QRCode size={128} level='L' value={data.token?data.token:""}/>
-        <h2 style={{marginBottom:"0%"}}>Code : {data.token}</h2>
-        </div>
-      </div>
+      <Nav year = {data.year} hint={data.hint?data.hint:[]}/>
+          {
+            !data.err && (
+              <div className="content">
+              <div className="inside-content" >
+                <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>PROFILE</h1>
+                <ProfileImg img={data.profile_img} />
+                <ShowProfile img={data.element.image_url} display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
+              </div>
+              <div className="qr-content">
+              <QRCode size={128} level='L' value={data.token?data.token:""}/>
+              <h2 style={{marginBottom:"0%"}}>Code : {data.token}</h2>
+              </div>
+            </div>
+            )
+          }
+      
       <ControlBar/>
       <style jsx>{
           `
@@ -77,7 +82,9 @@ export async function getServerSideProps(ctx) {
       const data1 = await res.data
       const res2 = await axios.get('/token',{headers: { cookie: ctx.req.headers.cookie }})
       const token1 = await res2.data
-      const data = {...data1,token:token1.token}
+      const res3 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
+      const hint = await res3.data
+      const data = {...data1,token:token1.token,hint:hint}
       return { props: { data } }
     }
     else{

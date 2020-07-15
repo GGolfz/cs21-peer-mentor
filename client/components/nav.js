@@ -1,38 +1,28 @@
-import React, {useState} from 'react'
+import React, {useState, Fragment} from 'react'
 import Link from 'next/link'
 import Header from './header'
 import { Button, Modal,Input } from 'antd'
 import Hint from './hint'
+import axios from '../axios/axios'
 const {Search} = Input
-const hint = [
-  {
-    message:"Hello4",
-    time:"15:00:00",
-    seen:false
-  },
-  {
-    message:"Hello3",
-    time:"14:00:00",
-    seen:false
-  },
-  {
-    message:"Hello2",
-    time:"13:00:00",
-    seen:false
-  },
-  {
-    message:"Hello2",
-    time:"12:00:00",
-    seen:true
-  }
-]
 
-const Nav = ({year}) => {
+const Nav = ({year,hint}) => {
+  const [hints,setHints] = useState(hint)
+  const [message,setHint] = useState('')
   const [visible,setVisible] = useState(false)
   const [addVisible,setAddVisible] = useState(false)
+  const calculateNotify = (h)=>{
+    let temp = 0
+    h.map(el=>{
+      if(!el.seen){
+        temp+=1
+      }
+    })
+    return temp;
+  }
   const [notify,setNotify] = useState(()=>{
     let temp = 0
-    hint.map(el=>{
+    hints.map(el=>{
       if(!el.seen){
         temp+=1
       }
@@ -41,10 +31,21 @@ const Nav = ({year}) => {
   })
   const showHint = ()=>{
     setVisible(true)
-    setNotify(0)
+    if(year === '1'){
+      axios.patch('/hint').then(async res=>{
+        await setHints(res.data)
+        await setNotify(calculateNotify(res.data))
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+    }
   }
   const handleClose = ()=>{
     setVisible(false)
+  }
+  const handleChange = (e)=>{
+    setHint(e.target.value)
   }
   const addHint = ()=>{
     setAddVisible(true)
@@ -54,21 +55,31 @@ const Nav = ({year}) => {
   }
   const handleSubmit =() =>{
     setAddVisible(false)
+    axios.post('/hint',{message}).then(
+      async (res)=>{
+        await setHints(res.data)
+        await setNotify(calculateNotify(res.data))
+      }
+    ).catch(err=>{
+      console.log(err)
+    })
   }
   return (
   <nav>
     <Header/>
     <div className="nav-bar">
+      { (year=== '1' || year==='2') && (
+        <Fragment>
         <span className="material-icons noti" style={{fontSize:"2em",color:notify>0?"#ff4d4f":""}} onClick={showHint}>
           notifications
         </span>
         <span style={{cursor:"pointer",position:"relative",left:"-1%",top:"2%",color:"#ff4d4f" }} onClick={showHint}>{notify>0?notify:""}</span>
-      <div className="button-list">
-        <a href="http://localhost:3050/logout"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></a>
-      </div>
+        </Fragment>
+      )   
+      }  
       <Modal onCancel={closeAdd} visible={addVisible} width="auto" footer={null} style={{textAlign:"center",padding:"2%"}}>
         <h2 style={{fontSize:"1.4em"}}>ADD HINT</h2>
-        <Search enterButton="ADD" onSearch={handleSubmit}/>
+        <Search onChange={handleChange} enterButton="ADD" onSearch={handleSubmit}/>
       </Modal>
       <Modal onCancel={handleClose} visible={visible} width="auto" footer={null} style={{textAlign:"center"}}>
         <h2 style={{fontSize:"1.8em"}}>HINT</h2>
@@ -81,12 +92,34 @@ const Nav = ({year}) => {
             )
         }
         { 
-          hint.map((el,index)=>{
-          return <Hint key={index} message={el.message} time={el.time} />
-        })}
+          
+          hints.reverse().map((el,index)=>{
+          return <Hint key={index} message={el.message} seen={el.seen} time={new Date(el.created_at).toLocaleDateString()} />
+          })
+        }
       </Modal>
+      
+      <div className="button-list">
+        <a href="http://localhost:3050/logout"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></a>
+      </div>
     </div>
     <style jsx>{`
+
+      @media only screen and (max-width:480px){
+          :global(.ant-modal) {
+          margin: 2%
+          }
+      }
+      @media only screen and (max-width:1024px) and (min-width:481px){
+          :global(.ant-modal) {
+          margin:0% 26%;
+          }
+      }
+      @media only screen and (min-width: 1025px) {
+          :global(.ant-modal) {
+          margin:0% 36%;
+          }
+      }
       :global(#ant-button-danger:hover) {
         color: #ff7875 !important;
         border-color: #ff7875 !important;

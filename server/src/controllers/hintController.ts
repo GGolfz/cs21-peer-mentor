@@ -51,7 +51,20 @@ export const getHintController = async (req: Request, res: Response): Promise<vo
 	}
 	res.send(toHintRes(hints))
 }
-
+export const updateHintController = async (req:Request,res:Response): Promise<void> => {
+	const user = req.user as String
+	const yearNumber = user.substring(0, 2)
+	let hints
+	if (yearNumber == '63') {
+		await Hint.updateMany({ reciever: user },{seen:true},{new:true})
+		hints = await Hint.find({ reciever: user })
+		console.log(hints)
+	} else {
+		res.status(400).send({ error: 'Cannot update seen' })
+		return
+	}
+	res.send(toHintRes(hints))
+}
 const toHintRes = (hints: Array<any>): Array<HintResBody> => {
 	const arr: Array<HintResBody> = []
 	hints.forEach(ele => {
