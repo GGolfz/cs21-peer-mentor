@@ -10,7 +10,7 @@ const secret = 'somesecret'
 
 export const getTokenController = async (req: Request, res: Response): Promise<void> => {
 	// const student_id = req.user
-	const student_id = '62130500216'
+	const student_id = '62130500212'
 	try {
 		const hashed = crypto.MD5(student_id).toString()
 		let token = ''
@@ -30,14 +30,18 @@ interface newBadgeReqBody {
 }
 
 export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody>, res: Response): Promise<void> => {
-	const student_id = req.user
-	// const student_id = '62130500230'
+	// const student_id = req.user
+	const student_id = '62130500230'
 	if (!req.body.token) {
 		res.status(400).send({ error: 'JWT from qrcode is required' })
 		return
 	}
 	// Decode the token
-	const decoded: any = jwt.verify(req.body.token, secret)
+	const targetID = await redis.get(req.body.token)
+	if (!targetID) {
+		res.status(400).send({ error: 'Token is expired or never exist' })
+		return
+	}
 
 	// Get the user and element
 	const user: any = await User.findOne({ student_id }).populate('badges')
@@ -48,7 +52,7 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 	if (!user.badges) {
 		user.badges = []
 	}
-	const element: any = await Element.findOne({ member: decoded.student_id.substring(9) })
+	const element: any = await Element.findOne({ member: targetID.substring(9) })
 	if (!element) {
 		res.status(404).send({ error: 'Element is not found' })
 		return
