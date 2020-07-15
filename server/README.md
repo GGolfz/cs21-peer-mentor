@@ -26,6 +26,14 @@ Run `yarn dev` to start the server
 >
 > // Right now after authen it redirect user to /test (I would change to the frontend page later)
 
+**GET** `/logout`
+
+> Make a GET request to this and attach a cookie. It would sign you out
+>
+> Success Response `200`
+>
+> Error Response `401`
+
 ---
 
 ### Profile Route
