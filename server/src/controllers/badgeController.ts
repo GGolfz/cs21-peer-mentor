@@ -11,11 +11,23 @@ export const getTokenController = async (req: Request, res: Response): Promise<v
 	// const student_id = '62130500212'
 	try {
 		const hashed = crypto.MD5(student_id).toString()
-		let token = ''
-		for (let i = 0; i < 5; i++) {
-			const index = Math.random() * hashed.length
-			token += hashed.charAt(index)
+		let token = '059a7'
+		let unique = false
+		while (!unique) {
+			for (let i = 0; i < 5; i++) {
+				const index = Math.random() * hashed.length
+				token += hashed.charAt(index)
+			}
+			const cache = await redis.get(token)
+			console.log(cache)
+			if (!cache) {
+				unique = true
+				break
+			} else {
+				token = ''
+			}
 		}
+
 		await redis.setex(token, 300, student_id)
 		res.send({ token })
 	} catch (err) {
