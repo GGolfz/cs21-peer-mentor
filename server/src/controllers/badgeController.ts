@@ -6,11 +6,10 @@ import { User } from '../models/user'
 import { Element } from '../models/element'
 
 // const sercre = process.env.JWT_SECRET
-const secret = 'somesecret'
 
 export const getTokenController = async (req: Request, res: Response): Promise<void> => {
-	// const student_id = req.user
-	const student_id = '62130500212'
+	const student_id = req.user as string
+	// const student_id = '62130500212'
 	try {
 		const hashed = crypto.MD5(student_id).toString()
 		let token = ''
@@ -30,8 +29,8 @@ interface newBadgeReqBody {
 }
 
 export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody>, res: Response): Promise<void> => {
-	// const student_id = req.user
-	const student_id = '62130500230'
+	const student_id = req.user
+	// const student_id = '62130500230'
 	if (!req.body.token) {
 		res.status(400).send({ error: 'JWT from qrcode is required' })
 		return
