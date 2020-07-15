@@ -52,7 +52,7 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 		await user.save()
 	} // TODO
 	// What to return?
-	res.send(user)
+	res.status(201).send(user)
 }
 
 export const getBadgesController = async (req: Request, res: Response): Promise<void> => {

@@ -118,5 +118,60 @@ Run `yarn dev` to start the server
 >
 > Error Response `400 401`
 
-### 
+---
 
+### Badge Route
+
+**GET** `/token`
+
+> Get Json Web Token to be used in qrcode generation later
+>
+> Response Body
+>
+> ```json
+> {
+>     "token": "String"
+> }
+> ```
+>
+> Error Response `401`
+
+**GET** `/badge`
+
+> Get user owned badges 
+>
+> Response Body
+>
+> ```json
+> [
+>     {
+>         "_id": "String",
+>         "name": "String",
+>         "thai_name": "String",
+>         "image_url": "String",
+>         member: ["String"]
+>     }
+> ]
+> ```
+>
+> If user own nothing, empty array will be return
+>
+> Error Response `401`
+
+**POST** `/badge`
+
+> Claim the badge by using JWT from the qrcode
+>
+> Request Body
+>
+> ```json
+> {
+>     "token": "String"
+> }
+> ```
+>
+> Success Response `201`
+>
+> Error Response `401 404`
+
+---
