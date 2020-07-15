@@ -1,22 +1,20 @@
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
-import qr from 'qrcode'
 import { User } from '../models/user'
 import { Element } from '../models/element'
 
 // const sercre = process.env.JWT_SECRET
 const secret = 'somesecret'
 
-export const getQRController = async (req: Request, res: Response): Promise<void> => {
-	// const student_id = req.user
-	const student_id = '62130500230'
+export const getTokenController = async (req: Request, res: Response): Promise<void> => {
+	const student_id = req.user
+	// const student_id = '62130500216'
 
 	const signedIDToken: String = jwt.sign({ student_id }, secret, {
 		algorithm: 'HS256',
-		// expiresIn: '5m',
+		expiresIn: '5m',
 	})
-	console.log(signedIDToken)
-	// const qrcode = await qr.toFile('uploads/temp.png', `${signedIDToken}`, { type: 'png' })
+	res.send({ token: signedIDToken })
 }
 
 interface newBadgeReqBody {
@@ -24,8 +22,8 @@ interface newBadgeReqBody {
 }
 
 export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody>, res: Response): Promise<void> => {
-	// const student_id = req.user
-	const student_id = '62130500230'
+	const student_id = req.user
+	// const student_id = '62130500230'
 	if (!req.body.token) {
 		res.status(400).send({ error: 'JWT from qrcode is required' })
 		return
@@ -55,4 +53,15 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 	} // TODO
 	// What to return?
 	res.send(user)
+}
+
+export const getBadgesController = async (req: Request, res: Response): Promise<void> => {
+	const student_id = req.user
+	// const student_id = '62130500230'
+	const user: any = await User.findOne({ student_id }, 'badges').populate('badges')
+	if (!user) {
+		res.send([])
+		return
+	}
+	res.send(user.badges)
 }
