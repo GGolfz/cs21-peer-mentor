@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { User } from '../models/user'
 import { Name } from '../models/name'
 import { Element } from '../models/element'
+import { determineYear } from '../util/determineYear'
 
 export const authCallbackController = async (req: Request, res: Response): Promise<void> => {
 	if (req.user) {
@@ -89,20 +90,4 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 	}
 
 	done(null, student_id)
-}
-
-const determineYear = (id: String): String => {
-	const year = id.substring(0, 2)
-	switch (year) {
-		case '63':
-			return '1'
-		case '62':
-			return '2'
-		case '61':
-			return '3'
-		case '60':
-			return '4'
-		default:
-			return 'Error'
-	}
 }
