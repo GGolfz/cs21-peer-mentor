@@ -4,8 +4,8 @@ import { getTokenController, getNewBadgeController, getBadgesController } from '
 
 export const badgeRoute = Router()
 
-badgeRoute.get('/token', verifyAuth, getTokenController)
+badgeRoute.get('/token', getTokenController)
 
-badgeRoute.post('/badge', verifyAuth, getNewBadgeController)
+badgeRoute.post('/badge', getNewBadgeController)
 
 badgeRoute.get('/badge', verifyAuth, getBadgesController)
