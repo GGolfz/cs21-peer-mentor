@@ -31,13 +31,15 @@ const Nav = ({year,hint}) => {
   })
   const showHint = ()=>{
     setVisible(true)
-    axios.patch('/hint').then(async res=>{
-      await setHints(res.data)
-      await setNotify(calculateNotify(res.data))
-    })
-    .catch(err=>{
-      console.log(err)
-    })
+    if(year === '1'){
+      axios.patch('/hint').then(async res=>{
+        await setHints(res.data)
+        await setNotify(calculateNotify(res.data))
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+    }
   }
   const handleClose = ()=>{
     setVisible(false)
@@ -90,9 +92,11 @@ const Nav = ({year,hint}) => {
             )
         }
         { 
-          hints.map((el,index)=>{
-          return <Hint key={index} message={el.message} time={new Date(el.created_at).toLocaleDateString()} />
-        })}
+          
+          hints.reverse().map((el,index)=>{
+          return <Hint key={index} message={el.message} seen={el.seen} time={new Date(el.created_at).toLocaleDateString()} />
+          })
+        }
       </Modal>
       
       <div className="button-list">

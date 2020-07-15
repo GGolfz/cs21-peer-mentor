@@ -16,7 +16,7 @@ function Profile({data}) {
   return (
     <div className="container">
       <BlackScreen />
-      <Nav year = {data.year} hint={data.hint}/>
+      <Nav year = {data.year} hint={data.hint?data.hint:[]}/>
           {
             !data.err && (
               <div className="content">

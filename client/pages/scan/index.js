@@ -47,7 +47,7 @@ const Scan = ({data1})=> {
   return (
     <div className="container">
       <BlackScreen />
-      <Nav year = {data1.year}/>
+      <Nav year = {data1.year} hint={data1.hint?data1.hint:[]}/>
       <div className="content">
         <div className="head-content">
           <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>Add Friend</h1>
@@ -114,7 +114,10 @@ export async function getServerSideProps(ctx) {
   if(ctx.req.headers.cookie){
     const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
     const data1 = await res.data
-    return { props: { data1 }}
+    const res3 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
+    const hint = await res3.data
+    const data2 = {...data1,hint:hint}
+    return { props: { data1:data2 }}
   }
   else{
     return { props: { data1: {err:true}}}

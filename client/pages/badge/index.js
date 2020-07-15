@@ -132,7 +132,7 @@ function Badge({data}) {
   return (
     <div className="container">
       <BlackScreen />
-      <Nav year = {data.year}/>
+      <Nav year = {data.year} hint={data.hint?data.hint:[]}/>
       <div className="content">
       <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>BADGE</h1>
         <Row>

@@ -12,7 +12,7 @@ function Chat({data}) {
   return (
     <div className="container">
       <BlackScreen />
-      <Nav year = {data.year}/>
+      <Nav year = {data.year} hint={data.hint?data.hint:[]}/>
       <div className="content">
         CONTENT ZONE
         CHAT
@@ -52,7 +52,9 @@ export async function getServerSideProps(ctx) {
   if(ctx.req.headers.cookie){
     const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
     const data1 = await res.data
-    return { props: { data:{year:data1.year} }}
+    const res3 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
+    const hint = await res3.data
+    return { props: { data:{year:data1.year,hint:hint} }}
   }
   else{
     return { props: { data: {err:true}}}
