@@ -2,7 +2,7 @@ import React from 'react'
 const AppLogo = () =>{
     return (
         <div className="appLogo">
-            THIS IS LOGO
+            <img src="/logo.png" width="50%"/>
             <style jsx>
                 {
                     `

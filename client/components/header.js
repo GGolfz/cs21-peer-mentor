@@ -11,9 +11,9 @@ export default  Headers = ()=> {
             <title>CS21 Peer Mentor</title>
             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></link>
             <link rel='manifest' href='/manifest.json' />
-            <link href='/favicon-16x16.png' rel='icon' type='image/png' sizes='16x16' />
-            <link href='/favicon-32x32.png' rel='icon' type='image/png' sizes='32x32' />
-            <link rel='apple-touch-icon' href='/apple-icon.png'></link>
+            <link href='/favicon.ico' rel='icon' type='image/png' sizes='16x16' />
+            <link href='/favicon.ico' rel='icon' type='image/png' sizes='32x32' />
+            <link rel='apple-touch-icon' href='/logo.png'/>
             <meta name='theme-color' content='#d4af5f' />
             <link rel='stylesheet'   href='https://cdnjs.cloudflare.com/ajax/libs/antd/3.22.0/antd.min.css' />
             <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Roboto:wght@100&display=swap" rel="stylesheet"></link>

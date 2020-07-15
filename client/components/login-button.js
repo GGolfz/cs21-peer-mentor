@@ -1,13 +1,14 @@
 import React from 'react'
 import MicrosoftIcon from './microsoft-icon'
-import { Button } from 'antd'
+import { Button, AutoComplete } from 'antd'
 const LoginButton = ()=>{
     return(
         <Button id="login-button" style={{
-            backgroundColor:"rgba(52,58,64,.1)",
-            borderColor:"rgba(52,58,64,.1)",
+            backgroundColor:"rgba(255,255,255,.5)",
+            borderColor:"rgba(52,58,64,.2)",
             color: "#343a40",
             display: "flex",
+            margin:"auto",
             alignItems: "center",
             fontSize: "1.2em"
             }}icon={<MicrosoftIcon />} size="large">

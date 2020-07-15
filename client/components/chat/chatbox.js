@@ -1,0 +1,51 @@
+import React from 'react'
+import {Card,Row,Col} from 'antd'
+const ChatBox = ({data}) =>{
+    console.log(data)
+    return (
+        <Card>
+            <Row style={{display:"flex",alignItems:"center"}}>
+                <Col span={5}>
+                    <img src={data.profile_image} style={{borderRadius:"200px"}} width="100%"/>
+                </Col>
+                <Col span={15}>
+                    <Row style={{textAlign:"left"}}>
+                    <Col span={24} style={{paddingLeft:"5%"}}>{data.name}</Col>
+                    <Col span={24} style={{paddingLeft:"5%"}}>({data.bio})</Col>
+                    <Col span={24} style={{paddingLeft:"5%"}}>You: {data.latest}</Col>
+                    </Row>
+                </Col>
+                <Col span={4}>
+                    <Row style={{justifyContent:"center",display:"flex"}}>
+                        <Col 
+                          span={24} 
+                          style={{
+                              fontSize:"1.2em",
+                              background:"#4BB543",
+                              color:"#FFFFFF",
+                              borderRadius:"50%",
+                              width:"35px",
+                              height:"35px",
+                              display:"flex",
+                              alignItems:"center",
+                              justifyContent: "center"
+                            }}>{data.notify}</Col>
+                    </Row>
+                    <Row style={{marginTop:"15%"}}>
+                        <Col span={24} style={{}}>{data.time}</Col>
+                    </Row>
+                </Col>
+            </Row>
+            <style jsx>
+                {
+                    `
+                    :global(.ant-card-body) {
+                        padding: 12px 18px !important;
+                    }
+                    `
+                }
+            </style>
+        </Card>
+    )
+}
+export default ChatBox;

@@ -45,6 +45,8 @@ export default function Home() {
             display:flex;
             align-items:center;
             justify-content:center;
+            background: rgb(255,248,220);
+            background: linear-gradient(0deg, rgba(255,248,220,1) 0%, rgba(249,198,171,1) 100%);
           }
           `
         }

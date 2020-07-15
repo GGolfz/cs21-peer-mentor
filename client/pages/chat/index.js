@@ -1,8 +1,11 @@
 import React, {useEffect} from 'react'
+import Router from 'next/router'
 import Nav from '../../components/nav'
 import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
 import axios from '../../axios/axios'
+import ChatBox from '../../components/chat/chatbox'
+import ChatRoom from '../../components/chat/chatroom'
 function Chat({data}) {
   useEffect(()=>{
     if(data.err){
@@ -14,8 +17,8 @@ function Chat({data}) {
       <BlackScreen />
       <Nav year = {data.year} hint={data.hint?data.hint:[]}/>
       <div className="content">
-        CONTENT ZONE
-        CHAT
+        {/* <ChatBox data={Object.assign({name:"GGolfz",bio:"Just a lazy guy",time:"20:00",profile_image:"https://storage.googleapis.com/cs21-peer-mentor/profile_img/03f117c211441309686defff2058d7e4.webp"},{latest:"เบื่อ",notify:"3"})}/> */}
+        <ChatRoom />
       </div>
       <ControlBar/>
       <style jsx>{
