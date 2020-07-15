@@ -1,9 +1,12 @@
 import React,{useState} from 'react'
 import { Input } from 'antd'
+import axios from '../../axios/axios'
 const {Search} = Input
 function ShowProfile ({img,display,name,bio,year}) {
-    const [tempDisplay,setTempDisplay] = useState(display)
-    const [tempBio,setTempBio] = useState(bio)
+    const [displayName,setDisplay] = useState(display)
+    const [curbio,setBio] = useState(bio)
+    const [tempDisplay,setTempDisplay] = useState(displayName)
+    const [tempBio,setTempBio] = useState(curbio)
     const editDisplay = ()=>{
         document.getElementById("showdisplay").style.display = "none";
         document.getElementById("editdisplay").style.display = "block";
@@ -11,6 +14,7 @@ function ShowProfile ({img,display,name,bio,year}) {
     const saveDisplay = ()=>{
         document.getElementById("showdisplay").style.display = "block";
         document.getElementById("editdisplay").style.display = "none";
+        save()
     }
     const editBio = ()=>{
         document.getElementById("showbio").style.display = "none";
@@ -19,6 +23,18 @@ function ShowProfile ({img,display,name,bio,year}) {
     const saveBio = ()=>{
         document.getElementById("showbio").style.display = "block";
         document.getElementById("editbio").style.display = "none";
+        save()
+    }
+    const save = () => {
+        axios.patch('/profile',{bio:tempBio,display_name:tempDisplay})
+        .then(
+            res=>{
+                setDisplay(res.data.display_name)
+                setBio(res.data.bio)
+            }
+        ).catch(err=>{
+            console.log(err)
+        })
     }
     const changeDisplay = e=>{
         setTempDisplay(e.target.value)
@@ -29,7 +45,7 @@ function ShowProfile ({img,display,name,bio,year}) {
     return (
     <div className="show-profile">
         <div className="displayName" id="showdisplay">
-            <span>{display} </span>
+            <span>{displayName} </span>
             <span className="material-icons" style={{fontSize:"0.9em",cursor:"pointer"}} onClick={editDisplay}>edit</span>
         </div>
         <div className="editDisplay" id="editdisplay" style={{display:"none"}}>
@@ -41,7 +57,7 @@ function ShowProfile ({img,display,name,bio,year}) {
         </div>
         <div className="bio" id="showbio">
             Bio <span className="material-icons" style={{fontSize:"0.9em",cursor:"pointer"}} onClick={editBio}>edit</span> <br/>
-            <div>{bio}</div>
+            <div>{curbio}</div>
         </div>
         <div className="editBio" id="editbio" style={{display:"none"}}>
             <Search placeholder="Bio" value={tempBio} enterButton="SAVE" onChange={changeBio} onSearch={saveBio} maxLength="40"/>
@@ -49,6 +65,18 @@ function ShowProfile ({img,display,name,bio,year}) {
         <style jsx>
             {
                 `
+                .editDisplay{
+                    margin-bottom: 2%;
+                }
+                .displayName{
+                    margin-bottom: 2%;
+                }
+                .bio{
+                    margin-bottom: 2%;
+                }
+                .editBio{
+                    margin-bottom: 2%;
+                }
                 .show-profile {
                     padding: 0% 8%;
                     font-size: 1.2em;
@@ -56,6 +84,7 @@ function ShowProfile ({img,display,name,bio,year}) {
                 }
                 .fix-detail{
                     display:flex;
+                    margin-bottom: 2%;
                 }
                 .name{
                     width:75%;

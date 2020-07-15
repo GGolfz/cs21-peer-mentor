@@ -1,10 +1,11 @@
 import React, { useState , useEffect} from 'react'
 import ReactCrop from 'react-image-crop'
 import {  Modal, Button  } from 'antd'
+import axios from '../../axios/axios'
 let imageRef =null
 let profile_pic = null
-function EditImage() {
-    const [prosrc,setPro] = useState('https://lh3.googleusercontent.com/IeNJWoKYx1waOhfWF6TiuSiWBLfqLb18lmZYXSgsH1fvb8v1IYiZr5aYWe0Gxu-pVZX3')
+function EditImage({img}) {
+    const [prosrc,setPro] = useState(img?img:"")
     const [src,setSrc] = useState('')
     const [crop,setCrop] = useState({unit: "%",width: 50,aspect: 1 / 1})
     const [croppedImg,setCroppedImg] = useState(null)
@@ -25,6 +26,18 @@ function EditImage() {
         e.preventDefault()
         setVisible(false)
         console.log(croppedImg)
+        const formData = new FormData()
+        formData.append('profile_pic',croppedImg)
+        axios.post('/profilepic',formData,{headers:{'content-type': 'multipart/form-data'}})
+        .then(
+            (res)=>{
+                setPro(res.data.profile_img)
+            }
+        ).catch(
+            (err)=>{
+                console.log(err)
+            }
+        )
     }
     const onImageLoaded = image => {
         imageRef = image
