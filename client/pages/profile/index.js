@@ -6,6 +6,7 @@ import ShowProfile from '../../components/profile/show-profile'
 import axios from '../../axios/axios'
 import ProfileImg from '../../components/profile/edit-image'
 import Router from 'next/router'
+import QRCode from "react-qr-code";
 function Profile({data}) {
   useEffect(()=>{
     if(data.err){
@@ -21,6 +22,10 @@ function Profile({data}) {
           <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>PROFILE</h1>
           <ProfileImg img={data.profile_img} />
           <ShowProfile display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
+        </div>
+        <div className="qr-content">
+        <QRCode size={128} level='L' value={data.token?data.token:""}/>
+        <h2 style={{marginBottom:"0%"}}>Code : {data.token}</h2>
         </div>
       </div>
       <ControlBar/>
@@ -48,7 +53,12 @@ function Profile({data}) {
           .inside-content{
             text-align:center;
             background: #FFFFFF;
-
+          }
+          .qr-content {
+            margin-top: 6%;
+            padding: 4% 0%;
+            background: #FFFFFF;
+            text-align:center;
           }
           .content {
             height:82vh !important;
@@ -61,13 +71,21 @@ function Profile({data}) {
   )
 }
 export async function getServerSideProps(ctx) {
-  if(ctx.req.headers.cookie){
-    const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
-    const data = await res.data
-    return { props: { data } }
+  try{
+    if(ctx.req.headers.cookie){
+      const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
+      const data1 = await res.data
+      const res2 = await axios.get('/token',{headers: { cookie: ctx.req.headers.cookie }})
+      const token1 = await res2.data
+      const data = {...data1,token:token1.token}
+      return { props: { data } }
+    }
+    else{
+      return { props: { data: {err:true}}}
+    }
   }
-  else{
-    return { props: { data: {err:true}}}
+  catch(err){
+    return {props: {data:{err:true}}}
   }
     
 }

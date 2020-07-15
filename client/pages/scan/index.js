@@ -1,14 +1,61 @@
+import React, { useState } from 'react'
 import Nav from '../../components/nav'
 import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
-function Scan() {
+import dynamic from "next/dynamic";
+import {Input} from 'antd';
+import axios from '../../axios/axios'
+const {Search} = Input
+const QrReader = dynamic(() => import('react-qr-reader'), { ssr: false});
+
+const Scan = (cookie)=> {
+  const [result,setResult] = useState('')
+  const handleScan = data => {
+    if (data) {
+      setResult(data)
+      axios.post('/badge',{token:data}).then(
+        (res)=>{
+          setResult('')
+        }
+      ).catch(err=>{
+        console.log(err)
+      })
+    }
+  }
+  const handleSearch = () => {
+    if (result !== ''){
+      axios.post('/badge',{token:result}).then(
+        (res)=> {
+          setResult('')
+        }
+      ).catch(err=>{
+        console.log(err)
+      })
+    }
+  }
+  const handleChange = (e) => {
+    setResult(e.target.value)
+  }
+  const handleError = err => {
+    console.error(err)
+  }
   return (
     <div className="container">
       <BlackScreen />
       <Nav />
       <div className="content">
-        CONTENT ZONE
-        SCAN
+        <div className="head-content">
+          <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>Add Friend</h1>
+        </div>
+
+        <div className="inside-content">
+        <div style={{textAlign:"left",fontSize:"1.2em"}}>Enter Friend Code</div>
+        <Search enterButton="ADD" onChange={handleChange} onSearch={handleSearch} />
+        <div className="or-text">OR</div>
+        <div className="qr-code-reader">
+        <QrReader delay={300} onScan={handleScan} onError={handleError}  style={{ width: '70%' }} />    
+        </div>
+        </div>
       </div>
       <ControlBar/>
       <style jsx>{
@@ -33,13 +80,39 @@ function Scan() {
             height:100vh;
           }
           .content {
-            height:85vh !important;
+            height:82vh !important;
             text-align:center;
+            background: #d4af5f44;
+          }
+          .head-content {
+            background: #FFFFFF;
+            padding-bottom: 2%;
+          }
+          .inside-content {
+            padding: 3% 8%;
+            background: #FFFFFF;
+            margin-top:5%;
+          }
+          .or-text {
+            margin: 5% 0%;
+          }
+          .qr-code-reader{
+            display:flex;
+            justify-content:center;
+            margin-bottom:5%;
           }
           `
         }</style>
     </div>
   )
 }
+export async function getServerSideProps(ctx) {
+  if(ctx.req.headers.cookie){
+    return { props: { cookie: ctx.req.headers.cookie}}
+  }
+  else{
+    return { props: { cookie: {err:true}}}
+  }
 
+}
 export default Scan;

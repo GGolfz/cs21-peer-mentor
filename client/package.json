@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "export": "next export",
     "start": "NODE_ENV=production node .next/production-server/index.js"
   },
   "dependencies": {
@@ -19,6 +20,9 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-image-crop": "^8.6.4",
+    "react-qr-code": "^1.0.2",
+    "react-qr-reader": "^2.2.1",
+    "react-qr-scanner": "0.0.9",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "typescript": "^3.9.6"

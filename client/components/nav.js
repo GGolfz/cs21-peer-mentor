@@ -64,7 +64,7 @@ const Nav = ({year}) => {
         </span>
         <span style={{cursor:"pointer",position:"relative",left:"-1%",top:"2%",color:"#ff4d4f" }} onClick={showHint}>{notify>0?notify:""}</span>
       <div className="button-list">
-        <Link href="/"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></Link>
+        <a href="http://localhost:3050/logout"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></a>
       </div>
       <Modal onCancel={closeAdd} visible={addVisible} width="auto" footer={null} style={{textAlign:"center",padding:"2%"}}>
         <h2 style={{fontSize:"1.4em"}}>ADD HINT</h2>

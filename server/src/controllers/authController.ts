@@ -26,7 +26,7 @@ export const verifyAuth = async (req: Request, res: Response, next: NextFunction
 
 export const logoutController = (req: Request, res: Response): void => {
 	req.logout()
-	res.send({ success: true })
+	res.redirect('http://localhost:3000')
 }
 
 interface UserAttributes {

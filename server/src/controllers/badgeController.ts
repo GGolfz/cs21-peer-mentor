@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import jwt from 'jsonwebtoken'
 import { redis } from '../util/redis'
 import crypto from 'crypto-js'
 import { User } from '../models/user'

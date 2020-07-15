@@ -33,7 +33,7 @@ function Chat() {
             height:100vh;
           }
           .content {
-            height:85vh !important;
+            height:82vh !important;
             text-align:center;
           }
           `

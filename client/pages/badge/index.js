@@ -1,14 +1,24 @@
+import React, {useEffect} from 'react'
 import Nav from '../../components/nav'
 import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
-function Badge() {
+import axios from '../../axios/axios'
+function Badge({data}) {
+  useEffect(()=>{
+    if(data.err){
+      Router.push('/')
+    }
+  })
   return (
     <div className="container">
       <BlackScreen />
       <Nav />
       <div className="content">
-        CONTENT ZONE
-        BADGE
+        {
+          data.badge.map(el=>{
+          return (<div>{el.name}</div>)
+          })
+        }
       </div>
       <ControlBar/>
       <style jsx>{
@@ -33,7 +43,7 @@ function Badge() {
             height:100vh;
           }
           .content {
-            height:85vh !important;
+            height:82vh !important;
             text-align:center;
           }
           `
@@ -41,5 +51,20 @@ function Badge() {
     </div>
   )
 }
-
+export async function getServerSideProps(ctx) {
+  try{
+    if(ctx.req.headers.cookie){
+      const res = await axios.get('/badge',{headers: { cookie: ctx.req.headers.cookie }})
+      const data = await res.data
+      return { props: { data:{badge:data} } }
+    }
+    else{
+      return { props: { data: {err:true}}}
+    }
+  }
+  catch(err){
+    return {props: {data:{err:true}}}
+  }
+    
+}
 export default Badge;
