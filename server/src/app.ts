@@ -8,6 +8,7 @@ import { testRouter } from './routers/testRoute'
 import { authRoute } from './routers/authRoute'
 import { profileRoute } from './routers/profileRoute'
 import { hintRoute } from './routers/hintRoute'
+import { badgeRoute } from './routers/badgeRoute'
 
 export const app: express.Application = express()
 
@@ -51,3 +52,4 @@ app.use(testRouter)
 app.use(authRoute)
 app.use(profileRoute)
 app.use(hintRoute)
+app.use(badgeRoute)

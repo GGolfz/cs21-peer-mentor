@@ -7,14 +7,13 @@ import sharp from 'sharp'
 export const getProfileController = async (req: Request, res: Response): Promise<void> => {
 	const student_id = req.user
 	const userProfile = await User.findOne({ student_id }).populate('element')
-	console.log(userProfile)
 	res.send(toProfileRes(userProfile))
 }
 
 interface profileResBody {
 	display_name: String
 	name: String
-	profile_url: String
+	profile_img: String
 	bio: String
 	year: String
 	element: {
@@ -30,7 +29,6 @@ interface updatedFields {
 }
 
 export const updateProfileController = async (req: Request<{}, {}, updatedFields>, res: Response): Promise<void> => {
-	//Temporarily checking
 	const student_id = req.user
 	if (!req.body.bio && !req.body.display_name) {
 		res.status(400).send({ Error: 'Input is empty. Please includes' })
@@ -46,7 +44,7 @@ export const updateProfileController = async (req: Request<{}, {}, updatedFields
 		{
 			new: true,
 		}
-	)
+	).populate('element')
 	res.send(toProfileRes(profile))
 }
 
@@ -70,14 +68,14 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 		// Optimize the image
 		await sharp(originalFilePath)
 			.resize({
-				height: 200,
-				width: 200,
+				height: 400,
+				width: 400,
 			})
-			.webp()
+			.webp({})
 			.toFile(optimizedFilePath)
 
 		const student_id = req.user
-		// const student_id = 62130500230 // Placeholder
+		// const student_id = '62130500230' // Placeholder
 
 		// Upload to Google Cloud Storage
 		const storage = new Storage({ keyFilename: 'GCS-service-account.json' })
@@ -89,7 +87,11 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 
 		const gcsFilePath = `https://storage.googleapis.com/cs21-peer-mentor/${gcsFile[0].name}`
 		// Write image url to db
-		const profile = await User.findOneAndUpdate({ student_id }, { profile_img: gcsFilePath }, { new: true })
+		const profile = await User.findOneAndUpdate(
+			{ student_id },
+			{ profile_img: gcsFilePath },
+			{ new: true }
+		).populate('element')
 		res.status(201).send(toProfileRes(profile))
 	} catch (err) {
 		res.status(500).send({ error: err })
@@ -103,7 +105,7 @@ const toProfileRes = (profile: any): profileResBody => {
 	return {
 		display_name: profile.display_name,
 		name: profile.name,
-		profile_url: profile.profile_url,
+		profile_img: profile.profile_img,
 		bio: profile.bio,
 		year: profile.year,
 		element: {
