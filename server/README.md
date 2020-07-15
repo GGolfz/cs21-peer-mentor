@@ -132,7 +132,7 @@ Run `yarn dev` to start the server
 
 **GET** `/token`
 
-> Get Json Web Token to be used in qrcode generation later
+> Get token to be used in qrcode generation later
 >
 > Response Body
 >
@@ -168,7 +168,7 @@ Run `yarn dev` to start the server
 
 **POST** `/badge`
 
-> Claim the badge by using JWT from the qrcode
+> Claim the badge by using token from the qrcode
 >
 > Request Body
 >

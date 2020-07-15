@@ -1,20 +1,27 @@
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
+import { redis } from '../util/redis'
+import crypto from 'crypto-js'
 import { User } from '../models/user'
 import { Element } from '../models/element'
 
 // const sercre = process.env.JWT_SECRET
-const secret = 'somesecret'
 
 export const getTokenController = async (req: Request, res: Response): Promise<void> => {
-	const student_id = req.user
-	// const student_id = '62130500216'
-
-	const signedIDToken: String = jwt.sign({ student_id }, secret, {
-		algorithm: 'HS256',
-		expiresIn: '5m',
-	})
-	res.send({ token: signedIDToken })
+	const student_id = req.user as string
+	// const student_id = '62130500212'
+	try {
+		const hashed = crypto.MD5(student_id).toString()
+		let token = ''
+		for (let i = 0; i < 5; i++) {
+			const index = Math.random() * hashed.length
+			token += hashed.charAt(index)
+		}
+		await redis.setex(token, 300, student_id)
+		res.send({ token })
+	} catch (err) {
+		res.status(500).send(err)
+	}
 }
 
 interface newBadgeReqBody {
@@ -29,7 +36,11 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 		return
 	}
 	// Decode the token
-	const decoded: any = jwt.verify(req.body.token, secret)
+	const targetID = await redis.get(req.body.token)
+	if (!targetID) {
+		res.status(400).send({ error: 'Token is expired or never exist' })
+		return
+	}
 
 	// Get the user and element
 	const user: any = await User.findOne({ student_id }).populate('badges')
@@ -40,7 +51,7 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 	if (!user.badges) {
 		user.badges = []
 	}
-	const element: any = await Element.findOne({ member: decoded.student_id.substring(9) })
+	const element: any = await Element.findOne({ member: targetID.substring(9) })
 	if (!element) {
 		res.status(404).send({ error: 'Element is not found' })
 		return
