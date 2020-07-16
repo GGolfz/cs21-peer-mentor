@@ -11,24 +11,24 @@ const userSchema = new Schema({
 	token: String,
 	element: {
 		type: Schema.Types.ObjectId,
-		ref: 'element',
+		ref: 'element'
 	},
 	badges: [
 		{
 			type: Schema.Types.ObjectId,
-			ref: 'element',
-		},
+			ref: 'element'
+		}
 	],
 	created_at: {
 		type: Date,
-		default: new Date(),
-	},
-	friends: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: 'user',
-		},
-	],
+		default: new Date()
+	}
+	// rooms: [
+	// 	{
+	// 		type: Schema.Types.ObjectId,
+	// 		ref: 'room'
+	// 	}
+	// ]
 })
 
 export const User = model('user', userSchema)

@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { redis } from '../util/redis'
 import crypto from 'crypto-js'
 import { User } from '../models/user'
+import { Room } from '../models/room'
 import { Element } from '../models/element'
 import { determineYear } from '../util/determineYear'
 
@@ -37,6 +38,12 @@ interface newBadgeReqBody {
 	token: string
 }
 
+interface newRoomSchema {
+	type: String
+	member: Array<any>
+	messages: Array<any>
+}
+
 export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody>, res: Response): Promise<void> => {
 	const student_id = req.user as String
 	// const student_id = '62130500230'
@@ -58,13 +65,12 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 	}
 
 	// Get the user
-	const user: any = await User.findOne({ student_id }).populate('badges').populate('friends')
+	const user: any = await User.findOne({ student_id }).populate('badges')
 	if (!user) {
 		res.status(404).send({ error: 'User is not found' })
 		return
 	}
 	if (!user.badges) user.badges = []
-	if (!user.friends) user.friends = []
 
 	// Check of element or year badge
 	const targetYear = determineYear(targetID)
@@ -82,14 +88,25 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 			return
 		}
 	}
-	console.log(user)
 	// Check if user aleady own that element badge
 	const isOwnedElement = addIfNotExistOnId(badge, user.badges)
 	if (isOwnedElement) {
-		const targetUser = await User.findOne({ student_id: targetID })
-		addIfNotExistOnId(targetUser, user.friends)
-		console.log(user)
 		await user.save()
+	}
+
+	// Create new chat room for user and target user
+	const targetUser = await User.findOne({ student_id: targetID })
+	const existingRoom = await Room.findOne({
+		member: { $all: [user._id, targetUser?._id] },
+		type: 'General'
+	})
+	if (!existingRoom) {
+		const newRoom: newRoomSchema = {
+			type: 'General',
+			messages: [],
+			member: [user, targetUser]
+		}
+		await Room.create(newRoom)
 	}
 
 	res.status(201).send(user)
