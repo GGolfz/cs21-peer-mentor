@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
+import { Types } from 'mongoose'
 import { User } from '../models/user'
 import { Name } from '../models/name'
+import { Room } from '../models/room'
 import { Element } from '../models/element'
 import { determineYear } from '../util/determineYear'
 
@@ -31,6 +33,7 @@ export const logoutController = (req: Request, res: Response): void => {
 }
 
 interface UserAttributes {
+	_id: Types.ObjectId
 	student_id: String
 	email: String
 	year: String
@@ -39,6 +42,7 @@ interface UserAttributes {
 	bio: String
 	profile_img: String
 	element: String
+	// rooms: Array<any>
 }
 
 export const passportCallback = async (accessToken: String, refreshToken: String, profile: any, done: Function) => {
@@ -56,7 +60,7 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 	if (!existingUser) {
 		// Determine the year and element of the user
 		const year = determineYear(student_id)
-		const element = await Element.findOne({ member: student_id.substring(9) })
+		const element: any = await Element.findOne({ member: student_id.substring(9) })
 		if (!element) {
 			done(`Element for ${student_id} is not found`, null)
 			return
@@ -68,12 +72,20 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 			return
 		}
 		// Create new user
+		const newUserID = Types.ObjectId()
 		const firstname = /(\w*).(\w*) (\w*)/.exec(match_name.name)
 		if (!firstname) {
 			done(`${match_name.name} cannot pass the name regex`, null)
 			return
 		}
+		// User init rooms for new user
+		await Room.updateMany(
+			{ $or: [{ name: `Code Line ${student_id.substring(9)}` }, { name: `${element.name} Code Line` }] },
+			{ $push: { member: newUserID } }
+		)
+
 		const newUser: UserAttributes = {
+			_id: newUserID,
 			student_id,
 			email: profile.emails[0].value,
 			year,
@@ -82,10 +94,8 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 			bio: '',
 			profile_img: '',
 			element: element._id
+			// rooms: []
 		}
-		// TODOS
-		// Test badges
-		console.log(newUser)
 		await User.create(newUser)
 	}
 
