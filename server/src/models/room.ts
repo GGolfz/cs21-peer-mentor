@@ -3,30 +3,31 @@ import { Schema, model } from 'mongoose'
 const messageSchema = new Schema({
 	sender: {
 		type: Schema.Types.ObjectId,
-		ref: 'user',
+		ref: 'user'
 	},
 	message: String,
 	timestamp: {
 		type: Date,
-		default: new Date(),
+		default: new Date()
 	},
 	seen: [
 		{
 			type: Schema.Types.ObjectId,
-			ref: 'user',
-		},
-	],
+			ref: 'user'
+		}
+	]
 })
 
 const roomSchema = new Schema({
 	name: String,
+	type: String,
 	member: [
 		{
 			type: Schema.Types.ObjectId,
-			ref: 'user',
-		},
+			ref: 'user'
+		}
 	],
-	messages: [messageSchema],
+	messages: [messageSchema]
 })
 
 export const Room = model('room', roomSchema)

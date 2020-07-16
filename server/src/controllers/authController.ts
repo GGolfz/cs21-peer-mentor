@@ -70,7 +70,7 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 		// Create new user
 		const firstname = /(\w*).(\w*) (\w*)/.exec(match_name.name)
 		if (!firstname) {
-			done(`${match_name.name} cannot pass the regex`, null)
+			done(`${match_name.name} cannot pass the name regex`, null)
 			return
 		}
 		const newUser: UserAttributes = {
@@ -81,7 +81,7 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 			display_name: firstname[2],
 			bio: '',
 			profile_img: '',
-			element: element._id,
+			element: element._id
 		}
 		// TODOS
 		// Test badges
