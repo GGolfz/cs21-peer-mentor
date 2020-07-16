@@ -8,8 +8,10 @@ function ShowProfile ({img,display,name,bio,year}) {
     const [tempDisplay,setTempDisplay] = useState(displayName)
     const [tempBio,setTempBio] = useState(curbio)
     const editDisplay = ()=>{
+        document.getElementById("editdisplay").style.display = "flex";
+        let x = document.getElementById("badge").width
+        document.getElementById('editdisplay').style.height = `${x}px`
         document.getElementById("showdisplay").style.display = "none";
-        document.getElementById("editdisplay").style.display = "block";
     }
     const saveDisplay = ()=>{
         document.getElementById("showdisplay").style.display = "block";
@@ -45,12 +47,12 @@ function ShowProfile ({img,display,name,bio,year}) {
     return (
     <div className="show-profile">
         <div className="displayName" id="showdisplay">
-            <span><img src={img} width="18%" /></span>
+            <span><img id="badge" src={img} width="18%" /></span>
             <span>{displayName} </span>
             <span className="material-icons" style={{fontSize:"0.9em",cursor:"pointer"}} onClick={editDisplay}>edit</span>
         </div>
         <div className="editDisplay" id="editdisplay" style={{display:"none"}}>
-            <Search placeholder="Display Name" value={tempDisplay} enterButton="SAVE" onChange={changeDisplay} onSearch={saveDisplay} maxLength="20" />
+            <Search className="edit-bar" placeholder="Display Name" value={tempDisplay} enterButton="SAVE" onChange={changeDisplay} onSearch={saveDisplay} maxLength="20" />
         </div>
         <div className="fix-detail">
             <div className="name">{name}</div>
@@ -61,7 +63,7 @@ function ShowProfile ({img,display,name,bio,year}) {
             <div>{curbio}</div>
         </div>
         <div className="editBio" id="editbio" style={{display:"none"}}>
-            <Search placeholder="Bio" value={tempBio} enterButton="SAVE" onChange={changeBio} onSearch={saveBio} maxLength="40"/>
+            <Search className="edit-bar" placeholder="Bio" value={tempBio} enterButton="SAVE" onChange={changeBio} onSearch={saveBio} maxLength="40"/>
         </div>
         <style jsx>
             {
@@ -79,9 +81,9 @@ function ShowProfile ({img,display,name,bio,year}) {
                     margin-bottom: 2%;
                 }
                 .show-profile {
-                    padding: 0% 8%;
+                    padding: 2% 3%;
                     font-size: 1.2em;
-                    height: 20vh;
+                    height: auto;
                 }
                 .fix-detail{
                     display:flex;
@@ -94,6 +96,10 @@ function ShowProfile ({img,display,name,bio,year}) {
                 .year{
                     width:25%;
                     text-align:center;
+                }
+                :global(.edit-bar) {
+                    padding:0% 5%;
+                    align-self:center;
                 }
                 `
             }

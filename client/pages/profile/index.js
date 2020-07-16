@@ -51,7 +51,7 @@ function Profile({data}) {
               <div className="inside-content" >
                 <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>PROFILE</h1>
                 <ProfileImg img={data.profile_img} />
-                <ShowProfile img="/Dark Logo.svg" display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
+                <ShowProfile img={data.element.image_url} display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
               </div>
               <div className="qr-content">
               <QRCode size={128} level='L' value={data.token?data.token:""}/>
