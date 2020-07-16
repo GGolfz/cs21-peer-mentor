@@ -95,7 +95,7 @@ const Nav = (props) => {
         <div style={{height:"60vh",overflowY:"auto"}}>
         { 
           hints.map((el,index)=>{
-          return <Hint key={index} message={el.message} seen={el.seen} time={new Date(el.created_at).toLocaleDateString()} />
+          return <Hint key={index} message={el.message} seen={el.seen} time={el.created_at} />
           })
         }
         </div>

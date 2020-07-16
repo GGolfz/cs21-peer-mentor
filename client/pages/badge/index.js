@@ -211,7 +211,9 @@ export async function getServerSideProps(ctx) {
       const data1 = await res.data
       const res2 = await axios.get('/badge',{headers: { cookie: ctx.req.headers.cookie }})
       const data2 = await res2.data
-      return { props: { data:{badge:data2,year:data1.year} } }
+      const res3 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
+      const hint = await res3.data
+      return { props: { data:{badge:data2,year:data1.year,hint:hint} } }
     }
     else{
       return { props: { data: {err:true}}}

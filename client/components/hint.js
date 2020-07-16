@@ -1,6 +1,15 @@
 import React from 'react'
 import {Card} from 'antd'
 const Hint = ({message,time,seen})=>{
+    const displayTime = (t)=>{
+        let temp = new Date(t)
+        let D = temp.getDate()
+        let M = temp.getMonth()
+        let Y = temp.getFullYear()
+        let h = temp.getHours()
+        let m = temp.getMinutes()
+        return D + "/"+ M+"/"+Y +" "+h+":"+m
+    }
     return (
         <Card style={{marginBottom:"3%"}}>
             <div style={{textAlign:"left"}}>{message}</div>
@@ -13,7 +22,7 @@ const Hint = ({message,time,seen})=>{
                 </span>
                 </div>
                 <div>
-                    {time}
+                    {displayTime(time)}
                 </div>
             </div>
         </Card>

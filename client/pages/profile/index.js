@@ -9,6 +9,7 @@ import Router from 'next/router'
 import QRCode from "react-qr-code";
 import socketIOClient from 'socket.io-client'
 let socket
+const yearImage = {2:'ปี2',3:'ปี3',4:'ปี4'}
 function Profile({data}) {
   const [notify,setNotify] = useState(0)
   const [hints,setHints] = useState(data.hint);
@@ -51,7 +52,7 @@ function Profile({data}) {
               <div className="inside-content" >
                 <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>PROFILE</h1>
                 <ProfileImg img={data.profile_img} />
-                <ShowProfile img={data.element.image_url} display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
+                <ShowProfile img={data.year!=='1'?yearImage[parseInt(data.year)]:data.element.image_url} display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
               </div>
               <div className="qr-content">
               <QRCode size={128} level='L' value={data.token?data.token:""}/>
