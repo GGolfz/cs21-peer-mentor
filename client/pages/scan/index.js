@@ -9,10 +9,11 @@ import socketIOClient from 'socket.io-client'
 const {Search} = Input
 const QrReader = dynamic(() => import('react-qr-reader'), { ssr: false});
 let socket
-const Scan = ({data1})=> {
+const Scan = ({data})=> {
   const [notify,setNotify] = useState(0)
+  const [hints,setHints] = useState(data.hint);
   useEffect(()=>{
-    if(data1.err){
+    if(data.err){
       Router.push('/')
     }
   })
@@ -31,10 +32,10 @@ const Scan = ({data1})=> {
     return ()=>{socket.emit('disconnect')}
   },[]);
   const [result,setResult] = useState('')
-  const handleScan = data => {
-    if (data) {
-      setResult(data)
-      axios.post('/badge',{token:data}).then(
+  const handleScan = scanData => {
+    if (scanData) {
+      setResult(scanData)
+      axios.post('/badge',{token:scanData}).then(
         (res)=>{
           setResult('')
         }
@@ -60,10 +61,13 @@ const Scan = ({data1})=> {
   const handleError = err => {
     console.error(err)
   }
+  const addHint = (newhint)=>{
+    socket.emit('addHint',newhint)
+  }
   return (
     <div className="container">
       <BlackScreen />
-      <Nav year = {data1.year} hint={data1.hint?data1.hint:[]}/>
+      <Nav year = {data.year} hint={hints?hints:[]} onAdd={addHint}/>
       <div className="content">
         <div className="head-content">
           <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>Add Friend</h1>
@@ -133,10 +137,10 @@ export async function getServerSideProps(ctx) {
     const res3 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
     const hint = await res3.data
     const data2 = {...data1,hint:hint}
-    return { props: { data1:data2 }}
+    return { props: { data:data2 }}
   }
   else{
-    return { props: { data1: {err:true}}}
+    return { props: { data: {err:true}}}
   }
 
 }

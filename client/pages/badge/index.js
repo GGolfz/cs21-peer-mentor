@@ -118,6 +118,7 @@ const badgeList =
 let have = new Set()
 function Badge({data}) {
   const [notify,setNotify] = useState(0)
+  const [hints,setHints] = useState(data.hint);
   useEffect(()=>{
     if(data.err){
       Router.push('/')
@@ -146,10 +147,13 @@ function Badge({data}) {
       return ()=>{socket.emit('disconnect')}
     },[]);
 
+  const addHint = (newhint)=>{
+    socket.emit('addHint',newhint)
+  }
   return (
     <div className="container">
       <BlackScreen />
-      <Nav year = {data.year} hint={data.hint?data.hint:[]}/>
+      <Nav year = {data.year} hint={hints?hints:[]} onAdd={addHint}/>
       <div className="content">
       <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>BADGE</h1>
         <Row>

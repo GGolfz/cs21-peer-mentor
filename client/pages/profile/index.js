@@ -11,6 +11,7 @@ import socketIOClient from 'socket.io-client'
 let socket
 function Profile({data}) {
   const [notify,setNotify] = useState(0)
+  const [hints,setHints] = useState(data.hint);
   useEffect(()=>{
     if(data.err){
       Router.push('/')
@@ -34,13 +35,16 @@ function Profile({data}) {
   useEffect(()=>{
     socket.on('notify')
   })
+  const addHint = (newhint)=>{
+    socket.emit('addHint',newhint)
+  }
 
 
 
   return (
     <div className="container">
       <BlackScreen />
-      <Nav year = {data.year} hint={data.hint?data.hint:[]}/>
+      <Nav year = {data.year} hint={hints?hints:[]} onAdd={addHint}/>
           {
             !data.err && (
               <div className="content">

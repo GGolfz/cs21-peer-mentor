@@ -14,8 +14,9 @@ let temp = [{
             time:"20:00",
             profile_image:"https://storage.googleapis.com/cs21-peer-mentor/profile_img/03f117c211441309686defff2058d7e4.webp",
             latest:"เบื่อ",
-            sender:"a",
-            notify:3
+            sender:"Wisarut",
+            notify:3,
+            me: "b"
           },{
             roomID:"2",
             name:"GGolfz",
@@ -23,8 +24,9 @@ let temp = [{
             time:"20:00",
             profile_image:"https://storage.googleapis.com/cs21-peer-mentor/profile_img/03f117c211441309686defff2058d7e4.webp",
             latest:"เบื่อ",
-            sender:"a",
-            notify:3
+            sender:"Wisarut",
+            notify:3,
+            me: "b"
           },{
             roomID:"3",
             name:"GGolfz",
@@ -33,7 +35,8 @@ let temp = [{
             time:"20:00",
             profile_image:"https://storage.googleapis.com/cs21-peer-mentor/profile_img/03f117c211441309686defff2058d7e4.webp",
             latest:"เบื่อ",
-            notify:3
+            notify:3,
+            me: "b"
           },
         ]
 
@@ -71,7 +74,6 @@ function Chat({data}) {
     return ()=>{socket.emit('disconnect')}
   },[]);
   const addHint = (newhint)=>{
-    console.log(newhint)
     socket.emit('addHint',newhint)
   }
   return (
@@ -88,7 +90,7 @@ function Chat({data}) {
           }
         </div>
         </div>
-      <ControlBar/>
+      <ControlBar notify ={notify}/>
       <style jsx>{
           `
           @media only screen and (max-width:480px){

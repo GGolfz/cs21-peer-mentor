@@ -41,6 +41,7 @@ function Chat({data}) {
   const roomID = useRouter().query.room
   const [message,setMessage] = useState(temp.messages)
   const [notify,setNotify] = useState(0)
+  const [hints,setHints] = useState(data.hint);
   
   //Implement Socket
   useEffect(() => {
@@ -68,10 +69,13 @@ function Chat({data}) {
 
     }
   }
+  const addHint = (newhint)=>{
+    socket.emit('addHint',newhint)
+  }
   return (
     <div className="container">
       <BlackScreen />
-      <Nav year = {data.year} hint={data.hint?data.hint:[]}/>
+      <Nav year = {data.year} hint={hints?hints:[]} onAdd={addHint}/>
       <div className="content">
         <ChatRoom data={temp} messages={message} onSend={onSend}/>
       </div>

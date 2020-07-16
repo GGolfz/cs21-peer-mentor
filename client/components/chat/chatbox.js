@@ -1,7 +1,7 @@
 import React from 'react'
 import {Card,Row,Col} from 'antd'
 import Router from 'next/router'
-const ChatBox = ({data}) =>{    
+const ChatBox = ({data}) =>{   
     const join = (id) => {
         Router.push(`/chat/${id}`)
     }
@@ -21,7 +21,7 @@ const ChatBox = ({data}) =>{
                     <Row style={{textAlign:"left"}}>
                     <Col span={24} style={{paddingLeft:"5%"}}>{data.name}</Col>
                     <Col span={24} style={{paddingLeft:"5%"}}>({data.bio})</Col>
-                    <Col span={24} style={{paddingLeft:"5%"}}>{data.sender}: {data.latest}</Col>
+                    <Col span={24} style={{paddingLeft:"5%"}}>{data.sender===data.me?"You": data.sender}: {data.latest}</Col>
                     </Row>
                 </Col>
                 <Col span={4}>
