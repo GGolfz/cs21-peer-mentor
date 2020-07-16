@@ -9,6 +9,7 @@ import { authRoute } from './routers/authRoute'
 import { profileRoute } from './routers/profileRoute'
 import { hintRoute } from './routers/hintRoute'
 import { badgeRoute } from './routers/badgeRoute'
+import { chatRouter } from './routers/chatRoute'
 
 export const app: express.Application = express()
 
@@ -16,13 +17,13 @@ const connectionString = `mongodb+srv://node-api:m42J1btjwCqRdlCp@cluster0.z5cnc
 mongoose.connect(connectionString, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-	useFindAndModify: false,
+	useFindAndModify: false
 })
 
 const corsOptions: cors.CorsOptions = {
 	origin: ['http://localhost:3000'],
 	methods: ['GET', 'POST', 'PUT', 'PATCH'],
-	credentials: true,
+	credentials: true
 }
 
 passport.serializeUser((user, cb) => {
@@ -39,7 +40,7 @@ app.use(
 		secret: 'foobar',
 		resave: true,
 		saveUninitialized: true,
-		cookie: { maxAge: 3600000 },
+		cookie: { maxAge: 3600000 }
 	})
 )
 
@@ -53,3 +54,4 @@ app.use(authRoute)
 app.use(profileRoute)
 app.use(hintRoute)
 app.use(badgeRoute)
+app.use(chatRouter)
