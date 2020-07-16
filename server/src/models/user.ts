@@ -22,13 +22,13 @@ const userSchema = new Schema({
 	created_at: {
 		type: Date,
 		default: new Date()
-	},
-	rooms: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: 'room'
-		}
-	]
+	}
+	// rooms: [
+	// 	{
+	// 		type: Schema.Types.ObjectId,
+	// 		ref: 'room'
+	// 	}
+	// ]
 })
 
 export const User = model('user', userSchema)
