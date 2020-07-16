@@ -7,8 +7,7 @@ const messageSchema = new Schema({
 	},
 	message: String,
 	timestamp: {
-		type: Date,
-		default: new Date()
+		type: Number
 	},
 	seen: [
 		{

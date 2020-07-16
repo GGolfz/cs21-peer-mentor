@@ -1,8 +1,16 @@
 import React from 'react'
-import {Card,Row,Col} from 'antd'
+import {Card,Row,Col, message} from 'antd'
 import Router from 'next/router'
+import axios from '../../axios/axios'
 const ChatBox = ({data}) =>{   
     const join = (id) => {
+        axios.patch('/notify',{roomID:id}).then(
+            res=>{
+                console.log(res)
+            }
+        ).catch(err=>{
+            console.log(err)
+        })
         Router.push(`/chat/${id}`)
     }
     const displayTime = (t) => {
@@ -20,12 +28,17 @@ const ChatBox = ({data}) =>{
                 <Col span={15}>
                     <Row style={{textAlign:"left"}}>
                     <Col span={24} style={{paddingLeft:"5%"}}>{data.name}</Col>
-                    <Col span={24} style={{paddingLeft:"5%"}}>({data.bio})</Col>
-                    <Col span={24} style={{paddingLeft:"5%"}}>{data.sender===data.me?"You": data.sender}: {data.latest}</Col>
+                    { data.bio !== '' ? (<Col span={24} style={{paddingLeft:"5%"}}>({data.bio})</Col>):<Col span={24}/>}
+                    {data.sender !== '' ? (
+                    <Col span={24} style={{paddingLeft:"5%"}}>{data.sender}: {data.latest}</Col>):''}
                     </Row>
                 </Col>
                 <Col span={4}>
                     <Row style={{justifyContent:"center",display:"flex"}}>
+                    {
+                        data.notify > 0?
+
+                    (    
                         <Col 
                           span={24} 
                           style={{
@@ -39,9 +52,15 @@ const ChatBox = ({data}) =>{
                               alignItems:"center",
                               justifyContent: "center"
                             }}>{data.notify}</Col>
+
+                    ):<Col span={24} style={{height:"35px"}} />
+                    }
                     </Row>
                     <Row style={{marginTop:"15%"}}>
-                        <Col span={24} style={{}}>{displayTime(data.time)}</Col>
+                        {
+                            data.time !== '' ? (<Col span={24} style={{}}>{displayTime(data.time)}</Col>) : ''
+                        }
+                        
                     </Row>
                 </Col>
             </Row>

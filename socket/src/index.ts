@@ -16,11 +16,10 @@ io.on('connection', socket => {
     socket.join(room);
   });
 
-  socket.on('chatMessage', (data: { sender: any; message: any; room: any }) => {
-    const {sender,message,room} = data
-    let time = new Date().getTime()
-    io.to(room).emit('message', {sender,message,time});
-    const noti = {roomID:room,sender,message,time}
+  socket.on('chatMessage', (data: { sender: any; message: any; room: any; time: any; }) => {
+    const {sender,message,room,time} = data
+    io.to(room).emit('message', {sender,message,time,roomID:room});
+    const noti = {sender,message,time,roomID:room}
     io.emit('notify',noti)
   });
   socket.on('addHint',(data:{ reciever: any; hint:any;})=>{

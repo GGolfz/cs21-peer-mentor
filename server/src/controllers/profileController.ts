@@ -11,6 +11,7 @@ export const getProfileController = async (req: Request, res: Response): Promise
 }
 
 interface profileResBody {
+	_id: String
 	student_id: String
 	display_name: String
 	name: String
@@ -104,6 +105,7 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 
 const toProfileRes = (profile: any): profileResBody => {
 	return {
+		_id: profile._id,
 		student_id: profile.student_id,
 		display_name: profile.display_name,
 		name: profile.name,

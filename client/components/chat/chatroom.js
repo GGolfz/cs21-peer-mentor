@@ -8,7 +8,6 @@ const ChatRoom = (props) =>{
     const data = props.data
     const messages = props.messages
     const [visible,setVisible] = useState(false)
-    //Mock Data for Chat Room
     useEffect(()=>{
        var x= document.getElementById('chat-room')
        x.scrollTop = x.scrollHeight
@@ -61,7 +60,7 @@ const ChatRoom = (props) =>{
             </Row>
             <Row id="chat-room">
                 {
-                    messages.map(
+                    messages && messages.map(
                         (message,index)=>{
                             let start=false,end=false,who,img
                             if(index === 0 || (index > 0 && messages[index-1].sender !== message.sender)){
@@ -70,13 +69,13 @@ const ChatRoom = (props) =>{
                             if(index === messages.length-1 || (index < messages.length-1 && messages[index+1].sender !== message.sender)){
                                 end = true
                             }
-                            if(message.sender === data.me){
+                            if(message.sender === props.me || message.sender === 'You'){
                                 who = 'me'
                             }
                             else{
                                 who = 'him'
                                 if(start){
-                                    img = data.member.find(el=>el.name===message.sender).profile_image
+                                    img = data.member.find(el=>el.display_name===message.sender).profile_image
                                 }
                             }
                             return(

@@ -58,7 +58,6 @@ export const updateHintController = async (req:Request,res:Response): Promise<vo
 	if (yearNumber == '63') {
 		await Hint.updateMany({ reciever: user },{seen:true},{new:true})
 		hints = await Hint.find({ reciever: user })
-		console.log(hints)
 	} else {
 		res.status(400).send({ error: 'Cannot update seen' })
 		return

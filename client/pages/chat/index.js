@@ -41,9 +41,9 @@ let temp = [{
         ]
 
 function Chat({data}) {
-  const [rooms,setRooms] = useState(temp);
+  const [rooms,setRooms] = useState(data.rooms);
   const [hints,setHints] = useState(data.hint);
-  const [notify,setNotify] = useState(0)
+  const [notify,setNotify] = useState(data.notify)
   useEffect(()=>{
     if(data.err){
       Router.push('/')
@@ -130,10 +130,13 @@ export async function getServerSideProps(ctx) {
   if(ctx.req.headers.cookie){
     const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
     const data1 = await res.data
-    const res3 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
-    const hint = await res3.data
-
-    return { props: { data:{...data1,hint:hint.reverse()} }}
+    const res1 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
+    const hint = await res1.data
+    const res2 = await axios.get('/rooms',{headers: { cookie: ctx.req.headers.cookie}})
+    const rooms = await res2.data
+    const res3 = await axios.get('/notify',{headers: { cookie: ctx.req.headers.cookie}})
+    const notify = await res3.data
+    return { props: { data:{...data1,hint:hint.reverse(),rooms,notify} }}
   }
   else{
     return { props: { data: {err:true}}}

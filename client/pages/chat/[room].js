@@ -9,49 +9,28 @@ import socketIOClient from 'socket.io-client'
 import {useRouter} from 'next/router'
 let socket
 function Chat({data}) {
-  let temp = {
-    room: "ยังคิดไม่ออก",
-    me: 'b',
-    member: [
-        {
-            name: "Wisarut",
-            profile_image: "https://storage.googleapis.com/cs21-peer-mentor/profile_img/03f117c211441309686defff2058d7e4.webp"
-        },
-        {
-            name: "b",
-            profile_image: ""
-        }
-    ],
-    messages:[
-        {
-            sender:"Wisarut",
-            message:"หวัดดี",
-            time:"12:00:00",
-            seen:[
-                "Wisarut","b"
-            ]
-        }
-    ]
-  }
   useEffect(()=>{
     if(data.err){
       Router.push('/')
     }
   })
-  const roomID = useRouter().query.room
-  const [message,setMessage] = useState(temp.messages)
+  const [message,setMessage] = useState(data.room.messages)
+  const [roomdata,setRoomdata] = useState(data.room)
   const [notify,setNotify] = useState(0)
   const [hints,setHints] = useState(data.hint);
   
   //Implement Socket
   useEffect(() => {
     socket= socketIOClient("http://localhost:5000")
-    socket.emit('joinRoom',{room:roomID,user:temp.me})
+    socket.emit('joinRoom',{room:data.roomID,user:data._id})
     socket.on('message', (messageNew) => {
-      setMessage(message=> [...message,messageNew])
-      var x= document.getElementById('chat-room')
+      console.log(messageNew)
+      setMessage([...message,messageNew])
+      var x = document.getElementById('chat-room')
       x.scrollTop = x.scrollHeight
-      setNotify(notify=> notify+1)
+      if(messageNew.roomID !== data.roomID){
+        setNotify(notify=> notify+1)
+      }
     })
     socket.on('update-hint',(updated)=>{
       if(data.student_id === updated.reciever){
@@ -64,9 +43,17 @@ function Chat({data}) {
   },[]);
   const onSend = (message)=>{
     if(message.length>0){
-      const tempData = {sender:temp.me,message,room:roomID}
-      socket.emit('chatMessage', tempData)
-
+      let time = new Date().getTime()
+      axios.post('/message',{message,roomID:data.roomID,timestamp:time}).then(
+        res=> {
+          setMessage(res.data.message)
+          setRoomdata(res.data)
+          const tempData = {sender:data._id,message,room:data.roomID,time}
+          socket.emit('chatMessage', tempData)
+        }
+      ).catch(err=>{
+        console.log(err)
+      })
     }
   }
   const addHint = (newhint)=>{
@@ -77,7 +64,7 @@ function Chat({data}) {
       <BlackScreen />
       <Nav year = {data.year} hint={hints?hints:[]} onAdd={addHint}/>
       <div className="content">
-        <ChatRoom data={temp} messages={message} onSend={onSend}/>
+        <ChatRoom data={roomdata} me={data._id} roomID={data.roomID} messages={message} onSend={onSend}/>
       </div>
       <ControlBar notify={notify}/>
       <style jsx>{
@@ -112,11 +99,14 @@ function Chat({data}) {
 }
 export async function getServerSideProps(ctx) {
   if(ctx.req.headers.cookie){
+    const roomID = ctx.query.room
     const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
     const data1 = await res.data
     const res3 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
     const hint = await res3.data
-    return { props: { data:{year:data1.year,hint:hint} }}
+    const res2 = await axios.get(`/roomDetail?roomID=${roomID}`,{headers: { cookie: ctx.req.headers.cookie}})
+    const data2 = await res2.data
+    return { props: { data:{...data1,hint:hint.reverse(),room:data2,roomID} }}
   }
   else{
     return { props: { data: {err:true}}}
