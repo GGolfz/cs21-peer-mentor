@@ -45,7 +45,7 @@ function ShowProfile ({img,display,name,bio,year}) {
     return (
     <div className="show-profile">
         <div className="displayName" id="showdisplay">
-            <span><img src={img} width="20%" /></span>
+            <span><img src={img} width="18%" /></span>
             <span>{displayName} </span>
             <span className="material-icons" style={{fontSize:"0.9em",cursor:"pointer"}} onClick={editDisplay}>edit</span>
         </div>
@@ -81,7 +81,7 @@ function ShowProfile ({img,display,name,bio,year}) {
                 .show-profile {
                     padding: 0% 8%;
                     font-size: 1.2em;
-                    height: 18vh;
+                    height: 20vh;
                 }
                 .fix-detail{
                     display:flex;

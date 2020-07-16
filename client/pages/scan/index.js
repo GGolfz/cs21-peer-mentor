@@ -5,15 +5,31 @@ import ControlBar from '../../components/control-bar'
 import dynamic from "next/dynamic";
 import {Input} from 'antd';
 import axios from '../../axios/axios'
+import socketIOClient from 'socket.io-client'
 const {Search} = Input
 const QrReader = dynamic(() => import('react-qr-reader'), { ssr: false});
-
+let socket
 const Scan = ({data1})=> {
+  const [notify,setNotify] = useState(0)
   useEffect(()=>{
     if(data1.err){
       Router.push('/')
     }
   })
+  useEffect(() => {
+    socket= socketIOClient("http://localhost:5000")
+    socket.on('notify', () => {
+      setNotify(notify=> notify+1)
+    })
+    socket.on('update-hint',(updated)=>{
+      if(data.student_id === updated.reciever){
+        setHints(updated.hint.reverse())
+      }
+    })
+  }, []);
+  useEffect(()=>{
+    return ()=>{socket.emit('disconnect')}
+  },[]);
   const [result,setResult] = useState('')
   const handleScan = data => {
     if (data) {
@@ -61,7 +77,7 @@ const Scan = ({data1})=> {
         </div>
         </div>
       </div>
-      <ControlBar/>
+      <ControlBar notify={notify}/>
       <style jsx>{
           `
           @media only screen and (max-width:480px){

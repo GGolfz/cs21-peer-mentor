@@ -1,10 +1,12 @@
-import React, {useEffect} from 'react'
+import React, {useEffect,useState} from 'react'
 import Nav from '../../components/nav'
 import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
 import axios from '../../axios/axios'
 import Router from 'next/router'
 import {Row,Col} from 'antd'
+import socketIOClient from 'socket.io-client'
+let socket
 const badgeList = 
 [{
   "name": "Fire",
@@ -44,7 +46,7 @@ const badgeList =
 {
   "name": "Darkness",
   "thai_name": "ความมืด",
-  "image_url": "https://storage.googleapis.com/cs21-peer-mentor/element_img/Darkness_1.jpg",
+  "image_url": "/Dark Logo.svg",
   "member": ["03", "41", "42", "55", "60", "64"],
   "check": false
 },
@@ -115,11 +117,23 @@ const badgeList =
 ]
 let have = new Set()
 function Badge({data}) {
+  const [notify,setNotify] = useState(0)
   useEffect(()=>{
     if(data.err){
       Router.push('/')
     }
   })
+  useEffect(() => {
+    socket= socketIOClient("http://localhost:5000")
+    socket.on('notify', () => {
+      setNotify(notify=> notify+1)
+    })
+    socket.on('update-hint',(updated)=>{
+      if(data.student_id === updated.reciever){
+        setHints(updated.hint.reverse())
+      }
+    })
+  }, []);
     data.badge.map(el=>{
       have.add(el.name)
     })
@@ -128,6 +142,9 @@ function Badge({data}) {
         el.check = true
       }
     })
+    useEffect(()=>{
+      return ()=>{socket.emit('disconnect')}
+    },[]);
 
   return (
     <div className="container">
@@ -146,7 +163,7 @@ function Badge({data}) {
         }
         </Row>
       </div>
-      <ControlBar/>
+      <ControlBar notify={notify}/>
       <style jsx>{
           `
           @media only screen and (max-width:480px){

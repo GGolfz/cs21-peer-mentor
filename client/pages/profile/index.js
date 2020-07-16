@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import Nav from '../../components/nav'
 import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
@@ -7,12 +7,36 @@ import axios from '../../axios/axios'
 import ProfileImg from '../../components/profile/edit-image'
 import Router from 'next/router'
 import QRCode from "react-qr-code";
+import socketIOClient from 'socket.io-client'
+let socket
 function Profile({data}) {
+  const [notify,setNotify] = useState(0)
   useEffect(()=>{
     if(data.err){
       Router.push('/')
     }
   })
+  // FOR IMPLEMENT SOCKET
+  useEffect(() => {
+    socket= socketIOClient("http://localhost:5000")
+    socket.on('notify', () => {
+      setNotify(notify=> notify+1)
+    })
+    socket.on('update-hint',(updated)=>{
+      if(data.student_id === updated.reciever){
+        setHints(updated.hint.reverse())
+      }
+    })
+  }, []);
+  useEffect(()=>{
+    return ()=>{socket.emit('disconnect')}
+  },[]);
+  useEffect(()=>{
+    socket.on('notify')
+  })
+
+
+
   return (
     <div className="container">
       <BlackScreen />
@@ -23,7 +47,7 @@ function Profile({data}) {
               <div className="inside-content" >
                 <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>PROFILE</h1>
                 <ProfileImg img={data.profile_img} />
-                <ShowProfile img={data.element.image_url} display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
+                <ShowProfile img="/Dark Logo.svg" display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
               </div>
               <div className="qr-content">
               <QRCode size={128} level='L' value={data.token?data.token:""}/>
@@ -33,7 +57,7 @@ function Profile({data}) {
             )
           }
       
-      <ControlBar/>
+      <ControlBar notify={notify}/>
       <style jsx>{
           `
           @media only screen and (max-width:480px){

@@ -1,50 +1,73 @@
-import React, { useEffect } from 'react'
-import {Row,Col,Input} from 'antd'
+import React, { useEffect, useState } from 'react'
+import {Row,Col,Input,Modal} from 'antd'
 import ChatBubble from './chatbubble'
-import Chat from '../../pages/chat'
+import Link from 'next/link'
 const {Search} = Input
-const ChatRoom = () =>{
+const ChatRoom = (props) =>{
+    const [text,setText] = useState('')
+    const data = props.data
+    const messages = props.messages
+    const [visible,setVisible] = useState(false)
     //Mock Data for Chat Room
-    let data = {
-        room: "ยังคิดไม่ออก",
-        me: 'b',
-        member: [
-            {
-                name: "Wisarut",
-                profile_image: "https://storage.googleapis.com/cs21-peer-mentor/profile_img/03f117c211441309686defff2058d7e4.webp"
-            },
-        ],
-        messages:[
-            {
-                sender:"Wisarut",
-                message:"หวัดดี",
-                time:"12:00:00",
-                seen:[
-                    "Wisarut","b","c"
-                ]
-            }
-        ]
-    }
     useEffect(()=>{
        var x= document.getElementById('chat-room')
        x.scrollTop = x.scrollHeight
     },[]);
+    const send = ()=> {
+        props.onSend(text)
+        setText('')
+    }
+    const showInfo =()=>{
+        setVisible(true)
+    }
+    const handleChange = (e)=>{
+        setText(e.target.value)
+    }
+    const displayTime = (t)=>{
+        let date = new Date(t)
+        let h = "0" + date.getHours()
+        let m = "0" + date.getMinutes()
+        let s = "0" + date.getSeconds()
+        return h.substring(h.length-2) + ":"+m.substring(m.length-2)+":"+s.substring(s.length-2)
+    }
     return (
         <div className="room">
+            <Modal visible={visible} width="auto" footer={null} onCancel={()=>{setVisible(false)}}>
+                <Row>
+                    <Col span={24}>
+                    <h2 style={{fontSize:"1.4em",textAlign:"center",cursor:"default"}}>
+                        {
+                        data.member.length === 2?data.member.find(el=>el.name!==data.me).name : data.room
+                        }
+                    </h2>
+                    </Col>
+                    <Col span={24}>
+
+                    </Col>
+                </Row>
+            </Modal>
             <Row>
-                <Col span={24}>
-                    <h2 style={{fontSize:"1.4em"}}>{data.room}</h2>
+                <Col span={4}>
+                    <Link href="/chat">
+                        <span className="material-icons" style={{padding:"5%",cursor:"pointer"}}>arrow_back_ios</span>
+                    </Link>
+                </Col>
+                <Col span={16}>
+                    <h2 style={{fontSize:"1.4em",cursor:"default"}}>{data.room}</h2>
+                </Col>
+                <Col span={4}>
+                    <span className="material-icons" style={{padding:"5%",cursor:"pointer"}} onClick={showInfo}>info</span>
                 </Col>
             </Row>
             <Row id="chat-room">
                 {
-                    data.messages.map(
+                    messages.map(
                         (message,index)=>{
                             let start=false,end=false,who,img
-                            if(index === 0 || (index > 0 && data.messages[index-1].sender !== message.sender)){
+                            if(index === 0 || (index > 0 && messages[index-1].sender !== message.sender)){
                                 start = true
                             }
-                            if(index === data.length-1 || (index < data.length-1 && data.messages[index+1].sender !== message.sender)){
+                            if(index === messages.length-1 || (index < messages.length-1 && messages[index+1].sender !== message.sender)){
                                 end = true
                             }
                             if(message.sender === data.me){
@@ -58,7 +81,7 @@ const ChatRoom = () =>{
                             }
                             return(
                                 <Col key={index} span={24} style={{margin:"1% 0%"}}>
-                                    <ChatBubble member={data.member.length} name={message.sender} nc={who} img={img} start={start} end={end} time={message.time} text={message.message}/>
+                                    <ChatBubble member={data.member.length} name={message.sender} nc={who} img={img} start={start} end={end} time={displayTime(message.time)} text={message.message}/>
                                 </Col>
                             )
                         }
@@ -66,7 +89,7 @@ const ChatRoom = () =>{
                 }
             </Row>
             <Row id="search-bar">
-                <Search enterButton="SEND"/> 
+                <Search onChange={handleChange} value={text} enterButton="SEND" onSearch={send}/> 
             </Row>
             <style jsx>
                 {

@@ -6,8 +6,8 @@ import Hint from './hint'
 import axios from '../axios/axios'
 const {Search} = Input
 
-const Nav = ({year,hint}) => {
-  const [hints,setHints] = useState(hint)
+const Nav = (props) => {
+  const [hints,setHints] = useState(props.hint)
   const [message,setHint] = useState('')
   const [visible,setVisible] = useState(false)
   const [addVisible,setAddVisible] = useState(false)
@@ -31,7 +31,7 @@ const Nav = ({year,hint}) => {
   })
   const showHint = ()=>{
     setVisible(true)
-    if(year === '1'){
+    if(props.year === '1'){
       axios.patch('/hint').then(async res=>{
         await setHints(res.data)
         await setNotify(calculateNotify(res.data))
@@ -57,8 +57,9 @@ const Nav = ({year,hint}) => {
     setAddVisible(false)
     axios.post('/hint',{message}).then(
       async (res)=>{
-        await setHints(res.data)
+        await setHints(res.data.reverse())
         await setNotify(calculateNotify(res.data))
+        await props.onAdd({reciever:res.data[0].reciever,hint:res.data})
       }
     ).catch(err=>{
       console.log(err)
@@ -68,7 +69,7 @@ const Nav = ({year,hint}) => {
   <nav>
     <Header/>
     <div className="nav-bar">
-      { (year=== '1' || year==='2') && (
+      { (props.year=== '1' || props.year==='2') && (
         <Fragment>
         <span className="material-icons noti" style={{fontSize:"2em",color:notify>0?"#ff4d4f":""}} onClick={showHint}>
           notifications
@@ -81,22 +82,23 @@ const Nav = ({year,hint}) => {
         <h2 style={{fontSize:"1.4em"}}>ADD HINT</h2>
         <Search onChange={handleChange} enterButton="ADD" onSearch={handleSubmit}/>
       </Modal>
-      <Modal onCancel={handleClose} visible={visible} width="auto" footer={null} style={{textAlign:"center"}}>
+      <Modal wrapClassName="hint-list" onCancel={handleClose} visible={visible} width="auto" footer={null} style={{textAlign:"center",height:"75vh"}}>
         <h2 style={{fontSize:"1.8em"}}>HINT</h2>
         {
-          year !== "1" && 
+          props.year !== "1" && 
             (
               <div style={{display:"flex",justifyContent:"flex-end"}}>
               <Button type="primary" style={{fontSize:"1.4em",padding:"0% 3%",borderRadius:"10px",marginBottom:"3%"}} onClick={addHint}>+</Button> <br/>
               </div>
             )
         }
+        <div style={{height:"60vh",overflowY:"auto"}}>
         { 
-          
-          hints.reverse().map((el,index)=>{
+          hints.map((el,index)=>{
           return <Hint key={index} message={el.message} seen={el.seen} time={new Date(el.created_at).toLocaleDateString()} />
           })
         }
+        </div>
       </Modal>
       
       <div className="button-list">
@@ -127,6 +129,9 @@ const Nav = ({year,hint}) => {
       :global(#ant-button-danger:active) {
         color: #ff7875 !important;
         border-color: #ff7875 !important;
+      }
+      :global(.hint-list .ant-card-body){
+        padding:24px !important;
       }
       .nav-bar {
         display:flex;

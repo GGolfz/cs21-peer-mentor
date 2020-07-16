@@ -4,8 +4,8 @@ import socketIOClient from 'socket.io-client'
 let socket
 function Room () {
     const room = useRouter().query.room
-    const [join,setJoin] = useState(false)
     const [input,setInput] = useState('')
+    const [join,setJoin] = useState(false)
     const [message,setMessage] = useState([])
     const username = "TEST"
 

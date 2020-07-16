@@ -1,9 +1,18 @@
 import React from 'react'
 import {Card,Row,Col} from 'antd'
-const ChatBox = ({data}) =>{
-    console.log(data)
+import Router from 'next/router'
+const ChatBox = ({data}) =>{    
+    const join = (id) => {
+        Router.push(`/chat/${id}`)
+    }
+    const displayTime = (t) => {
+            let date = new Date(t)
+            let h = "0" + date.getHours()
+            let m = "0" + date.getMinutes()
+            return h.substring(h.length-2) + ":"+m.substring(m.length-2)
+    }
     return (
-        <Card>
+        <Card style={{cursor:"pointer"}} onClick={()=>{join(data.roomID)}}>
             <Row style={{display:"flex",alignItems:"center"}}>
                 <Col span={5}>
                     <img src={data.profile_image} style={{borderRadius:"200px"}} width="100%"/>
@@ -12,7 +21,7 @@ const ChatBox = ({data}) =>{
                     <Row style={{textAlign:"left"}}>
                     <Col span={24} style={{paddingLeft:"5%"}}>{data.name}</Col>
                     <Col span={24} style={{paddingLeft:"5%"}}>({data.bio})</Col>
-                    <Col span={24} style={{paddingLeft:"5%"}}>You: {data.latest}</Col>
+                    <Col span={24} style={{paddingLeft:"5%"}}>{data.sender}: {data.latest}</Col>
                     </Row>
                 </Col>
                 <Col span={4}>
@@ -32,7 +41,7 @@ const ChatBox = ({data}) =>{
                             }}>{data.notify}</Col>
                     </Row>
                     <Row style={{marginTop:"15%"}}>
-                        <Col span={24} style={{}}>{data.time}</Col>
+                        <Col span={24} style={{}}>{displayTime(data.time)}</Col>
                     </Row>
                 </Col>
             </Row>
