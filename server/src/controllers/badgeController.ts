@@ -47,11 +47,6 @@ interface newRoomSchema {
 export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody>, res: Response): Promise<void> => {
 	const student_id = req.user as String
 	// const student_id = '62130500230'
-	const year = determineYear(student_id)
-	if (year != '1') {
-		res.status(400).send({ error: 'Only first year student can get badge' })
-		return
-	}
 
 	if (!req.body.token) {
 		res.status(400).send({ error: 'Token from qrcode is required' })
