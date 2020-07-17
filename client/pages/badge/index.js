@@ -116,17 +116,17 @@ const badgeList =
 },
 { 
   "name":"Year 2",
-  "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Y2.jpg",
+  "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Sophomore.svg",
   "check": false
 },
 {
   "name":"Year 3",
-  "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Y3.jpg",
+  "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Junior.svg",
   "check": false
 },
 {
   "name":"Year 4",
-  "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Y4.jpg",
+  "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Senior.svg",
   "check": false
 }
 ]
