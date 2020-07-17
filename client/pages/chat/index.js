@@ -17,7 +17,7 @@ function Chat({data}) {
     }
   })
   useEffect(() => {
-    socket= socketIOClient(process.env.SOCKET_URL)
+    socket= socketIOClient(process.env.NEXT_PUBLIC_SOCKET_URL)
   }, []);
   useEffect(()=>{
 

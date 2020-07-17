@@ -19,7 +19,7 @@ const Scan = ({data})=> {
     }
   })
   useEffect(() => {
-    socket= socketIOClient(process.env.SOCKET_URL)
+    socket= socketIOClient(process.env.NEXT_PUBLIC_SOCKET_URL)
     socket.on('notify', (noti) => {
       let temp1 = [... data.rooms]
       temp1.map(room=> {
