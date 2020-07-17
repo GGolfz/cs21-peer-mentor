@@ -41,10 +41,10 @@ export const updateProfileController = async (req: Request<{}, {}, updatedFields
 		{ student_id },
 		{
 			bio: req.body.bio,
-			display_name: req.body.display_name,
+			display_name: req.body.display_name
 		},
 		{
-			new: true,
+			new: true
 		}
 	).populate('element')
 	res.send(toProfileRes(profile))
@@ -71,7 +71,7 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 		await sharp(originalFilePath)
 			.resize({
 				height: 400,
-				width: 400,
+				width: 400
 			})
 			.webp({})
 			.toFile(optimizedFilePath)
@@ -80,14 +80,14 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 		// const student_id = '62130500230' // Placeholder
 
 		// Upload to Google Cloud Storage
-		const storage = new Storage({ keyFilename: 'GCS-service-account.json' })
-		const bucketName = 'cs21-peer-mentor'
+		const storage = new Storage({ keyFilename: process.env.GCS_KEY_PATH })
+		const bucketName = process.env.GCS_BUCKET_NAME as string
 		const gcsFile: UploadResponse = await storage.bucket(bucketName).upload(optimizedFilePath, {
 			destination: `profile_img/${req.file.filename}.webp`,
-			gzip: true,
+			gzip: true
 		})
 
-		const gcsFilePath = `https://storage.googleapis.com/cs21-peer-mentor/${gcsFile[0].name}`
+		const gcsFilePath = `${process.env.GCS_BUCKET_PATH}/${gcsFile[0].name}`
 		// Write image url to db
 		const profile = await User.findOneAndUpdate(
 			{ student_id },
@@ -115,7 +115,7 @@ const toProfileRes = (profile: any): profileResBody => {
 		element: {
 			name: profile.element.name,
 			thai_name: profile.element.thai_name,
-			image_url: profile.element.image_url,
-		},
+			image_url: profile.element.image_url
+		}
 	}
 }

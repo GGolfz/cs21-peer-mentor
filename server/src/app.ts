@@ -13,7 +13,7 @@ import { chatRouter } from './routers/chatRoute'
 
 export const app: express.Application = express()
 
-const connectionString = `mongodb+srv://node-api:m42J1btjwCqRdlCp@cluster0.z5cnc.mongodb.net/cs21PeerMentor?retryWrites=true&w=majority`
+const connectionString = process.env.MONGO_CONNECTION_STRING as string
 mongoose.connect(connectionString, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
@@ -21,7 +21,7 @@ mongoose.connect(connectionString, {
 })
 
 const corsOptions: cors.CorsOptions = {
-	origin: ['http://localhost:3000'],
+	origin: [process.env.CLIENT_URL as string],
 	methods: ['GET', 'POST', 'PUT', 'PATCH'],
 	credentials: true
 }
@@ -37,7 +37,7 @@ passport.deserializeUser((obj, cb) => {
 app.use(
 	session({
 		// store: new RedisStore({ client: redisClient }),
-		secret: 'foobar',
+		secret: process.env.SESSION_SECRET as string,
 		resave: true,
 		saveUninitialized: true,
 		cookie: { maxAge: 3600000 }

@@ -8,10 +8,10 @@ import { determineYear } from '../util/determineYear'
 
 export const authCallbackController = async (req: Request, res: Response): Promise<void> => {
 	if (req.user) {
-		res.redirect('http://localhost:3000/profile')
+		res.redirect(`${process.env.CLIENT_URL}/profile`)
 		return
 	}
-	res.redirect('http://localhost:3000')
+	res.redirect(process.env.CLIENT_URL as string)
 }
 
 export const verifyAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -29,7 +29,7 @@ export const verifyAuth = async (req: Request, res: Response, next: NextFunction
 
 export const logoutController = (req: Request, res: Response): void => {
 	req.logout()
-	res.redirect('http://localhost:3000')
+	res.redirect(process.env.CLIENT_URL as string)
 }
 
 interface UserAttributes {
