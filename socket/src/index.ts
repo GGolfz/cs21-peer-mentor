@@ -18,7 +18,6 @@ io.on('connection', socket => {
 
   socket.on('chatMessage', (data: { sender: any;senderID: any; message: any; room: any; time: any; }) => {
     const {senderID,sender,message,room,time} = data
-    console.log(data)
     io.emit('notify',{senderID,sender,message,time,roomID:room})
     io.to(room).emit('message', {senderID,sender,message,time,roomID:room});
   });

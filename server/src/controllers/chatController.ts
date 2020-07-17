@@ -314,6 +314,7 @@ const roomResponse = async (rooms: Array<any>, me: String): Promise<Array<ChatBo
 		}
 		arr.push(chatroom)
 	}
+	await arr.sort((a:any,b:any)=> b.time - a.time)
 	return arr
 }
 const getImage =async (name:String,type:String): Promise<String> => {
