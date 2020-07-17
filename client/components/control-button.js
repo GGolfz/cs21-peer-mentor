@@ -1,9 +1,11 @@
 import React from 'react'
-import Link from 'next/link'
-function ControlButton({data,icon,color,notify}){
+function ControlButton(props){
+    let data =props.data
+    let icon =props.icon
+    let color= props.color
+    let notify= props.notify
     return(
-        <Link href={`/${data}`}>
-        <div className="control-button">
+        <div className="control-button" onClick={()=>{props.onGoto({href:`/${data}`})}}>
             <span className="material-icons" style={{color,fontSize:"2em"}}>
                 {icon}
             </span>
@@ -33,7 +35,6 @@ function ControlButton({data,icon,color,notify}){
 
             </style>
         </div>
-        </Link>
     )
 }
 

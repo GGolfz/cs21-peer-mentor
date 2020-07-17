@@ -24,11 +24,10 @@ function Chat({data}) {
     socket= socketIOClient("http://localhost:5000")
     socket.emit('joinRoom',{room:data.roomID,user:data._id})
     socket.on('message', (messageNew) => {
-      console.log(messageNew)
       setMessage([...message,messageNew])
       var x = document.getElementById('chat-room')
       x.scrollTop = x.scrollHeight
-      if(messageNew.roomID !== data.roomID){
+      if(messageNew.roomID !== data.roomID && messageNew.senderID !== data._id){
         setNotify(notify=> notify+1)
       }
     })
@@ -48,7 +47,7 @@ function Chat({data}) {
         res=> {
           setMessage(res.data.message)
           setRoomdata(res.data)
-          const tempData = {sender:data._id,message,room:data.roomID,time}
+          const tempData = {sender:data.display_name,senderID:data._id,message,room:data.roomID,time}
           socket.emit('chatMessage', tempData)
         }
       ).catch(err=>{
@@ -59,6 +58,10 @@ function Chat({data}) {
   const addHint = (newhint)=>{
     socket.emit('addHint',newhint)
   }
+  const goTo = async (el)=>{
+    await socket.emit('forceDisconnect')
+    await Router.push(el.href)
+  }
   return (
     <div className="container">
       <BlackScreen />
@@ -66,7 +69,7 @@ function Chat({data}) {
       <div className="content">
         <ChatRoom data={roomdata} me={data._id} roomID={data.roomID} messages={message} onSend={onSend}/>
       </div>
-      <ControlBar notify={notify}/>
+      <ControlBar notify={notify} onGoto={goTo}/>
       <style jsx>{
           `
           @media only screen and (max-width:480px){

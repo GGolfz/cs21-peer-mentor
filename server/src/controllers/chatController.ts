@@ -61,7 +61,8 @@ export const updateRoomMessage = async (req:Request,res:Response): Promise<void>
 	let newMessage = {
 		sender: user._id,
 		message: message,
-		timestamp: Number(timestamp)
+		timestamp: Number(timestamp),
+		seen: [user._id]
 	}
 	const rooms = await Room.findOneAndUpdate({_id:roomID,member:user._id},{$push: {messages: newMessage},new:true})
 	const response = await roomDetailResponse(rooms,user._id)
@@ -93,9 +94,17 @@ export const updateNotify = async (req:Request,res:Response): Promise<void> => {
 		res.status(404).send({ error: 'User is not found' })
 		return
 	}
-	await Room.updateMany({member:user._id,_id:roomID},{$push:{messages:{seen:user._id}},new:true})
-	const rooms = await Room.find({member:user._id})
-	res.send(getNotify(rooms))
+	const rooms = await Room.find({member:user._id,_id:roomID})
+	rooms.forEach((room:any)=>{
+		room.messages.map((mes:any)=>{
+			if(!mes.seen.find((el:any)=> el.toString() == user._id.toString())){
+				mes.seen.push(user._id)
+			}
+		})
+		room.save()
+	})
+	const roomsRes =await Room.find({member:user._id})
+	res.send(getNotify(roomsRes))
 	return 
 }
 export const getRoomListController = async (req: Request, res: Response): Promise<void> => {
@@ -158,7 +167,12 @@ const toRefRoomMessages = async (room:any,me:String): Promise<any> => {
 	const messages:Array<Message> = []
 		await room.messages.forEach(async (message:any)=>{
 			if(room.type === 'General'){
-				let sender = await room.member.find((mem:any)=> mem._id.toString() == message.sender.toString())
+				let sender
+				if(message.sender.toString() == me.toString()){
+					sender = 'You'
+				} else{
+					sender = await room.member.find((mem:any)=> mem._id.toString() == message.sender.toString()).display_name
+				}
 				await messages.push(
 					{
 						message: message.message,
@@ -206,9 +220,8 @@ const roomResponse =  (rooms:Array<any>,me: String): Array<ChatBoxResponse>=> {
 			let lastMessage
 			if(room.messages.length > 0 ){
 				let mes = room.messages[room.messages.length - 1]
+				console.log(mes)
 				let sender
-				
-				
 				if (mes.sender.toString() === me.toString()){
 					sender = 'You'
 				}

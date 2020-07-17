@@ -1,10 +1,10 @@
 import React from 'react'
-const Bubble = ({member,img,name,nc,text,start,end,time}) => {
+const Bubble = ({type,img,name,nc,text,start,end,time}) => {
     return (
         <div>
         
             <img className="profile_pic" src={img} width="36px" style={{float:"left",borderRadius:"50px"}}/>
-            {member>2 && nc==='him'&&start? (<div style={{marginLeft:"calc(5% + 36px)",textAlign:"left"}}>{name}</div>) :''}
+            {type==='General' && nc==='him'&&start? (<div style={{marginLeft:"calc(5% + 36px)",textAlign:"left"}}>{name}</div>) :''}
             <span className={`text ${nc} ${start?"start":""} ${end?"end":""}`} style={{marginLeft:(nc==='him' && img!=='' && !start)?"calc(5% + 36px)":'2%'}}>
                 {text}
             </span>

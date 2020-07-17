@@ -151,6 +151,10 @@ function Badge({data}) {
   const addHint = (newhint)=>{
     socket.emit('addHint',newhint)
   }
+  const goTo = async (el)=>{
+    await socket.emit('forceDisconnect')
+    await Router.push(el.href)
+  }
   return (
     <div className="container">
       <BlackScreen />
@@ -168,7 +172,7 @@ function Badge({data}) {
         }
         </Row>
       </div>
-      <ControlBar notify={notify}/>
+      <ControlBar notify={notify} onGoto={goTo}/>
       <style jsx>{
           `
           @media only screen and (max-width:480px){

@@ -43,7 +43,7 @@ let temp = [{
 function Chat({data}) {
   const [rooms,setRooms] = useState(data.rooms);
   const [hints,setHints] = useState(data.hint);
-  const [notify,setNotify] = useState(data.notify)
+  const [notify,setNotify] = useState(data.notify.notify)
   useEffect(()=>{
     if(data.err){
       Router.push('/')
@@ -51,30 +51,45 @@ function Chat({data}) {
   })
   useEffect(() => {
     socket= socketIOClient("http://localhost:5000")
-    socket.on('notify', (notify) => {
+  }, []);
+  useEffect(()=>{
+
+    socket.on('notify', (noti) => {
       let temp1 = [...rooms]
       temp1.map(room=> {
-        if(room.roomID === notify.roomID){
-          room.notify += 1
-          room.time = notify.time
-          room.sender = notify.sender
-          room.latest = notify.message
+        if(room.roomID === noti.roomID){
+          if(noti.senderID != data._id){
+            room.notify += 1
+            room.sender = noti.sender
+            setNotify(notify=> notify+1)
+          }
+          else{
+            room.sender = "You"
+          }
+          room.time = noti.time
+          room.latest = noti.message
         }
       })
       setRooms(temp1)
-      setNotify(notify=> notify+1)
     })
+  },[]);
+  useEffect(()=>{
+
     socket.on('update-hint',(updated)=>{
       if(data.student_id === updated.reciever){
         setHints(updated.hint.reverse())
       }
     })
-  }, []);
+  },[]);
   useEffect(()=>{
     return ()=>{socket.emit('disconnect')}
   },[]);
   const addHint = (newhint)=>{
     socket.emit('addHint',newhint)
+  }
+  const goTo = async (el)=>{
+    await socket.emit('forceDisconnect')
+    await Router.push(el.href)
   }
   return (
     <div className="container">
@@ -90,7 +105,7 @@ function Chat({data}) {
           }
         </div>
         </div>
-      <ControlBar notify ={notify}/>
+      <ControlBar notify={notify} onGoto={goTo}/>
       <style jsx>{
           `
           @media only screen and (max-width:480px){

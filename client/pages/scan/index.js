@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import {Input} from 'antd';
 import axios from '../../axios/axios'
 import socketIOClient from 'socket.io-client'
+import Router from 'next/router'
 const {Search} = Input
 const QrReader = dynamic(() => import('react-qr-reader'), { ssr: false});
 let socket
@@ -64,6 +65,10 @@ const Scan = ({data})=> {
   const addHint = (newhint)=>{
     socket.emit('addHint',newhint)
   }
+  const goTo = async (el)=>{
+    await socket.emit('forceDisconnect')
+    await Router.push(el.href)
+  }
   return (
     <div className="container">
       <BlackScreen />
@@ -81,7 +86,7 @@ const Scan = ({data})=> {
         </div>
         </div>
       </div>
-      <ControlBar notify={notify}/>
+      <ControlBar notify={notify} onGoto={goTo}/>
       <style jsx>{
           `
           @media only screen and (max-width:480px){

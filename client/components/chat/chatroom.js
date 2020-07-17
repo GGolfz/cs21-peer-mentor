@@ -36,7 +36,7 @@ const ChatRoom = (props) =>{
                     <Col span={24}>
                     <h2 style={{fontSize:"1.4em",textAlign:"center",cursor:"default"}}>
                         {
-                        data.member.length === 2?data.member.find(el=>el.name!==data.me).name : data.room
+                        data.type=== 'General'?data.member.find(el=>el.name!==data.me).name : data.room
                         }
                     </h2>
                     </Col>
@@ -69,7 +69,7 @@ const ChatRoom = (props) =>{
                             if(index === messages.length-1 || (index < messages.length-1 && messages[index+1].sender !== message.sender)){
                                 end = true
                             }
-                            if(message.sender === props.me || message.sender === 'You'){
+                            if(message.senderID === props.me || message.sender === 'You'){
                                 who = 'me'
                             }
                             else{
@@ -80,7 +80,7 @@ const ChatRoom = (props) =>{
                             }
                             return(
                                 <Col key={index} span={24} style={{margin:"1% 0%"}}>
-                                    <ChatBubble member={data.member.length} name={message.sender} nc={who} img={img} start={start} end={end} time={displayTime(message.time)} text={message.message}/>
+                                    <ChatBubble type={data.type} name={message.sender} nc={who} img={img} start={start} end={end} time={displayTime(message.time)} text={message.message}/>
                                 </Col>
                             )
                         }

@@ -9,23 +9,25 @@ const server = app.listen(port, () => {
 const io:Socket = require('socket.io').listen(server)
 var user:String =""
 io.on('connection', socket => {
-  console.log('user connected')
+  console.log(' connected')
   socket.on('joinRoom', (data: { room: any; user: any }) => {
     const {room,user} = data
     console.log(`${user} join ${room}`)
     socket.join(room);
   });
 
-  socket.on('chatMessage', (data: { sender: any; message: any; room: any; time: any; }) => {
-    const {sender,message,room,time} = data
-    io.to(room).emit('message', {sender,message,time,roomID:room});
-    const noti = {sender,message,time,roomID:room}
-    io.emit('notify',noti)
+  socket.on('chatMessage', (data: { sender: any;senderID: any; message: any; room: any; time: any; }) => {
+    const {senderID,sender,message,room,time} = data
+    io.emit('notify',{senderID,sender,message,time,roomID:room})
+    io.to(room).emit('message', {senderID,sender,message,time,roomID:room});
   });
   socket.on('addHint',(data:{ reciever: any; hint:any;})=>{
     io.emit('update-hint',data)
   })
   // Runs when client disconnects
+  socket.on('forceDisconnect',()=>{
+    socket.disconnect();
+  })
   socket.on('disconnect', () => {
       console.log(`user disconnected`)  
   }
