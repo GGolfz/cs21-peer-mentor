@@ -65,7 +65,8 @@ export const updateRoomMessage = async (req: Request, res: Response): Promise<vo
 	}
 	const rooms = await Room.findOneAndUpdate(
 		{ _id: roomID, member: user._id },
-		{ $push: { messages: newMessage }, new: true }
+		{ $push: { messages: newMessage } },
+		{ new: true }
 	)
 	const response = await roomDetailResponse(rooms, user._id)
 	res.send(response)
@@ -103,8 +104,8 @@ export const updateNotify = async (req: Request, res: Response): Promise<void> =
 	return
 }
 export const getRoomListController = async (req: Request, res: Response): Promise<void> => {
-	// const student_id = req.user
-	const student_id = '62130500230'
+	const student_id = req.user
+	// const student_id = '62130500230'
 	const user = await User.findOne({ student_id }).select('_id')
 	if (!user) {
 		res.status(404).send({ error: 'User is not found' })
