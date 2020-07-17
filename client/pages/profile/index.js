@@ -10,9 +10,9 @@ import QRCode from "react-qr-code";
 import socketIOClient from 'socket.io-client'
 let socket
 const yearImage = {
-  2:'https://storage.googleapis.com/cs21-peer-mentor/element_img/Y2.jpg',
-  3:'https://storage.googleapis.com/cs21-peer-mentor/element_img/Y3.jpg',
-  4:'https://storage.googleapis.com/cs21-peer-mentor/element_img/Y4.jpg'
+  2:'https://storage.googleapis.com/cs21-peer-mentor/element_img/Sophomore.svg',
+  3:'https://storage.googleapis.com/cs21-peer-mentor/element_img/Junior.svg',
+  4:'https://storage.googleapis.com/cs21-peer-mentor/element_img/Senior.svg'
 }
 function Profile({data}) {
   const [notify,setNotify] = useState(data.notify)
@@ -68,8 +68,8 @@ function Profile({data}) {
                 <ShowProfile img={data.year!=='1'?yearImage[parseInt(data.year)]:data.element.image_url} display={data.display_name} name={data.name} year={data.year} bio={data.bio}/>
               </div>
               <div className="qr-content">
-              <QRCode size={128} level='L' value={data.token?data.token:""}/>
-              <h2 style={{marginBottom:"0%"}}>Code : {data.token}</h2>
+              <QRCode size={100} level='L' value={data.token?data.token:""}/>
+              <h2 style={{marginBottom:"0%",fontSize:"1.2em"}}>Code : {data.token}</h2>
               </div>
             </div>
             )
@@ -102,7 +102,8 @@ function Profile({data}) {
             background: #FFFFFF;
           }
           .qr-content {
-            margin-top: 6%;
+            margin-top: 4%;
+            margin-bottom: 2%;
             padding: 4% 0%;
             background: #FFFFFF;
             text-align:center;
@@ -111,6 +112,7 @@ function Profile({data}) {
             height:82vh !important;
             text-align:center;
             background: #d4af5f44;
+            overflow:auto;
           }
           `
         }</style>
