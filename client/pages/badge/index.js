@@ -141,7 +141,7 @@ function Badge({data}) {
   })
   useEffect(() => {
     socket= socketIOClient(process.env.SOCKET_URL)
-    socket.on('notify', () => {
+    socket.on('notify', (noti) => {
       let temp1 = [... data.rooms]
       temp1.map(room=> {
         if(room.roomID === noti.roomID && noti.senderID != data._id){

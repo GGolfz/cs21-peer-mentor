@@ -7,39 +7,6 @@ import axios from '../../axios/axios'
 import ChatBox from '../../components/chat/chatbox'
 import socketIOClient from 'socket.io-client'
 let socket
-let temp = [{
-            roomID:"1",
-            name:"GGolfz",
-            bio:"Just a lazy guy",
-            time:"20:00",
-            profile_image:"https://storage.googleapis.com/cs21-peer-mentor/profile_img/03f117c211441309686defff2058d7e4.webp",
-            latest:"เบื่อ",
-            sender:"Wisarut",
-            notify:3,
-            me: "b"
-          },{
-            roomID:"2",
-            name:"GGolfz",
-            bio:"Just a lazy guy",
-            time:"20:00",
-            profile_image:"https://storage.googleapis.com/cs21-peer-mentor/profile_img/03f117c211441309686defff2058d7e4.webp",
-            latest:"เบื่อ",
-            sender:"Wisarut",
-            notify:3,
-            me: "b"
-          },{
-            roomID:"3",
-            name:"GGolfz",
-            bio:"Just a lazy guy",
-            sender:"b",
-            time:"20:00",
-            profile_image:"https://storage.googleapis.com/cs21-peer-mentor/profile_img/03f117c211441309686defff2058d7e4.webp",
-            latest:"เบื่อ",
-            notify:3,
-            me: "b"
-          },
-        ]
-
 function Chat({data}) {
   const [rooms,setRooms] = useState(data.rooms);
   const [hints,setHints] = useState(data.hint);

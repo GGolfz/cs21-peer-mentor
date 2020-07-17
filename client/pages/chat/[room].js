@@ -23,7 +23,9 @@ function Chat({data}) {
     socket= socketIOClient(process.env.SOCKET_URL)
     socket.emit('joinRoom',{room:data.roomID,user:data._id})
     socket.on('message', (messageNew) => {
-      setMessage([...message,messageNew])
+      if(messageNew.senderID != data._id){
+        setMessage([...message,messageNew])
+      }
       var x = document.getElementById('chat-room')
       x.scrollTop = x.scrollHeight
       if(messageNew.roomID !== data.roomID && messageNew.senderID !== data._id){
@@ -44,9 +46,10 @@ function Chat({data}) {
       let time = new Date().getTime()
       axios.post('/message',{message,roomID:data.roomID,timestamp:time}).then(
         res=> {
-          setMessage(res.data.message)
+          setMessage(res.data.messages)
           setRoomdata(res.data)
-          const tempData = {sender:data.display_name,senderID:data._id,message,room:data.roomID,time}
+          let sender = data.year != '1' && data.room.type !== 'General' ? `พี่ปี `+ data.year: data.display_name
+          const tempData = {sender,senderID:data._id,message,room:data.roomID,time}
           socket.emit('chatMessage', tempData)
         }
       ).catch(err=>{
