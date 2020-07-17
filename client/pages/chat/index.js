@@ -37,6 +37,7 @@ function Chat({data}) {
           room.latest = noti.message
         }
       })
+      temp1.sort((a,b)=>b.time-a.time)
       setRooms(temp1)
     })
   },[]);
