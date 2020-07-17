@@ -9,7 +9,7 @@ const server = app.listen(port, () => {
 const io:Socket = require('socket.io').listen(server)
 var user:String =""
 io.on('connection', socket => {
-  console.log(' connected')
+  console.log('user connected')
   socket.on('joinRoom', (data: { room: any; user: any }) => {
     const {room,user} = data
     console.log(`${user} join ${room}`)

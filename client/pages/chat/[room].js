@@ -13,7 +13,7 @@ function Chat({data}) {
       Router.push('/')
     }
   })
-  const [message,setMessage] = useState(data.room.messages)
+  const [message,setMessage] = useState(data.room?data.room.messages:[])
   const [roomdata,setRoomdata] = useState(data.room)
   const [notify,setNotify] = useState(0)
   const [hints,setHints] = useState(data.hint);
@@ -100,19 +100,25 @@ function Chat({data}) {
   )
 }
 export async function getServerSideProps(ctx) {
-  if(ctx.req.headers.cookie){
-    const roomID = ctx.query.room
-    const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
-    const data1 = await res.data
-    const res3 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
-    const hint = await res3.data
-    const res2 = await axios.get(`/roomDetail?roomID=${roomID}`,{headers: { cookie: ctx.req.headers.cookie}})
-    const data2 = await res2.data
-    return { props: { data:{...data1,hint:hint.reverse(),room:data2,roomID} }}
+  try{
+    if(ctx.req.headers.cookie){
+      const roomID = ctx.query.room
+      const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
+      const data1 = await res.data
+      const res3 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
+      const hint = await res3.data
+      const res2 = await axios.get(`/roomDetail?roomID=${roomID}`,{headers: { cookie: ctx.req.headers.cookie}})
+      const data2 = await res2.data
+      return { props: { data:{...data1,hint:hint.reverse(),room:data2,roomID} }}
+    }
+    else{
+      return { props: { data: {err:true}}}
+    }
   }
-  else{
-    return { props: { data: {err:true}}}
+  catch(err){
+    return {props: {data:{err:true}}}
   }
+    
 
 }
 

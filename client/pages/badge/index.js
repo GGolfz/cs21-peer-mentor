@@ -155,7 +155,7 @@ function Badge({data}) {
       }
     })
   }, []);
-    data.badge.map(el=>{
+    data.badge && data.badge.map(el=>{
       have.add(el.name)
     })
     badgeList.map(el=>{

@@ -43,7 +43,7 @@ let temp = [{
 function Chat({data}) {
   const [rooms,setRooms] = useState(data.rooms);
   const [hints,setHints] = useState(data.hint);
-  const [notify,setNotify] = useState(data.notify.notify)
+  const [notify,setNotify] = useState(data.notify)
   useEffect(()=>{
     if(data.err){
       Router.push('/')
@@ -99,7 +99,7 @@ function Chat({data}) {
         <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>CHAT</h1>
         <div className="chat-list">
           {
-            rooms.map((room)=>{
+            rooms && rooms.map((room)=>{
               return (<ChatBox key={room.roomID} data={room}/>)
             })
           }
@@ -142,19 +142,24 @@ function Chat({data}) {
   )
 }
 export async function getServerSideProps(ctx) {
-  if(ctx.req.headers.cookie){
-    const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
-    const data1 = await res.data
-    const res1 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
-    const hint = await res1.data
-    const res2 = await axios.get('/rooms',{headers: { cookie: ctx.req.headers.cookie}})
-    const rooms = await res2.data
-    const res3 = await axios.get('/notify',{headers: { cookie: ctx.req.headers.cookie}})
-    const notify = await res3.data
-    return { props: { data:{...data1,hint:hint.reverse(),rooms,notify} }}
+  try{
+    if(ctx.req.headers.cookie){
+      const res = await axios.get('/profile',{headers: { cookie: ctx.req.headers.cookie }})
+      const data1 = await res.data
+      const res1 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
+      const hint = await res1.data
+      const res2 = await axios.get('/rooms',{headers: { cookie: ctx.req.headers.cookie}})
+      const rooms = await res2.data
+      const res3 = await axios.get('/notify',{headers: { cookie: ctx.req.headers.cookie}})
+      const notify = await res3.data.notify
+      return { props: { data:{...data1,hint:hint.reverse(),rooms,notify} }}
+    }
+    else{
+      return { props: { data: {err:true}}}
+    }
   }
-  else{
-    return { props: { data: {err:true}}}
+  catch(err){
+    return {props: {data:{err:true}}}
   }
 
 }

@@ -36,7 +36,7 @@ const ChatRoom = (props) =>{
             <Modal visible={visible} width="auto" footer={null} onCancel={()=>{setVisible(false)}}>
                 
                     {
-                    data.type!== 'General' ? (
+                    data && data.type!== 'General' ? (
                     <Row>
                     <Col span={24}>
                     <h2 style={{fontSize:"1.4em",textAlign:"center",cursor:"default"}}>
@@ -66,7 +66,7 @@ const ChatRoom = (props) =>{
                     :(<Row>
                         <Col span={24}>
                         <h2 style={{fontSize:"1.4em",textAlign:"center",cursor:"default"}}>
-                            Room Name : {data.name}
+                            Room Name : {data?data.name:''}
                         </h2>
                         </Col>
                         <Col span={24}>
@@ -74,7 +74,7 @@ const ChatRoom = (props) =>{
                             Member
                         </h2>
                         </Col>
-                        {data.member.map(member=>{
+                        {data && data.member.map(member=>{
                             return (<Col span={24}><ChatMember data={member}/></Col>)
                         })
                         }
@@ -89,7 +89,7 @@ const ChatRoom = (props) =>{
                     </Link>
                 </Col>
                 <Col span={16}>
-                    <h2 style={{fontSize:"1.4em",cursor:"default"}}>{data.type=== 'General'?data.member.find(el=>el.name!==data.me).display_name : data.room}</h2>
+                    <h2 style={{fontSize:"1.4em",cursor:"default"}}>{data && data.type=== 'General'?data.member.find(el=>el.name!==data.me).display_name :data&& data.room}</h2>
                 </Col>
                 <Col span={4}>
                     <span className="material-icons" style={{padding:"5%",cursor:"pointer"}} onClick={showInfo}>info</span>

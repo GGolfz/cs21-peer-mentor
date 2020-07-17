@@ -9,9 +9,13 @@ import Router from 'next/router'
 import QRCode from "react-qr-code";
 import socketIOClient from 'socket.io-client'
 let socket
-const yearImage = {2:'ปี2',3:'ปี3',4:'ปี4'}
+const yearImage = {
+  2:'https://storage.googleapis.com/cs21-peer-mentor/element_img/Y2.jpg',
+  3:'https://storage.googleapis.com/cs21-peer-mentor/element_img/Y3.jpg',
+  4:'https://storage.googleapis.com/cs21-peer-mentor/element_img/Y4.jpg'
+}
 function Profile({data}) {
-  const [notify,setNotify] = useState(0)
+  const [notify,setNotify] = useState(data.notify)
   const [hints,setHints] = useState(data.hint);
   useEffect(()=>{
     if(data.err){
@@ -125,7 +129,7 @@ export async function getServerSideProps(ctx) {
       const res4 = await axios.get('/rooms',{headers: { cookie: ctx.req.headers.cookie}})
       const rooms = await res4.data
       const res5 = await axios.get('/notify',{headers: { cookie: ctx.req.headers.cookie}})
-      const notify = await res5.data
+      const notify = await res5.data.notify
       const data = {...data1,token:token1.token,hint:hint,rooms,notify}
       return { props: { data } }
     }
