@@ -52,7 +52,7 @@ const ChatRoom = (props) =>{
                     </Link>
                 </Col>
                 <Col span={16}>
-                    <h2 style={{fontSize:"1.4em",cursor:"default"}}>{data.room}</h2>
+                    <h2 style={{fontSize:"1.4em",cursor:"default"}}>{data.type=== 'General'?data.member.find(el=>el.name!==data.me).display_name : data.room}</h2>
                 </Col>
                 <Col span={4}>
                     <span className="material-icons" style={{padding:"5%",cursor:"pointer"}} onClick={showInfo}>info</span>
@@ -62,7 +62,7 @@ const ChatRoom = (props) =>{
                 {
                     messages && messages.map(
                         (message,index)=>{
-                            let start=false,end=false,who,img
+                            let start=false,end=false,who,img=''
                             if(index === 0 || (index > 0 && messages[index-1].sender !== message.sender)){
                                 start = true
                             }

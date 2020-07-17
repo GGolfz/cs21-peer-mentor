@@ -6,7 +6,6 @@ import ControlBar from '../../components/control-bar'
 import axios from '../../axios/axios'
 import ChatRoom from '../../components/chat/chatroom'
 import socketIOClient from 'socket.io-client'
-import {useRouter} from 'next/router'
 let socket
 function Chat({data}) {
   useEffect(()=>{
