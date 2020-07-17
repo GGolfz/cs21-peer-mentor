@@ -12,8 +12,6 @@
 
 `/profile` : show user profile and qr code
 
-`/profile/edit` : edit user profile
-
 `/chat`: show all chat room that user can access (provide 2 top for code line and co-code line) (use socket to get notification of latest message and number of unread message) 
 
 `/chat/:roomID` : chat room for specific ID
