@@ -7,7 +7,6 @@ const {Search} = Input
 const ChatRoom = (props) =>{
     const [text,setText] = useState('')
     const data = props.data
-    console.log(data)
     const messages = props.messages
     const [visible,setVisible] = useState(false)
     useEffect(()=>{

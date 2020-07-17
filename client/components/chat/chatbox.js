@@ -4,11 +4,7 @@ import Router from 'next/router'
 import axios from '../../axios/axios'
 const ChatBox = ({data}) =>{   
     const join = (id) => {
-        axios.patch('/notify',{roomID:id}).then(
-            res=>{
-                console.log(res)
-            }
-        ).catch(err=>{
+        axios.patch('/notify',{roomID:id}).catch(err=>{
             console.log(err)
         })
         Router.push(`/chat/${id}`)

@@ -1,7 +1,6 @@
 import React from 'react'
 import {Card,Row,Col} from 'antd'
 const Chatmember = ({data}) =>{  
-    console.log(data) 
     return (
         <Card style={{cursor:"pointer"}}>
             <Row style={{display:"flex",alignItems:"center"}}>

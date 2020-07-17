@@ -20,7 +20,7 @@ function Chat({data}) {
   
   //Implement Socket
   useEffect(() => {
-    socket= socketIOClient("http://localhost:5000")
+    socket= socketIOClient(process.env.SOCKET_URL)
     socket.emit('joinRoom',{room:data.roomID,user:data._id})
     socket.on('message', (messageNew) => {
       setMessage([...message,messageNew])

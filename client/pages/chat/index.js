@@ -50,7 +50,7 @@ function Chat({data}) {
     }
   })
   useEffect(() => {
-    socket= socketIOClient("http://localhost:5000")
+    socket= socketIOClient(process.env.SOCKET_URL)
   }, []);
   useEffect(()=>{
 

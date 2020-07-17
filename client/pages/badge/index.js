@@ -140,7 +140,7 @@ function Badge({data}) {
     }
   })
   useEffect(() => {
-    socket= socketIOClient("http://localhost:5000")
+    socket= socketIOClient(process.env.SOCKET_URL)
     socket.on('notify', () => {
       let temp1 = [... data.rooms]
       temp1.map(room=> {
