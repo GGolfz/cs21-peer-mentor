@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import {Row,Col,Input,Modal} from 'antd'
 import ChatBubble from './chatbubble'
+import ChatMember from './chatmember'
 import Link from 'next/link'
 const {Search} = Input
 const ChatRoom = (props) =>{
     const [text,setText] = useState('')
     const data = props.data
+    console.log(data)
     const messages = props.messages
     const [visible,setVisible] = useState(false)
     useEffect(()=>{
@@ -32,18 +34,53 @@ const ChatRoom = (props) =>{
     return (
         <div className="room">
             <Modal visible={visible} width="auto" footer={null} onCancel={()=>{setVisible(false)}}>
-                <Row>
+                
+                    {
+                    data.type!== 'General' ? (
+                    <Row>
                     <Col span={24}>
                     <h2 style={{fontSize:"1.4em",textAlign:"center",cursor:"default"}}>
-                        {
-                        data.type=== 'General'?data.member.find(el=>el.name!==data.me).name : data.room
-                        }
+                        {data.member.find(el=>el.name!==data.me).name}
                     </h2>
                     </Col>
                     <Col span={24}>
-
+                    <h2 style={{fontSize:"1.3em",textAlign:"center",cursor:"default"}}>
+                        {data.member.find(el=>el.name!==data.me).display_name}
+                    </h2>
                     </Col>
-                </Row>
+                    <Col span={24} style={{textAlign:"center"}}>
+                        <img width="40%" style={{borderRadius:"200px",cursor:"pointer",marginBottom:"5%"}} src={data.member.find(el=>el.name!==data.me).profile_image}/>
+                    </Col>
+                    <Col span={24} style={{textAlign:"center"}}>
+                    <h2 style={{fontSize:"1.2em",textAlign:"center",cursor:"default"}}>
+                        {data.member.find(el=>el.name!==data.me).bio?'Bio: ' + data.member.find(el=>el.name!==data.me).bio:' '}
+                    </h2>
+                    </Col>
+                    <Col span={24} style={{textAlign:"center"}}>
+                    <h2 style={{fontSize:"1.2em",textAlign:"center",cursor:"default"}}>
+                        Year: {data.member.find(el=>el.name!==data.me).year}
+                    </h2>
+                    </Col>
+                    </Row>
+                    )
+                    :(<Row>
+                        <Col span={24}>
+                        <h2 style={{fontSize:"1.4em",textAlign:"center",cursor:"default"}}>
+                            Room Name : {data.name}
+                        </h2>
+                        </Col>
+                        <Col span={24}>
+                        <h2 style={{fontSize:"1.3em",textAlign:"center",cursor:"default"}}>
+                            Member
+                        </h2>
+                        </Col>
+                        {data.member.map(member=>{
+                            return (<Col span={24}><ChatMember data={member}/></Col>)
+                        })
+                        }
+
+                    </Row>)
+                    }
             </Modal>
             <Row>
                 <Col span={4}>
@@ -62,7 +99,7 @@ const ChatRoom = (props) =>{
                 {
                     messages && messages.map(
                         (message,index)=>{
-                            let start=false,end=false,who,img=''
+                            let start=false,end=false,who,img
                             if(index === 0 || (index > 0 && messages[index-1].sender !== message.sender)){
                                 start = true
                             }

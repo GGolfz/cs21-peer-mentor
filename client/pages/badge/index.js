@@ -113,6 +113,21 @@ const badgeList =
   "image_url": "https://storage.googleapis.com/cs21-peer-mentor/element_img/Cat%20Logo.svg",
   "member": ["04", "12", "31"],
   "check": false
+},
+{ 
+  "name":"Year 2",
+  "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Y2.jpg",
+  "check": false
+},
+{
+  "name":"Year 3",
+  "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Y3.jpg",
+  "check": false
+},
+{
+  "name":"Year 4",
+  "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Y4.jpg",
+  "check": false
 }
 ]
 let have = new Set()
@@ -127,7 +142,12 @@ function Badge({data}) {
   useEffect(() => {
     socket= socketIOClient("http://localhost:5000")
     socket.on('notify', () => {
-      setNotify(notify=> notify+1)
+      let temp1 = [... data.rooms]
+      temp1.map(room=> {
+        if(room.roomID === noti.roomID && noti.senderID != data._id){
+            setNotify(notify=> notify+1)
+        }
+      })
     })
     socket.on('update-hint',(updated)=>{
       if(data.student_id === updated.reciever){
@@ -143,7 +163,7 @@ function Badge({data}) {
         el.check = true
       }
     })
-    badgeList.sort((a,b)=> b.check - true)
+    badgeList.sort((a,b)=> false - a.check) 
     useEffect(()=>{
       return ()=>{socket.emit('disconnect')}
     },[]);
@@ -217,7 +237,11 @@ export async function getServerSideProps(ctx) {
       const data2 = await res2.data
       const res3 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
       const hint = await res3.data
-      return { props: { data:{badge:data2,year:data1.year,hint:hint} } }
+      const res4 = await axios.get('/rooms',{headers: { cookie: ctx.req.headers.cookie}})
+      const rooms = await res4.data
+      const res5 = await axios.get('/notify',{headers: { cookie: ctx.req.headers.cookie}})
+      const notify = await res5.data
+      return { props: { data:{badge:data2,...data1,hint:hint,rooms,notify} } }
     }
     else{
       return { props: { data: {err:true}}}

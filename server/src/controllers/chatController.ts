@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { User } from '../models/user'
 import { Room } from '../models/room'
-
+import { Element } from '../models/element'
 interface ChatResponse {
 	_id: String
 	name: String
@@ -41,7 +41,7 @@ export const getCurrentNotify = async (req: Request, res: Response): Promise<voi
 		return
 	}
 	const rooms = await Room.find({ member: user._id })
-	res.send(getNotify(rooms))
+	res.send(getNotify(rooms,user._id))
 	return
 }
 export const updateRoomMessage = async (req: Request, res: Response): Promise<void> => {
@@ -69,6 +69,15 @@ export const updateRoomMessage = async (req: Request, res: Response): Promise<vo
 		{ $push: { messages: newMessage } },
 		{ new: true }
 	)
+	const rooms1 = await Room.find({member:user._id,_id:roomID})
+	rooms1.forEach((room:any)=>{
+		room.messages.map((mes:any)=>{
+			if(!mes.seen.find((el:any)=> el.toString() == user._id.toString())){
+				mes.seen.push(user._id)
+			}
+		})
+		room.save()
+	})
 	const response = await roomDetailResponse(rooms, user._id)
 	res.send(response)
 	return
@@ -114,7 +123,7 @@ export const updateNotify = async (req: Request, res: Response): Promise<void> =
 		room.save()
 	})
 	const roomsRes =await Room.find({member:user._id})
-	res.send(getNotify(roomsRes))
+	res.send(getNotify(roomsRes,user._id))
 	return 
 }
 export const getRoomListController = async (req: Request, res: Response): Promise<void> => {
@@ -133,13 +142,14 @@ export const getRoomListController = async (req: Request, res: Response): Promis
 	})
 	res.send(roomResponse(rooms, user._id))
 }
-const getNotify = (rooms: Array<any>): Object => {
+const getNotify = (rooms: Array<any>,me:any): Object => {
 	let notify = 0
 	rooms.map(room => {
 		room.messages.forEach((message: any) => {
-			if (!message.seen) {
+			if (!message.seen.find((see:any)=> see == me.toString())) {
 				notify += 1
 			}
+			
 		})
 	})
 	return { notify }
@@ -158,9 +168,9 @@ const toRefMember = (mem1: any, type: String): Member => {
 		return {
 			_id: mem1._id,
 			display_name: mem1.year !== '1' ? `พี่ปี ${mem1.year}` : mem1.display_name,
-			profile_image: '',
-			bio: '',
-			name: mem1.year !== '1' ? `พี่ปี ${mem1.year}` : mem1.display_name,
+			profile_image: mem1.year !== '1' ? getImage(`${mem1.year}`,'user') : mem1.profile_img,
+			bio:  mem1.year !== '1' ? 'รอน้องๆ ตามหาอยู่น้า' : mem1.bio ,
+			name: mem1.year !== '1' ? `พี่ปี ${mem1.year}` : mem1.name,
 			year: mem1.year
 		}
 	}
@@ -185,7 +195,7 @@ const toRefRoomMembers = async (room: any): Promise<Array<Member>> => {
 }
 const toRefRoomMessages = async (room: any, me: String): Promise<any> => {
 	const messages: Array<Message> = []
-	await room.messages.forEach(async (message: any) => {
+	for(let message of room.messages){
 		if (room.type === 'General') {
 			let sender
 			if(message.sender.toString() == me.toString()){
@@ -214,7 +224,7 @@ const toRefRoomMessages = async (room: any, me: String): Promise<any> => {
 				time: message.timestamp
 			})
 		}
-	})
+	}
 	return messages
 }
 const roomDetailResponse = async (room: any, me: String): Promise<any> => {
@@ -250,7 +260,7 @@ const roomResponse = (rooms: Array<any>, me: String): Array<ChatBoxResponse> => 
 			}
 			let notify = 0
 			room.messages.forEach((message: any) => {
-				if (!message.seen) {
+				if (!message.seen.find((see:any)=> see == me.toString())) {
 					notify += 1
 				}
 			})
@@ -282,7 +292,7 @@ const roomResponse = (rooms: Array<any>, me: String): Array<ChatBoxResponse> => 
 			}
 			let notify = 0
 			room.messages.forEach((message: any) => {
-				if (!message.seen) {
+				if (!message.seen.find((see:any)=> see == me.toString())) {
 					notify += 1
 				}
 			})
@@ -291,7 +301,7 @@ const roomResponse = (rooms: Array<any>, me: String): Array<ChatBoxResponse> => 
 				name: room.name,
 				bio: '',
 				type: room.type,
-				profile_image: '',
+				profile_image: getImage(room.name,room.type),
 				time: lastMessage.timestamp,
 				latest: lastMessage.message,
 				sender: lastMessage.sender,
@@ -301,4 +311,24 @@ const roomResponse = (rooms: Array<any>, me: String): Array<ChatBoxResponse> => 
 		arr.push(chatroom)
 	})
 	return arr
+}
+const getImage =async (name:String,type:String): Promise<String> => {
+	switch(type){
+		case "Co Line":
+			const coimage:any = await Element.findOne({
+				name: name.split(' ')[0]
+			}).select('image_url')
+			return coimage.image_url
+		case "Code Line":
+			const codeimage:any =await Element.findOne({
+				member: name.split(' ')[2]
+			}).select('image_url')
+			return codeimage.image_url
+		case "user":
+			const userimage: any = await Element.findOne({
+				name: `Year ${name}`
+			}).select('image_url')
+			return userimage.image_url
+	}
+	return ""
 }

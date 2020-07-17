@@ -1,16 +1,16 @@
 import { Router, Request, Response } from 'express'
 import { Types } from 'mongoose'
 import { Room } from '../models/room'
+import { Element } from '../models/element'
+import { Hint } from '../models/hint'
 import { verifyAuth } from '../controllers/authController'
-
 export const testRouter = Router()
 
 testRouter.get('/test', async (req: Request, res: Response) => {
 	// const newUserID = Types.ObjectId()
-	const rooms = await Room.find({})
-	// const element: any = await Element.find()
+	const element: any = await Element.find({})
 	// console.log(process.env.TEST)
-	res.send(rooms)
+	res.send(element)
 })
 
 testRouter.post('/test', verifyAuth, async (req: Request, res: Response) => {

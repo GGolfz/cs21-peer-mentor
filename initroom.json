@@ -42,7 +42,7 @@
 		"messages": []
 	},
 	{
-		"name": "Thunder Code Line",
+		"name": "Thunderbolt Code Line",
 		"type": "Co Line",
 		"member": [],
 		"messages": []
@@ -79,6 +79,12 @@
 	},
 	{
 		"name": "Darkness Code Line",
+		"type": "Co Line",
+		"member": [],
+		"messages": []
+	},
+	{
+		"name": "Cat-lover Code Line",
 		"type": "Co Line",
 		"member": [],
 		"messages": []

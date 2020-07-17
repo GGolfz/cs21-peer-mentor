@@ -1,5 +1,5 @@
 import React from 'react'
-import {Card,Row,Col, message} from 'antd'
+import {Card,Row,Col} from 'antd'
 import Router from 'next/router'
 import axios from '../../axios/axios'
 const ChatBox = ({data}) =>{   
@@ -28,9 +28,9 @@ const ChatBox = ({data}) =>{
                 <Col span={15}>
                     <Row style={{textAlign:"left"}}>
                     <Col span={24} style={{paddingLeft:"5%"}}>{data.name}</Col>
-                    { data.bio !== '' ? (<Col span={24} style={{paddingLeft:"5%"}}>({data.bio})</Col>):<Col span={24}/>}
+                    { data.bio !== '' ? (<Col span={24} style={{paddingLeft:"5%"}}>({data.bio})</Col>):<Col span={24}>&nbsp;</Col>}
                     {data.sender !== '' ? (
-                    <Col span={24} style={{paddingLeft:"5%"}}>{data.sender}: {data.latest}</Col>):''}
+                    <Col span={24} style={{paddingLeft:"5%"}}>{data.sender}: {data.latest}</Col>):<Col span={24}>&nbsp;</Col>}
                     </Row>
                 </Col>
                 <Col span={4}>

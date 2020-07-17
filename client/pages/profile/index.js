@@ -22,7 +22,12 @@ function Profile({data}) {
   useEffect(() => {
     socket= socketIOClient("http://localhost:5000")
     socket.on('notify', () => {
-      setNotify(notify=> notify+1)
+      let temp1 = [... data.rooms]
+      temp1.map(room=> {
+        if(room.roomID === noti.roomID && noti.senderID != data._id){
+            setNotify(notify=> notify+1)
+        }
+      })
     })
     socket.on('update-hint',(updated)=>{
       if(data.student_id === updated.reciever){
@@ -117,7 +122,11 @@ export async function getServerSideProps(ctx) {
       const token1 = await res2.data
       const res3 = await axios.get('/hint',{headers: { cookie: ctx.req.headers.cookie}})
       const hint = await res3.data
-      const data = {...data1,token:token1.token,hint:hint}
+      const res4 = await axios.get('/rooms',{headers: { cookie: ctx.req.headers.cookie}})
+      const rooms = await res4.data
+      const res5 = await axios.get('/notify',{headers: { cookie: ctx.req.headers.cookie}})
+      const notify = await res5.data
+      const data = {...data1,token:token1.token,hint:hint,rooms,notify}
       return { props: { data } }
     }
     else{
