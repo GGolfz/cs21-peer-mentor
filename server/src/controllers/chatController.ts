@@ -99,7 +99,8 @@ export const getRoomDetailController = async (req: Request, res: Response): Prom
 		display_name: 1,
 		bio: 1,
 		profile_img: 1,
-		_id: 1
+		_id: 1,
+		year: 1
 	})
 	const response = await roomDetailResponse(rooms, user._id)
 	res.send(response)
@@ -138,9 +139,11 @@ export const getRoomListController = async (req: Request, res: Response): Promis
 		display_name: 1,
 		bio: 1,
 		profile_img: 1,
-		_id: 1
+		_id: 1,
+		year: 1
 	})
-	res.send(roomResponse(rooms, user._id))
+	let response = await roomResponse(rooms, user._id)
+	res.send(response)
 }
 const getNotify = (rooms: Array<any>,me:any): Object => {
 	let notify = 0
@@ -154,7 +157,7 @@ const getNotify = (rooms: Array<any>,me:any): Object => {
 	})
 	return { notify }
 }
-const toRefMember = (mem1: any, type: String): Member => {
+const toRefMember = async (mem1: any, type: String): Promise<Member> => {
 	if (type === 'General') {
 		return {
 			_id: mem1._id,
@@ -165,10 +168,11 @@ const toRefMember = (mem1: any, type: String): Member => {
 			year: mem1.year
 		}
 	} else {
+		let img = await getImage(`${mem1.year}`,'user')
 		return {
 			_id: mem1._id,
 			display_name: mem1.year !== '1' ? `พี่ปี ${mem1.year}` : mem1.display_name,
-			profile_image: mem1.year !== '1' ? getImage(`${mem1.year}`,'user') : mem1.profile_img,
+			profile_image: mem1.year !== '1' ? img: mem1.profile_img,
 			bio:  mem1.year !== '1' ? 'รอน้องๆ ตามหาอยู่น้า' : mem1.bio ,
 			name: mem1.year !== '1' ? `พี่ปี ${mem1.year}` : mem1.name,
 			year: mem1.year
@@ -215,7 +219,7 @@ const toRefRoomMessages = async (room: any, me: String): Promise<any> => {
 			if (message.sender.toString() == me.toString()) {
 				sender = 'You'
 			} else {
-				let mem1 = room.member.find((mem: any) => mem.id === message.sender.toString())
+				let mem1 = room.member.find((mem: any) => mem._id === message.sender.toString())
 				sender = mem1.year !== '1' ? `พี่ปี ${mem1.year}` : mem1.display_name
 			}
 			await messages.push({
@@ -238,9 +242,9 @@ const roomDetailResponse = async (room: any, me: String): Promise<any> => {
 		member
 	}
 }
-const roomResponse = (rooms: Array<any>, me: String): Array<ChatBoxResponse> => {
+const roomResponse = async (rooms: Array<any>, me: String): Promise<Array<ChatBoxResponse>> => {
 	const arr: Array<ChatBoxResponse> = []
-	rooms.map(room => {
+	for(let room of rooms){
 		let chatroom
 		if (room.type === 'General') {
 			let target = room.member.find((mem: any) => mem._id !== me)
@@ -248,7 +252,6 @@ const roomResponse = (rooms: Array<any>, me: String): Array<ChatBoxResponse> => 
 			if (room.messages.length > 0) {
 				let mes = room.messages[room.messages.length - 1]
 				let sender
-
 				if (mes.sender.toString() === me.toString()) {
 					sender = 'You'
 				} else {
@@ -280,10 +283,10 @@ const roomResponse = (rooms: Array<any>, me: String): Array<ChatBoxResponse> => 
 			if (room.messages.length > 0) {
 				let mes = room.messages[room.messages.length - 1]
 				let sender
-				if (mes.sender === me) {
+				if (mes.sender.toString() == me.toString()) {
 					sender = 'You'
 				} else {
-					let mem1 = room.member.find((mem: any) => mem.id === mes.sender)
+					let mem1 = room.member.find((mem: any) => mem._id.toString() == mes.sender.toString())
 					sender = mem1.year !== '1' ? `พี่ปี ${mem1.year}` : mem1.display_name
 				}
 				lastMessage = { message: mes.message, sender, timestamp: mes.timestamp }
@@ -296,12 +299,13 @@ const roomResponse = (rooms: Array<any>, me: String): Array<ChatBoxResponse> => 
 					notify += 1
 				}
 			})
+			let img = await getImage(room.name,room.type)
 			chatroom = {
 				roomID: room._id,
 				name: room.name,
 				bio: '',
 				type: room.type,
-				profile_image: getImage(room.name,room.type),
+				profile_image: img,
 				time: lastMessage.timestamp,
 				latest: lastMessage.message,
 				sender: lastMessage.sender,
@@ -309,7 +313,7 @@ const roomResponse = (rooms: Array<any>, me: String): Array<ChatBoxResponse> => 
 			}
 		}
 		arr.push(chatroom)
-	})
+	}
 	return arr
 }
 const getImage =async (name:String,type:String): Promise<String> => {
