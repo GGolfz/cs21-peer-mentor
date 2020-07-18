@@ -3,6 +3,7 @@ import { Types } from 'mongoose'
 import { Room } from '../models/room'
 import { Element } from '../models/element'
 import { Hint } from '../models/hint'
+import { User  } from '../models/user'
 import { verifyAuth } from '../controllers/authController'
 export const testRouter = Router()
 

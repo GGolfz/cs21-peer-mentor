@@ -13,8 +13,10 @@ const ChatRoom = (props) =>{
        var x= document.getElementById('chat-room')
        x.scrollTop = x.scrollHeight
     },[]);
-    const send = ()=> {
-        props.onSend(text)
+    const send = async ()=> {
+        await props.onSend(text)
+        var x= document.getElementById('chat-room')
+        x.scrollTop = x.scrollHeight
         setText('')
     }
     const showInfo =()=>{
@@ -105,13 +107,19 @@ const ChatRoom = (props) =>{
                             if(index === messages.length-1 || (index < messages.length-1 && messages[index+1].sender !== message.sender)){
                                 end = true
                             }
-                            if(message.senderID === props.me || message.sender === 'You'){
+                            if(message.sender == 'You' || (message.senderID && (message.senderID == props.me))){
                                 who = 'me'
                             }
                             else{
                                 who = 'him'
                                 if(start){
-                                    img = data.member.find(el=>el.display_name===message.sender).profile_image
+                                    img = data.member.find(el=>el.display_name===message.sender)
+                                    if(img) {
+                                        img = img.profile_image
+                                    }
+                                    else {
+                                        img = ''
+                                    }
                                 }
                             }
                             return(
