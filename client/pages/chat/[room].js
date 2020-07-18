@@ -41,13 +41,13 @@ function Chat({data}) {
   useEffect(()=>{
     return ()=>{socket.emit('disconnect')}
   },[]);
-  const onSend = (message)=>{
+  const onSend = async (message)=>{
     if(message.length>0){
       let time = new Date().getTime()
-      axios.post('/message',{message,roomID:data.roomID,timestamp:time}).then(
+      await axios.post('/message',{message,roomID:data.roomID,timestamp:time}).then(
         res=> {
-          setMessage(res.data.messages)
           setRoomdata(res.data)
+          setMessage(res.data.messages)
           let sender = data.year != '1' && data.room.type !== 'General' ? `พี่ปี `+ data.year: data.display_name
           const tempData = {sender,senderID:data._id,message,room:data.roomID,time}
           socket.emit('chatMessage', tempData)
