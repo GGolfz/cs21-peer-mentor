@@ -4,5 +4,5 @@ COPY ./package.json ./package.json
 RUN yarn
 COPY ./ ./
 RUN yarn build
-EXPOSE 3050
+EXPOSE 5000
 CMD ["node", "build/main.js"]
