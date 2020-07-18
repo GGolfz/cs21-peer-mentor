@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next export",
-    "start": "NODE_ENV=production node .next/production-server/index.js"
+    "start": "next start"
   },
   "dependencies": {
     "@babel/core": "^7.10.4",

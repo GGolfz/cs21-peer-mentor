@@ -3,5 +3,5 @@ node_modules/
 uploads/
 .env
 GCS-service-account.json
-READNE.md
+README.md
 .gitignore

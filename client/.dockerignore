@@ -2,6 +2,6 @@ build/
 node_modules/
 uploads/
 .env
-GCS-service-account.json
 README.md
 .gitignore
+.next
