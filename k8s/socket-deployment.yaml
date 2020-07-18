@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: socket-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       component: server
@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: cs21-peer-mentor-socket
-          image: cs21-peer-mentor-socket
+          image: thetkpark/cs21-peer-mentor-socket
           ports:
             - containerPort: 5000

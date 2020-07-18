@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: client-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       component: web
@@ -14,11 +14,11 @@ spec:
     spec:
       containers:
         - name: cs21-peer-mentor-client
-          image: cs21-peer-mentor-client
+          image: thetkpark/cs21-peer-mentor-client:latest
           ports:
             - containerPort: 3000
           env:
             - name: NEXT_PUBLIC_SERVER_URL
-              value: http://localhost/api
+              value: https://e46c0e798b5a.ngrok.io/api
             - name: NEXT_PUBLIC_SOCKET_URL
-              value: http://localhost/socket
+              value: https://e46c0e798b5a.ngrok.io/socket
