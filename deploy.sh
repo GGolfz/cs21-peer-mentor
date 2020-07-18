@@ -1,7 +1,13 @@
-docker build -t cs21-peer-mentor_client -f ./client/Dockerfile ./client
-docker build -t cs21-peer-mentor_server -f ./server/Dockerfile ./server
-docker build -t cs21-peer-mentor_socket -f ./socket/Dockerfile ./socket
+docker build -t ggolfz/cs21-peer-mentor-client -f ./client/Dockerfile ./client
+docker build -t ggolfz/cs21-peer-mentor-server -f ./server/Dockerfile ./server
+docker build -t ggolfz/cs21-peer-mentor-socket -f ./socket/Dockerfile ./socket
 
-# docker run --name cs21-peer-mentor_client -p 3000:3000 cs21-peer-mentor_client 
-# docker run --name cs21-peer-mentor_server -p 3050:3050 cs21-peer-mentor_server
-# docker run --name cs21-peer-mentor_socket -p 5000:5000 cs21-peer-mentor_socket
+docker push ggolfz/cs21-peer-mentor-client
+docker push ggolfz/cs21-peer-mentor-server
+docker push ggolfz/cs21-peer-mentor-socket
+
+
+kubectl apply -f k8s
+kubectl set image deployments/server-deployment cs21-peer-mentor-server=ggolfz/cs21-peer-mentor-server
+kubectl set image deployments/client-deployment cs21-peer-mentor-client=ggolfz/cs21-peer-mentor-client
+kubectl set image deployments/socket-deployment cs21-peer-mentor-socket=ggolfz/cs21-peer-mentor-socket

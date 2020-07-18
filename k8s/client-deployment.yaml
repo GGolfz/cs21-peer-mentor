@@ -13,9 +13,12 @@ spec:
         component: web
     spec:
       containers:
-        - name: cs21-peer-mentor_client
-          image: cs21-peer-mentor_client
+        - name: cs21-peer-mentor-client
+          image: cs21-peer-mentor-client
           ports:
             - containerPort: 3000
           env:
-            
+            - name: NEXT_PUBLIC_SERVER_URL
+              value: http://localhost/api
+            - name: NEXT_PUBLIC_SOCKET_URL
+              value: http://localhost/socket

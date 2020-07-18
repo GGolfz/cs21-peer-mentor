@@ -13,7 +13,7 @@ spec:
         component: server
     spec:
       containers:
-        - name: cs21-peer-mentor_socket
-          image: cs21-peer-mentor_socket
+        - name: cs21-peer-mentor-socket
+          image: cs21-peer-mentor-socket
           ports:
             - containerPort: 5000

@@ -13,8 +13,8 @@ spec:
         component: server
     spec:
       containers:
-        - name: cs21-peer-mentor_server
-          image: cs21-peer-mentor_server
+        - name: cs21-peer-mentor-server
+          image: cs21-peer-mentor-server
           ports:
             - containerPort: 3000
           env:
