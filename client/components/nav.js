@@ -102,7 +102,7 @@ const Nav = (props) => {
       </Modal>
       
       <div className="button-list">
-        <a href="http://localhost:3050/logout"><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></a>
+        <a href={`${process.env.NEXT_PUBLIC_SERVER_URL}/logout`}><Button type="dashed" id="ant-button-danger" style={{marginRight:"8%"}}>LOG OUT</Button></a>
       </div>
     </div>
     <style jsx>{`

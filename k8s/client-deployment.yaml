@@ -19,6 +19,6 @@ spec:
             - containerPort: 3000
           env:
             - name: NEXT_PUBLIC_SERVER_URL
-              value: http://localhost/api
+              value: http://192.168.64.2/api
             - name: NEXT_PUBLIC_SOCKET_URL
-              value: http://localhost/socket
+              value: http://192.168.64.2/socket
