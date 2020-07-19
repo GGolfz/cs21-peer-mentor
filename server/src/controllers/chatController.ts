@@ -2,13 +2,6 @@ import { Request, Response } from 'express'
 import { User } from '../models/user'
 import { Room } from '../models/room'
 import { Element } from '../models/element'
-interface ChatResponse {
-	_id: String
-	name: String
-	type: String
-	messages: Array<Message>
-	member: Array<Member>
-}
 interface Message {
 	message: String
 	sender: String
@@ -43,6 +36,35 @@ export const getCurrentNotify = async (req: Request, res: Response): Promise<voi
 	const rooms = await Room.find({ member: user._id })
 	res.send(getNotify(rooms, user._id))
 	return
+}
+export const updateRoomDetail = async (req:Request, res: Response): Promise<void> => {
+	const student_id = req.user
+	const roomID = req.body.roomID
+	const user = await User.findOne({ student_id }).select('_id')
+	if (!user) {
+		res.status(404).send({ error: 'User is not found' })
+		return
+	}
+	const rooms = await Room.find({ member: user._id, _id: roomID })
+	rooms.forEach((room: any) => {
+		room.messages.map((mes: any) => {
+			if (!mes.seen.find((el: any) => el.toString() == user._id.toString())) {
+				mes.seen.push(user._id)
+			}
+		})
+		room.save()
+	})
+	const rooms2: any = await Room.find({ member: user._id }).populate('member', {
+		display_name: 1,
+		bio: 1,
+		profile_img: 1,
+		_id: 1,
+		year: 1,
+	})
+	const response = await roomDetailResponse(rooms2, user._id)
+	res.send(response)
+	return
+
 }
 export const updateRoomMessage = async (req: Request, res: Response): Promise<void> => {
 	const student_id = req.user

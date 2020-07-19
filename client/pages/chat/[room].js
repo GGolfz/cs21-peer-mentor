@@ -26,11 +26,11 @@ function Chat({data}) {
     socket.emit('joinRoom',{room:data.roomID,user:data._id})
     socket.on('message', (messageNew) => {
       if(messageNew.senderID != data._id){
-        axios.get(`/roomDetail?roomID=${roomID}`).then(res=>{
+        axios.patch('/updateRoomDetail',{roomID:id}).then(res=>{
           setRoomdata(res.data)
           setMessage(res.data.messages)
         }).catch(err=>{
-          console.log(err)
+            console.log(err)
         })
       }
     })
