@@ -6,6 +6,6 @@ data:
   CLIENT_URL: https://cs21.cscms.me/
   SERVER_URL: https://cs21.cscms.me/api
   SOCKET_URL: https://cs21.cscms.me/socket
-  REDIS_HOST: cs21.redis.cache.windows.net
+  REDIS_HOST: redis-cluster-ip-service
   GCS_BUCKET_NAME: cs21-peer-mentor
   GCS_BUCKET_PATH: https://storage.googleapis.com/cs21-peer-mentor
