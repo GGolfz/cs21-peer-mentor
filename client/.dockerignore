@@ -1,7 +1,6 @@
 build/
 node_modules/
 uploads/
-.env
 README.md
 .gitignore
 .next

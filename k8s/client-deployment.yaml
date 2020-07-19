@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: cs21-peer-mentor-client
-          image: thetkpark/cs21-peer-mentor-client:latest
+          image: thetkpark/cs21-peer-mentor-client
           ports:
             - containerPort: 3000
           env:

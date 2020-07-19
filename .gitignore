@@ -30,3 +30,7 @@ yarn-error.log*
 .env.production.local
 
 k8s/server-secret.yaml
+
+k8s/cs21.crt
+
+k8s/cs21.key

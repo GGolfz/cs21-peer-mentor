@@ -1,0 +1,23 @@
+apiVersion: skaffold/v2alpha1
+kind: Config
+metadata:
+  name: cs--peer-mentor
+build:
+  artifacts:
+  - image: thetkpark/cs21-peer-mentor-client
+    context: client
+  - image: thetkpark/cs21-peer-mentor-server
+    context: server
+  - image: thetkpark/cs21-peer-mentor-socket
+    context: socket
+deploy:
+  kubectl:
+    manifests:
+    - k8s/client-cluster-ip-service.yaml
+    - k8s/client-deployment.yaml
+    - k8s/ingress-service.yaml
+    - k8s/server-cluster-ip-service.yaml
+    - k8s/server-deployment.yaml
+    - k8s/server-secret.yaml
+    - k8s/socker-cluster-ip-service.yaml
+    - k8s/socket-deployment.yaml

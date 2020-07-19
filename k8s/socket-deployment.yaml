@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      component: server
+      component: socket
   template:
     metadata:
       labels:
-        component: server
+        component: socket
     spec:
       containers:
         - name: cs21-peer-mentor-socket

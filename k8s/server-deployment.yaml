@@ -32,9 +32,9 @@ spec:
                   name: server-secret
                   key: MONGO_CONNECTION_STRING
             - name: CLIENT_URL
-              value: https://2b1235c80c26.ap.ngrok.io
+              value: https://cs21.cscms.me/
             - name: SERVER_URL
-              value: https://2b1235c80c26.ap.ngrok.io/api
+              value: https://cs21.cscms.me/api
             - name: SESSION_SECRET
               valueFrom:
                 secretKeyRef:

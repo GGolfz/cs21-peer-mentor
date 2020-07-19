@@ -12,7 +12,7 @@ export default function Home() {
       <div className="content">
         <div className="app-logo">
           <AppLogo/>
-          <a href={`/api/auth/microsoft`}>
+          <a href={`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/microsoft`}>
             <LoginButton/>
           </a>
         </div>
