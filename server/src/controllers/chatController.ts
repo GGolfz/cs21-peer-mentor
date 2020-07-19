@@ -78,7 +78,14 @@ export const updateRoomMessage = async (req: Request, res: Response): Promise<vo
 		})
 		room.save()
 	})
-	const response = await roomDetailResponse(rooms, user._id)
+	const rooms2: any = await Room.find({ member: user._id }).populate('member', {
+		display_name: 1,
+		bio: 1,
+		profile_img: 1,
+		_id: 1,
+		year: 1,
+	})
+	const response = await roomDetailResponse(rooms2, user._id)
 	res.send(response)
 	return
 }
