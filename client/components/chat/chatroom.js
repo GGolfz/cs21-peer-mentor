@@ -113,7 +113,7 @@ const ChatRoom = (props) =>{
                             else{
                                 who = 'him'
                                 if(start){
-                                    img = data.member.find(el=>el.display_name===message.sender)
+                                    img = data.member.find(el=>el.display_name==message.sender)
                                     if(img) {
                                         img = img.profile_image
                                     }
