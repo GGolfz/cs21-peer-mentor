@@ -19,6 +19,12 @@ spec:
             - containerPort: 3000
           env:
             - name: NEXT_PUBLIC_SERVER_URL
-              value: https://2b1235c80c26.ap.ngrok.io/api
+              valueFrom:
+                configMapKeyRef:
+                  name: components-config
+                  key: SERVER_URL
             - name: NEXT_PUBLIC_SOCKET_URL
-              value: https://2b1235c80c26.ap.ngrok.io/socket
+              valueFrom:
+                configMapKeyRef:
+                  name: components-config
+                  key: SOCKET_URL

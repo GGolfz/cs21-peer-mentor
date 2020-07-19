@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: components-config
+data:
+  CLIENT_URL: https://cs21.cscms.me/
+  SERVER_URL: https://cs21.cscms.me/api
+  SOCKET_URL: https://cs21.cscms.me/socket
+  REDIS_HOST: cs21.redis.cache.windows.net
+  GCS_BUCKET_NAMEA: cs21-peer-mentor
+  GCS_BUCKET_PATH: https://storage.googleapis.com/cs21-peer-mentor

@@ -32,16 +32,25 @@ spec:
                   name: server-secret
                   key: MONGO_CONNECTION_STRING
             - name: CLIENT_URL
-              value: https://cs21.cscms.me/
+              valueFrom:
+                configMapKeyRef:
+                  name: components-config
+                  key: CLIENT_URL
             - name: SERVER_URL
-              value: https://cs21.cscms.me/api
+              valueFrom:
+                configMapKeyRef:
+                  name: components-config
+                  key: SERVER_URL
             - name: SESSION_SECRET
               valueFrom:
                 secretKeyRef:
                   name: server-secret
                   key: SESSION_SECRET
             - name: REDIS_HOST
-              value: cs21.redis.cache.windows.net
+              valueFrom:
+                configMapKeyRef:
+                  name: components-config
+                  key: REDIS_HOST
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -58,9 +67,15 @@ spec:
                   name: server-secret
                   key: MSAPP_CLIENT_SECRET
             - name: GCS_BUCKET_NAME
-              value: cs21-peer-mentor
+              valueFrom:
+                configMapKeyRef:
+                  name: components-config
+                  key: GCS_BUCKET_NAME
             - name: GCS_KEY_PATH
               value: /etc/gcs/gcs
             - name: GCS_BUCKET_PATH
-              value: https://storage.googleapis.com/cs21-peer-mentor
+              valueFrom:
+                configMapKeyRef:
+                  name: components-config
+                  key: GCS_BUCKET_PATH
         
