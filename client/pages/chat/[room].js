@@ -20,17 +20,28 @@ function Chat({data}) {
   
   //Implement Socket
   useEffect(() => {
+    var x = document.getElementById('chat-room')
+    x.scrollTop = x.scrollHeight
     socket= socketIOClient(process.env.NEXT_PUBLIC_SOCKET_URL)
     socket.emit('joinRoom',{room:data.roomID,user:data._id})
     socket.on('message', (messageNew) => {
       if(messageNew.senderID != data._id){
-        setMessage([...message,messageNew])
+        const temp = [... message]
+        temp.push(messageNew)
+        setMessage(temp)
+        var x = document.getElementById('chat-room')
+        x.scrollTop = x.scrollHeight
       }
-      var x = document.getElementById('chat-room')
-      x.scrollTop = x.scrollHeight
-      if(messageNew.roomID !== data.roomID && messageNew.senderID !== data._id){
-        setNotify(notify=> notify+1)
-      }
+    })
+    socket.on('notify', (noti) => {
+      let temp1 = [... data.rooms]
+      temp1.map(room=> {
+        if(room.roomID === noti.roomID && noti.senderID != data._id){
+            if(noti.roomID !== data.roomID){
+              setNotify(notify=> notify+1)
+            }
+        }
+      })
     })
     socket.on('update-hint',(updated)=>{
       if(data.student_id === updated.reciever){
@@ -112,7 +123,11 @@ export async function getServerSideProps(ctx) {
       const hint = await res3.data
       const res2 = await axios.get(`/roomDetail?roomID=${roomID}`,{headers: { cookie: ctx.req.headers.cookie}})
       const data2 = await res2.data
-      return { props: { data:{...data1,hint:hint.reverse(),room:data2,roomID} }}
+      const res4 = await axios.get('/rooms',{headers: { cookie: ctx.req.headers.cookie}})
+      const rooms = await res4.data
+      const res5 = await axios.get('/notify',{headers: { cookie: ctx.req.headers.cookie}})
+      const notify = await res5.data.notify
+      return { props: { data:{...data1,hint:hint.reverse(),room:data2,roomID,rooms,notify} }}
     }
     else{
       return { props: { data: {err:true}}}
