@@ -12,11 +12,55 @@ spec:
       labels:
         component: server
     spec:
+      volumes:
+        - name: gcs-service-account-json
+          secret:
+            secretName: gcs-service-account
       containers:
         - name: cs21-peer-mentor-server
           image: thetkpark/cs21-peer-mentor-server
           ports:
             - containerPort: 3000
+          volumeMounts:
+            - name: gcs-service-account-json
+              mountPath: /etc/gcs
+              readOnly: true
           env:
-
-            
+            - name: MONGO_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: server-secret
+                  key: MONGO_CONNECTION_STRING
+            - name: CLIENT_URL
+              value: https://2b1235c80c26.ap.ngrok.io
+            - name: SERVER_URL
+              value: https://2b1235c80c26.ap.ngrok.io/api
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: server-secret
+                  key: SESSION_SECRET
+            - name: REDIS_HOST
+              value: cs21.redis.cache.windows.net
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: server-secret
+                  key: REDIS_PASSWORD
+            - name: MSAPP_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: server-secret
+                  key: MSAPP_CLIENT_ID
+            - name: MSAPP_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: server-secret
+                  key: MSAPP_CLIENT_SECRET
+            - name: GCS_BUCKET_NAME
+              value: cs21-peer-mentor
+            - name: GCS_KEY_PATH
+              value: /etc/gcs/gcs
+            - name: GCS_BUCKET_PATH
+              value: https://storage.googleapis.com/cs21-peer-mentor
+        
