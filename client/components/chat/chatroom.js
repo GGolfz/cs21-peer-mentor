@@ -41,12 +41,12 @@ const ChatRoom = (props) =>{
                     <Row>
                     <Col span={24}>
                     <h2 style={{fontSize:"1.4em",textAlign:"center",cursor:"default"}}>
-                        {data.member.find(el=>el.name!==data.me).name}
+                        {data.member.find(el=>el.name!=data.me).name}
                     </h2>
                     </Col>
                     <Col span={24}>
                     <h2 style={{fontSize:"1.3em",textAlign:"center",cursor:"default"}}>
-                        {data.member.find(el=>el.name!==data.me).display_name}
+                        {data.member.find(el=>el.name!=data.me).display_name}
                     </h2>
                     </Col>
                     <Col span={24} style={{textAlign:"center"}}>
@@ -54,12 +54,12 @@ const ChatRoom = (props) =>{
                     </Col>
                     <Col span={24} style={{textAlign:"center"}}>
                     <h2 style={{fontSize:"1.2em",textAlign:"center",cursor:"default"}}>
-                        {data.member.find(el=>el.name!==data.me).bio?'Bio: ' + data.member.find(el=>el.name!==data.me).bio:' '}
+                        {data.member.find(el=>el.name!=data.me).bio?'Bio: ' + data.member.find(el=>el.name!==data.me).bio:' '}
                     </h2>
                     </Col>
                     <Col span={24} style={{textAlign:"center"}}>
                     <h2 style={{fontSize:"1.2em",textAlign:"center",cursor:"default"}}>
-                        Year: {data.member.find(el=>el.name!==data.me).year}
+                        Year: {data.member.find(el=>el.name!=data.me).year}
                     </h2>
                     </Col>
                     </Row>
