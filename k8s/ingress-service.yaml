@@ -28,9 +28,6 @@ spec:
             backend:
               serviceName: server-cluster-ip-service
               servicePort: 3050
-          - path: /socket/?(.*)
-            backend:
-              
           - path: /?(.*)
             backend:
               serviceName: client-cluster-ip-service
