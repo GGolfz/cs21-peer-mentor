@@ -36,3 +36,7 @@ k8s/cs21.crt
 k8s/cs21.key
 
 k8s/gcs-service-account-secret.yaml
+
+k8s/cs21-socket.crt
+
+k8s/cs21-socket.key

@@ -10,7 +10,17 @@ spec:
     - hosts:
       - cs21.cscms.me
       secretName: cs21-cf
+    - hosts:
+      - cs21socket.cscms.me
+      secretName: cs21-socket-cf
   rules:
+    - host: cs21socket.cscms.me
+      http:
+        paths:
+          - path: /?(.*)
+            backend:
+              serviceName: socket-cluster-ip-service
+              servicePort: 5000
     - host: cs21.cscms.me
       http:
         paths:
@@ -18,10 +28,6 @@ spec:
             backend:
               serviceName: server-cluster-ip-service
               servicePort: 3050
-          - path: /socket.io/?(.*)
-            backend:
-              serviceName: socket-cluster-ip-service
-              servicePort: 5000
           - path: /?(.*)
             backend:
               serviceName: client-cluster-ip-service
