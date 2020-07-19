@@ -10,6 +10,8 @@ import { profileRoute } from './routers/profileRoute'
 import { hintRoute } from './routers/hintRoute'
 import { badgeRoute } from './routers/badgeRoute'
 import { chatRouter } from './routers/chatRoute'
+import { redis } from "./util/redis";
+const RedisStore = require('connect-redis')(session)
 
 export const app: express.Application = express()
 
@@ -36,11 +38,11 @@ passport.deserializeUser((obj, cb) => {
 
 app.use(
 	session({
-		// store: new RedisStore({ client: redisClient }),
+		store: new RedisStore({ client: redis }),
 		secret: process.env.SESSION_SECRET as string,
 		resave: true,
 		saveUninitialized: true,
-		cookie: { maxAge: 3600000 }
+		// cookie: { maxAge: 3600000 }
 	})
 )
 
