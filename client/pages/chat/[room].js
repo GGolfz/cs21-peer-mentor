@@ -26,11 +26,12 @@ function Chat({data}) {
     socket.emit('joinRoom',{room:data.roomID,user:data._id})
     socket.on('message', (messageNew) => {
       if(messageNew.senderID != data._id){
-        const temp = [... message]
-        temp.push(messageNew)
-        setMessage(temp)
-        var x = document.getElementById('chat-room')
-        x.scrollTop = x.scrollHeight
+        axios.get(`/roomDetail?roomID=${roomID}`).then(res=>{
+          setRoomdata(res.data)
+          setMessage(res.data.messages)
+        }).catch(err=>{
+          console.log(err)
+        })
       }
     })
     socket.on('notify', (noti) => {
