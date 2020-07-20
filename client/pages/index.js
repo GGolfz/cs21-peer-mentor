@@ -18,7 +18,8 @@ export default function Home() {
         </div>
       </div>
       <style jsx>
-        {`@media only screen and (max-width:480px){
+        {`
+          @media only screen and (max-width:480px){
           .container {
               margin: 0%
           }

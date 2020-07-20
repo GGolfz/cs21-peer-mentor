@@ -115,17 +115,17 @@ const badgeList =
   "check": false
 },
 { 
-  "name":"Year 2",
+  "name":"Sophomore",
   "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Sophomore.svg",
   "check": false
 },
 {
-  "name":"Year 3",
+  "name":"Junior",
   "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Junior.svg",
   "check": false
 },
 {
-  "name":"Year 4",
+  "name":"Senior",
   "image_url":"https://storage.googleapis.com/cs21-peer-mentor/element_img/Senior.svg",
   "check": false
 }

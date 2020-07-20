@@ -9,9 +9,9 @@ export const testRouter = Router()
 
 testRouter.get('/test', async (req: Request, res: Response) => {
 	// const newUserID = Types.ObjectId()
-	const rooms: any = await Room.find({})
+	const elements: any = await Element.find({})
 	// console.log(process.env.TEST)
-	res.send(rooms)
+	res.send(elements)
 })
 
 testRouter.post('/test', verifyAuth, async (req: Request, res: Response) => {

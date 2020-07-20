@@ -3,16 +3,19 @@ import Nav from '../../components/nav'
 import BlackScreen from '../../components/blackscreen'
 import ControlBar from '../../components/control-bar'
 import dynamic from "next/dynamic";
-import {Input} from 'antd';
+import {Input,Modal} from 'antd';
 import axios from '../../axios/axios'
 import socketIOClient from 'socket.io-client'
 import Router from 'next/router'
+import BadgeRecieve from '../../components/badgerecieve'
 const {Search} = Input
 const QrReader = dynamic(() => import('react-qr-reader'), { ssr: false});
 let socket
 const Scan = ({data})=> {
   const [notify,setNotify] = useState(data.notify)
-  const [hints,setHints] = useState(data.hint);
+  const [hints,setHints] = useState(data.hint)
+  const [badge,setBadge] = useState(null)
+  const [visible,setVisible] = useState(false)
   useEffect(()=>{
     if(data.err){
       Router.push('/')
@@ -44,17 +47,24 @@ const Scan = ({data})=> {
       axios.post('/badge',{token:scanData}).then(
         (res)=>{
           setResult('')
+          setBadge(res.data)
+          setVisible(true)
         }
       ).catch(err=>{
         console.log(err)
       })
     }
   }
+  const handleClose = () => {
+    setVisible(false)
+  }
   const handleSearch = () => {
     if (result !== ''){
       axios.post('/badge',{token:result}).then(
         (res)=> {
           setResult('')
+          setBadge(res.data)
+          setVisible(true)
         }
       ).catch(err=>{
         console.log(err)
@@ -91,6 +101,9 @@ const Scan = ({data})=> {
         <QrReader delay={300} onScan={handleScan} onError={handleError}  style={{ width: '70%' }} />    
         </div>
         </div>
+        <Modal onCancel={handleClose} visible={visible} width="auto" footer={null} style={{padding:"1%",textAlign:"center",height:"75vh"}}>
+          <BadgeRecieve data={badge} onOk={handleClose}/>
+        </Modal>
       </div>
       <ControlBar notify={notify} onGoto={goTo}/>
       </div>
@@ -100,15 +113,24 @@ const Scan = ({data})=> {
           .container {
               margin: 0%
           }
+          :global(.ant-modal) {
+          margin: 2%
+          }
           }
           @media only screen and (max-width:1024px) and (min-width:481px){
               .container {
                 margin:0% 25%;
               }
+              :global(.ant-modal) {
+              margin:0% 26%;
+              }
           }
           @media only screen and (min-width: 1025px) {
               .container {
                 margin:0% 35%;
+              }
+              :global(.ant-modal) {
+              margin:0% 36%;
               }
           }
           .screen {
