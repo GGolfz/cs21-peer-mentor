@@ -3,6 +3,7 @@ kind: Service
 metadata: 
   name: socket-cluster-ip-service
 spec:
+  # sessionAffinity: ClientIP
   type: ClusterIP
   selector:
     component: socket

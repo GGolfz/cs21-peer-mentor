@@ -73,7 +73,7 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 				height: 400,
 				width: 400
 			})
-			.webp({})
+			.jpeg({ quality: 80 })
 			.toFile(optimizedFilePath)
 
 		const student_id = req.user
@@ -83,7 +83,7 @@ export const newProfilePicController = async (req: Request, res: Response): Prom
 		const storage = new Storage({ keyFilename: process.env.GCS_KEY_PATH })
 		const bucketName = process.env.GCS_BUCKET_NAME as string
 		const gcsFile: UploadResponse = await storage.bucket(bucketName).upload(optimizedFilePath, {
-			destination: `profile_img/${req.file.filename}.webp`,
+			destination: `profile_img/${req.file.filename}.jpeg`,
 			gzip: true
 		})
 
