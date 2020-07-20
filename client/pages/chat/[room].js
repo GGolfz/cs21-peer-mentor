@@ -24,15 +24,13 @@ function Chat({data}) {
     x.scrollTop = x.scrollHeight
     socket= socketIOClient(process.env.NEXT_PUBLIC_SOCKET_URL)
     socket.emit('joinRoom',{room:data.roomID,user:data._id})
-    socket.on('message', (messageNew) => {
-      if(messageNew.senderID != data._id){
+    socket.on('message', () => {
         axios.patch('/updateRoomDetail',{roomID:id}).then(res=>{
           setRoomdata(res.data)
           setMessage(res.data.messages)
         }).catch(err=>{
             console.log(err)
         })
-      }
     })
     socket.on('notify', (noti) => {
       let temp1 = [... data.rooms]
