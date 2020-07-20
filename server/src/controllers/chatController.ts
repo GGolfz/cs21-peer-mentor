@@ -46,13 +46,13 @@ export const updateRoomDetail = async (req:Request, res: Response): Promise<void
 		return
 	}
 	const rooms = await Room.find({ member: user._id, _id: roomID })
-	rooms.forEach((room: any) => {
+	rooms.forEach(async (room: any) => {
 		room.messages.map((mes: any) => {
 			if (!mes.seen.find((el: any) => el.toString() == user._id.toString())) {
 				mes.seen.push(user._id)
 			}
 		})
-		room.save()
+		await room.save()
 	})
 	const rooms2: any = await Room.find({ member: user._id }).populate('member', {
 		display_name: 1,
@@ -92,13 +92,13 @@ export const updateRoomMessage = async (req: Request, res: Response): Promise<vo
 		{ new: true }
 	)
 	const rooms1 = await Room.find({ member: user._id, _id: roomID })
-	rooms1.forEach((room: any) => {
+	rooms1.forEach(async (room: any) => {
 		room.messages.map((mes: any) => {
 			if (!mes.seen.find((el: any) => el.toString() == user._id.toString())) {
 				mes.seen.push(user._id)
 			}
 		})
-		room.save()
+		await room.save()
 	})
 	const rooms2: any = await Room.find({ member: user._id }).populate('member', {
 		display_name: 1,
