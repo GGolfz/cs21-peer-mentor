@@ -46,15 +46,15 @@ export const updateRoomDetail = async (req:Request, res: Response): Promise<void
 		return
 	}
 	const rooms = await Room.find({ member: user._id, _id: roomID })
-	rooms.forEach((room: any) => {
+	await rooms.forEach(async (room: any) => {
 		room.messages.map((mes: any) => {
 			if (!mes.seen.find((el: any) => el.toString() == user._id.toString())) {
 				mes.seen.push(user._id)
 			}
 		})
-		room.save()
+		await room.save()
 	})
-	const rooms2: any = await Room.find({ member: user._id }).populate('member', {
+	const rooms2: any = await Room.findOne({ member: user._id, _id: roomID  }).populate('member', {
 		display_name: 1,
 		bio: 1,
 		profile_img: 1,
@@ -67,10 +67,10 @@ export const updateRoomDetail = async (req:Request, res: Response): Promise<void
 
 }
 export const updateRoomMessage = async (req: Request, res: Response): Promise<void> => {
-	const student_id = req.user
-	const roomID = req.body.roomID
-	const message = req.body.message
-	const timestamp = req.body.timestamp
+	const student_id = "62130500226"
+	const roomID = "5f1065746532a40996970aa9"
+	const message = ";-;"
+	const timestamp = new Date().getTime()
 	if (!roomID && !message) {
 		res.status(400).send({ error: 'roomID and message are required' })
 		return
@@ -92,15 +92,15 @@ export const updateRoomMessage = async (req: Request, res: Response): Promise<vo
 		{ new: true }
 	)
 	const rooms1 = await Room.find({ member: user._id, _id: roomID })
-	rooms1.forEach((room: any) => {
+	await rooms1.forEach(async (room: any) => {
 		room.messages.map((mes: any) => {
 			if (!mes.seen.find((el: any) => el.toString() == user._id.toString())) {
 				mes.seen.push(user._id)
 			}
 		})
-		room.save()
+		await room.save()
 	})
-	const rooms2: any = await Room.find({ member: user._id }).populate('member', {
+	const rooms2: any = await Room.findOne({ member: user._id, _id: roomID  }).populate('member', {
 		display_name: 1,
 		bio: 1,
 		profile_img: 1,
