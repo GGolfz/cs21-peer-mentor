@@ -90,7 +90,13 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 	}
 
 	// Create new chat room for user and target user
-	const targetUser = await User.findOne({ student_id: targetID })
+	const targetUser: any = await User.findOne({ student_id: targetID })
+		.populate('badges', { name: 1, _id: 1 })
+		.populate('element', { name: 1, image_url: 1 })
+	const isTargetOwnedElement = addIfNotExistOnId(user.element, targetUser.badges)
+	if (isTargetOwnedElement) {
+		await targetUser.save()
+	}
 	const existingRoom = await Room.findOne({
 		member: { $all: [user._id, targetUser?._id] },
 		type: 'General'
@@ -104,7 +110,31 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 		await Room.create(newRoom)
 	}
 
-	res.status(201).send(user)
+	res.status(201).send(toGetBadgeRes(targetUser))
+}
+
+interface getBadgeResponse {
+	name: String,
+	display_name: String,
+	bio: String,
+	profile_img: String,
+	element: {
+		name: String,
+		image_url: String
+	}
+}
+
+const toGetBadgeRes = (user: any): getBadgeResponse => {
+	return {
+		name: user.name,
+		display_name: user.display_name,
+		bio: user.bio,
+		profile_img: user.profile_img,
+		element: {
+			name: user.element.name,
+			image_url: user.element.image_url
+		}
+	}
 }
 
 export const getBadgesController = async (req: Request, res: Response): Promise<void> => {
