@@ -77,6 +77,7 @@ const Scan = ({data})=> {
   return (
     <div className="container">
       <BlackScreen />
+      <div className="screen">
       <Nav year = {data.year} hint={hints?hints:[]} onAdd={addHint}/>
       <div className="content">
         <div className="head-content">
@@ -92,6 +93,7 @@ const Scan = ({data})=> {
         </div>
       </div>
       <ControlBar notify={notify} onGoto={goTo}/>
+      </div>
       <style jsx>{
           `
           @media only screen and (max-width:480px){
@@ -108,6 +110,9 @@ const Scan = ({data})=> {
               .container {
                 margin:0% 35%;
               }
+          }
+          .screen {
+            height:100% !important;
           }
           .container {
             background:white;

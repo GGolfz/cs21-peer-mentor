@@ -62,6 +62,7 @@ function Chat({data}) {
   return (
     <div className="container">
       <BlackScreen />
+      <div className="screen">
       <Nav year = {data.year} hint={hints?hints:[]} onAdd={addHint}/>
       <div className="content">
         <h1 style={{fontSize:"1.8em",marginBottom:"2vh",cursor:"default"}}>CHAT</h1>
@@ -74,6 +75,7 @@ function Chat({data}) {
         </div>
         </div>
       <ControlBar notify={notify} onGoto={goTo}/>
+      </div>
       <style jsx>{
           `
           @media only screen and (max-width:480px){
@@ -90,6 +92,9 @@ function Chat({data}) {
               .container {
                 margin:0% 35%;
               }
+          }
+          .screen {
+            height:100% !important;
           }
           .container {
             background:white;

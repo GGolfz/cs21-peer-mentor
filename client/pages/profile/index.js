@@ -58,6 +58,7 @@ function Profile({data}) {
   return (
     <div className="container">
       <BlackScreen />
+      <div className="screen">
       <Nav year = {data.year} hint={hints?hints:[]} onAdd={addHint}/>
           {
             !data.err && (
@@ -76,6 +77,7 @@ function Profile({data}) {
           }
       
       <ControlBar notify={notify} onGoto={goTo}/>
+      </div>
       <style jsx>{
           `
           @media only screen and (max-width:480px){
@@ -92,6 +94,9 @@ function Profile({data}) {
               .container {
                 margin:0% 35%;
               }
+          }
+          .screen {
+            height:100% !important;
           }
           .container {
             background:white;
