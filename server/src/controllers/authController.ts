@@ -92,7 +92,7 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 			name: match_name.name,
 			display_name: firstname[2],
 			bio: '',
-			profile_img: '',
+			profile_img: `https://storage.googleapis.com/cs21-peer-mentor/profile_img/default_profile_img.jpeg`,
 			element: element._id
 			// rooms: []
 		}
