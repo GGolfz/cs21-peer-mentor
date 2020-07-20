@@ -66,9 +66,9 @@ const Nav = (props) => {
     })
   }
   return (
-  <nav className="nav-bar">
+  <nav>
     <Header/>
-    <div>
+    <div className="nav-bar">
       { (props.year=== '1' || props.year==='2') && (
         <Fragment>
         <span className="material-icons noti" style={{fontSize:"2em",color:notify>0?"#ff4d4f":""}} onClick={showHint}>
