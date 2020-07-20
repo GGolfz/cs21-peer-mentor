@@ -9,7 +9,6 @@ const ChatRoom = (props) =>{
     const data = props.data
     const messages = props.messages
     const [visible,setVisible] = useState(false)
-    console.log(data)
     useEffect(()=>{
        var x= document.getElementById('chat-room')
        x.scrollTop = x.scrollHeight
@@ -42,25 +41,25 @@ const ChatRoom = (props) =>{
                     <Row>
                     <Col span={24}>
                     <h2 style={{fontSize:"1.4em",textAlign:"center",cursor:"default"}}>
-                        {data.member.find(el=>el._id.toString()!=data.me).name}
+                        {data.member.find(el=>el._id.toString()!=props.me.toString()).name}
                     </h2>
                     </Col>
                     <Col span={24}>
                     <h2 style={{fontSize:"1.3em",textAlign:"center",cursor:"default"}}>
-                        {data.member.find(el=>el._id.toString()!=data.me).display_name}
+                        {data.member.find(el=>el._id.toString()!=props.me.toString()).display_name}
                     </h2>
                     </Col>
                     <Col span={24} style={{textAlign:"center"}}>
-                        <img width="40%" style={{borderRadius:"200px",cursor:"pointer",marginBottom:"5%"}} src={data.member.find(el=>el._id.toString()!=data.me).profile_image}/>
+                        <img width="40%" style={{borderRadius:"200px",cursor:"pointer",marginBottom:"5%"}} src={data.member.find(el=>el._id.toString()!=props.me.toString()).profile_image}/>
                     </Col>
                     <Col span={24} style={{textAlign:"center"}}>
                     <h2 style={{fontSize:"1.2em",textAlign:"center",cursor:"default"}}>
-                        {data.member.find(el=>el._id.toString()!=data.me).bio?'Bio: ' + data.member.find(el=>el._id.toString()!=data.me).bio:' '}
+                        {data.member.find(el=>el._id.toString()!=props.me.toString()).bio?'Bio: ' + data.member.find(el=>el._id.toString()!=props.me.toString()).bio:' '}
                     </h2>
                     </Col>
                     <Col span={24} style={{textAlign:"center"}}>
                     <h2 style={{fontSize:"1.2em",textAlign:"center",cursor:"default"}}>
-                        Year: {data.member.find(el=>el._id.toString()!=data.me).year}
+                        Year: {data.member.find(el=>el._id.toString()!=props.me.toString()).year}
                     </h2>
                     </Col>
                     </Row>
@@ -91,7 +90,7 @@ const ChatRoom = (props) =>{
                     </Link>
                 </Col>
                 <Col span={16}>
-                    <h2 style={{fontSize:"1.4em",cursor:"default"}}>{data && data.type=== 'General'?data.member.find(el=>el._id.toString()!=data.me).display_name :data&& data.name}</h2>
+                    <h2 style={{fontSize:"1.4em",cursor:"default"}}>{data && data.type=== 'General'?data.member.find(el=>el._id.toString()!=props.me.toString()).display_name :data&& data.name}</h2>
                 </Col>
                 <Col span={4}>
                     <span className="material-icons" style={{padding:"5%",cursor:"pointer"}} onClick={showInfo}>info</span>
