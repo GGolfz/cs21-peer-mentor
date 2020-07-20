@@ -9,6 +9,7 @@ const ChatRoom = (props) =>{
     const data = props.data
     const messages = props.messages
     const [visible,setVisible] = useState(false)
+    console.log(data)
     useEffect(()=>{
        var x= document.getElementById('chat-room')
        x.scrollTop = x.scrollHeight
