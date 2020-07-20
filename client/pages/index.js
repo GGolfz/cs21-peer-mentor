@@ -10,12 +10,17 @@ export default function Home() {
       try {
           if (win.document.URL==`${process.env.NEXT_PUBLIC_SERVER_URL}/profile`) {
             window.clearInterval(pollTimer)
+            window.focus()
+            test()
             win.close()
             Router.push('/profile')
           }
       } catch(e) {
       }
   }, 100);
+  }
+  const test = () => {
+    console.log("It come to test function");
   }
   return (
     <div className="container">
