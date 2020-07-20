@@ -90,6 +90,7 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 			userBadge = await getYearBadge(targetYear)
 		}
 	}
+	const responseElement = userBadge
 	// Check if user aleady own that element badge
 	const isOwnedElement = addIfNotExistOnId(userBadge, user.badges)
 	if (isOwnedElement) {
@@ -117,7 +118,7 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 		await Room.create(newRoom)
 	}
 
-	res.status(201).send(toGetBadgeRes(targetUser))
+	res.status(201).send(toGetBadgeRes(targetUser, responseElement))
 }
 
 interface getBadgeResponse {
@@ -131,15 +132,15 @@ interface getBadgeResponse {
 	}
 }
 
-const toGetBadgeRes = (user: any): getBadgeResponse => {
+const toGetBadgeRes = (user: any, element:any): getBadgeResponse => {
 	return {
 		name: user.name,
 		display_name: user.display_name,
 		bio: user.bio,
 		profile_img: user.profile_img,
 		element: {
-			name: user.element.name,
-			image_url: user.element.image_url
+			name: element.name,
+			image_url: element.image_url
 		}
 	}
 }
