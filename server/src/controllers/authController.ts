@@ -8,8 +8,8 @@ import { determineYear } from '../util/determineYear'
 
 export const authCallbackController = async (req: Request, res: Response): Promise<void> => {
 	if (req.user) {
-		// res.redirect(`${process.env.CLIENT_URL}/profile`)
-		res.send('<script>window.close()</script>')
+		res.redirect(`${process.env.CLIENT_URL}/authsuccess`)
+		// res.send('<script>window.close()</script>')
 		return
 	}
 	res.redirect(process.env.CLIENT_URL as string)
