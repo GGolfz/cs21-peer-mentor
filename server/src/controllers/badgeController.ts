@@ -8,7 +8,7 @@ import { determineYear } from '../util/determineYear'
 
 export const getTokenController = async (req: Request, res: Response): Promise<void> => {
 	const student_id = req.user as string
-	// const student_id = '62130500226'
+	// const student_id = '63130500209'
 	try {
 		const hashed = crypto.MD5(student_id).toString()
 		let token = ''
@@ -69,22 +69,29 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 
 	// Check of element or year badge
 	const targetYear = determineYear(targetID)
-	let badge: any
-	if (targetYear == '1') {
-		badge = await Element.findOne({ member: targetID.substring(9) })
-		if (!badge) {
-			res.status(404).send({ error: 'Element is not found' })
-			return
+	const userYear = determineYear(student_id)
+	let userBadge: any
+	let targetBadge: any
+	if (userYear == '1') {
+		targetBadge = await getElementBadge(student_id)
+		if(targetYear == '1'){
+			userBadge = await getElementBadge(targetID)
 		}
-	} else {
-		badge = await Element.findOne({ name: { $regex: `${targetYear}$` } })
-		if (!badge) {
-			res.status(404).send({ error: 'Year is not found' })
-			return
+		else {
+			userBadge = await getYearBadge(targetYear)
+		}
+	}
+	else {
+		targetBadge = await getYearBadge(userYear)
+		if(targetYear == '1'){
+			userBadge = await getElementBadge(targetID)
+		}
+		else {
+			userBadge = await getYearBadge(targetYear)
 		}
 	}
 	// Check if user aleady own that element badge
-	const isOwnedElement = addIfNotExistOnId(badge, user.badges)
+	const isOwnedElement = addIfNotExistOnId(userBadge, user.badges)
 	if (isOwnedElement) {
 		await user.save()
 	}
@@ -93,7 +100,7 @@ export const getNewBadgeController = async (req: Request<{}, {}, newBadgeReqBody
 	const targetUser: any = await User.findOne({ student_id: targetID })
 		.populate('badges', { name: 1, _id: 1 })
 		.populate('element', { name: 1, image_url: 1 })
-	const isTargetOwnedElement = addIfNotExistOnId(user.element, targetUser.badges)
+	const isTargetOwnedElement = addIfNotExistOnId(targetBadge, targetUser.badges)
 	if (isTargetOwnedElement) {
 		await targetUser.save()
 	}
@@ -139,8 +146,8 @@ const toGetBadgeRes = (user: any): getBadgeResponse => {
 
 export const getBadgesController = async (req: Request, res: Response): Promise<void> => {
 	const student_id = req.user
-	// const student_id = '62130500230'
-	const user: any = await User.findOne({ student_id }, 'badges').populate('badges')
+	// const student_id = '63130500209'
+	const user: any = await User.findOne({ student_id }, 'badges').populate('badges', {member: 0})
 	if (!user) {
 		res.send([])
 		return
@@ -155,4 +162,38 @@ const addIfNotExistOnId = (element: any, array: Array<any>): Array<any> | undefi
 		return array
 	}
 	return undefined
+}
+
+const getElementBadge = async (student_id: String): Promise<any> => {
+	const badge = await Element.findOne({ member: student_id.substring(9) })
+	if (!badge) {
+		return Promise.reject('Element not found')
+	}
+	return badge
+}
+
+const getYearBadge = async (year: String): Promise<any> => {
+	const yearName = getYearName(year)
+	const badge = await Element.findOne({ name: yearName } )
+	if (!badge) {
+		return Promise.reject('Year badge not found')
+	}
+	return badge
+}
+
+const getYearName = (year: String): String => {
+	switch (year) {
+		case '2':
+			return 'Sophomore'
+			break;
+		case '3':
+			return 'Junior'
+			break;
+		case '4':
+			return 'Senior'
+			break;
+		default:
+			return 'NOT FOUND'
+			break;
+	}
 }
