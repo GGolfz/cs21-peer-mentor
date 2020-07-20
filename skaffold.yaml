@@ -21,3 +21,4 @@ deploy:
     - k8s/server-secret.yaml
     - k8s/socker-cluster-ip-service.yaml
     - k8s/socket-deployment.yaml
+    - k8s/prod-configmap.yaml
