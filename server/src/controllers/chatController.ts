@@ -67,10 +67,10 @@ export const updateRoomDetail = async (req:Request, res: Response): Promise<void
 
 }
 export const updateRoomMessage = async (req: Request, res: Response): Promise<void> => {
-	const student_id = "62130500226"
-	const roomID = "5f1065746532a40996970aa9"
-	const message = ";-;"
-	const timestamp = new Date().getTime()
+	const student_id = req.user
+	const roomID = req.body.roomID
+	const message = req.body.message
+	const timestamp = req.body.timestamp
 	if (!roomID && !message) {
 		res.status(400).send({ error: 'roomID and message are required' })
 		return
