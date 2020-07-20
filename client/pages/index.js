@@ -1,10 +1,8 @@
-import Link from 'next/link'
 import BlackScreen from '../components/blackscreen'
 import AppLogo from '../components/applogo'
 import LoginButton from '../components/login-button'
 import Header from '../components/header'
-import {Button} from 'antd'
-import { useEffect } from 'react'
+import Router from 'next/router'
 export default function Home() {
   const login = ()=>{
     let win = window.open(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/microsoft`,"loginwindow",'width=400px,height=600px'); 
@@ -13,10 +11,9 @@ export default function Home() {
           if (win.document.URL==`${process.env.NEXT_PUBLIC_SERVER_URL}/profile`) {
             window.clearInterval(pollTimer)
             win.close()
-            window.location.href= `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`
+            Router.push('/profile')
           }
       } catch(e) {
-        console.log(e)
       }
   }, 100);
   }
