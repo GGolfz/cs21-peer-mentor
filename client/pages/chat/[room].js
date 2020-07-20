@@ -25,7 +25,7 @@ function Chat({data}) {
     socket= socketIOClient(process.env.NEXT_PUBLIC_SOCKET_URL)
     socket.emit('joinRoom',{room:data.roomID,user:data._id})
     socket.on('message', () => {
-        axios.patch('/updateRoomDetail',{roomID:id}).then(res=>{
+        axios.patch('/updateRoomDetail',{roomID:data.roomID}).then(res=>{
           setRoomdata(res.data)
           setMessage(res.data.messages)
         }).catch(err=>{
