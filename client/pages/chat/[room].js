@@ -28,6 +28,8 @@ function Chat({data}) {
         axios.patch('/updateRoomDetail',{roomID:data.roomID}).then(res=>{
           setRoomdata(res.data)
           setMessage(res.data.messages)
+          var x= document.getElementById('chat-room')
+          x.scrollTop = x.scrollHeight
         }).catch(err=>{
             console.log(err)
         })
