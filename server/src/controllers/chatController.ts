@@ -357,8 +357,9 @@ const getImage = async (name: String, type: String): Promise<String> => {
 			}).select('image_url')
 			return codeimage.image_url
 		case 'user':
+			let ele_name = name == '2'? "Sophomore": (name == '3'? "Junior": "Senior")
 			const userimage: any = await Element.findOne({
-				name: `Year ${name}`,
+				name: `${ele_name}`,
 			}).select('image_url')
 			return userimage.image_url
 	}
