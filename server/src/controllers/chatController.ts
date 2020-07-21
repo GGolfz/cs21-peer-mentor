@@ -246,7 +246,7 @@ const toRefRoomMessages = async (room: any, me: String): Promise<any> => {
 			if (message.sender.toString() == me.toString()) {
 				sender = 'You'
 			} else {
-				let mem1 = room.member.find((mem: any) => mem._id === message.sender.toString())
+				let mem1 = room.member.find((mem: any) => mem._id.toString() === message.sender.toString())
 				sender = mem1.year !== '1' ? `พี่ปี ${mem1.year}` : mem1.display_name
 			}
 			await messages.push({
