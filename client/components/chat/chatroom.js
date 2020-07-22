@@ -41,11 +41,6 @@ const ChatRoom = (props) =>{
                     <Row>
                     <Col span={24}>
                     <h2 style={{fontSize:"1.4em",textAlign:"center",cursor:"default"}}>
-                        {data.member.find(el=>el._id.toString()!=props.me.toString()).name}
-                    </h2>
-                    </Col>
-                    <Col span={24}>
-                    <h2 style={{fontSize:"1.3em",textAlign:"center",cursor:"default"}}>
                         {data.member.find(el=>el._id.toString()!=props.me.toString()).display_name}
                     </h2>
                     </Col>
