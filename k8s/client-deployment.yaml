@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: client-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       component: web
@@ -17,6 +17,13 @@ spec:
           image: thetkpark/cs21-peer-mentor-client:b5d0b5a1b767036a6c13e056fb9885489182fa8d
           ports:
             - containerPort: 3000
+          resources:
+            requests:
+              memory: "400Mi"
+              cpu: "100m"
+            limits:
+              memory: "700Mi"
+              cpu: "300m"
           env:
             - name: NEXT_PUBLIC_SERVER_URL
               valueFrom:
