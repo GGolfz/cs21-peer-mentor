@@ -12,15 +12,23 @@ import { badgeRoute } from './routers/badgeRoute'
 import { chatRouter } from './routers/chatRoute'
 import { redis } from "./util/redis";
 const RedisStore = require('connect-redis')(session)
+require('dotenv').config()
 
 export const app: express.Application = express()
 
-const connectionString = process.env.MONGO_CONNECTION_STRING as string
+
+const connectionString = "mongodb://"+process.env.COSMOSDB_HOST+":"+process.env.COSMOSDB_PORT+"/"+process.env.COSMOSDB_DBNAME+"?ssl=true&replicaSet=globaldb&retrywrites=false"
 mongoose.connect(connectionString, {
-	useNewUrlParser: true,
+  auth: {
+    user: process.env.COSMODDB_USER as string,
+    password: process.env.COSMOSDB_PASSWORD as string
+  },
+  	useNewUrlParser: true,
 	useUnifiedTopology: true,
-	useFindAndModify: false
+	useFindAndModify: false,
 })
+.then(() => console.log('Connection to CosmosDB successful'))
+.catch((err) => console.error(err));
 
 const corsOptions: cors.CorsOptions = {
 	origin: [process.env.CLIENT_URL as string],
