@@ -85,4 +85,28 @@ spec:
                 configMapKeyRef:
                   name: components-config
                   key: GCS_BUCKET_PATH
-        
+            - name: COSMODDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: server-secret
+                  key: COSMODDB_USER
+            - name: COSMOSDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: server-secret
+                  key: COSMOSDB_PASSWORD
+            - name: COSMOSDB_DBNAME
+              valueFrom:
+                secretKeyRef:
+                  name: server-secret
+                  key: COSMOSDB_DBNAME
+            - name: COSMOSDB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: server-secret
+                  key: COSMOSDB_HOST
+            - name: COSMOSDB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: server-secret
+                  key: COSMOSDB_PORT
