@@ -47,18 +47,27 @@ interface UserAttributes {
 }
 
 export const passportCallback = async (accessToken: String, refreshToken: String, profile: any, done: Function) => {
+	const email = profile.emails[0].value
 	// Check if the account is a SIT Student account
-	if (profile.name.familyName != 'SIT-STUDENT') {
-		const error = 'Please sign-in using @ad.sit.kmutt.ac.th'
+	if (!/.*@mail.kmutt.ac.th/.test(email)) {
+		const error = 'Please sign-in using @mail.kmutt.ac.th'
 		done(error, null)
 		return
 	}
-	// Check if the use is not new
-	const student_id: String = profile.name.givenName
-	const existingUser = await User.findOne({ student_id })
 
+	// Check if the use is not new
+	const name: String = profile.displayName
+	const existingUser: any = await User.findOne({ "name" : { $regex: `${name}`, $options: 'i' }})
+	let student_id
 	// If use is new
 	if (!existingUser) {
+		// Get student_id form names collection
+		const nameResult: any = await Name.findOne({ "name" : { $regex: `${name}`, $options: 'i' }})
+		student_id = nameResult.student_id
+		if(!nameResult){
+			done(`${student_id} is not found in names collection`, null)
+			return
+		}
 		// Determine the year and element of the user
 		const year = determineYear(student_id)
 		const element: any = await Element.findOne({ member: student_id.substring(9) })
@@ -66,17 +75,11 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 			done(`Element for ${student_id} is not found`, null)
 			return
 		}
-		// Get the user's name from 'names' collection
-		const match_name: any = await Name.findOne({ student_id })
-		if (!match_name) {
-			done(`${student_id} is not found in names collection`, null)
-			return
-		}
 		// Create new user
 		const newUserID = Types.ObjectId()
-		const firstname = /(\w*).(\w*) (\w*)/.exec(match_name.name)
+		const firstname = /(\w*) (\w*)/.exec(name as string)
 		if (!firstname) {
-			done(`${match_name.name} cannot pass the name regex`, null)
+			done(`${name} cannot pass the name regex`, null)
 			return
 		}
 		// User init rooms for new user
@@ -88,10 +91,10 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 		const newUser: UserAttributes = {
 			_id: newUserID,
 			student_id,
-			email: profile.emails[0].value,
+			email,
 			year,
-			name: match_name.name,
-			display_name: firstname[2],
+			name,
+			display_name: firstname[1],
 			bio: '',
 			profile_img: `https://storage.googleapis.com/cs21-peer-mentor/profile_img/default_profile_img.jpeg`,
 			element: element._id
@@ -99,6 +102,8 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 		}
 		await User.create(newUser)
 	}
-
+	else {
+		student_id = existingUser.student_id
+	}
 	done(null, student_id)
 }
