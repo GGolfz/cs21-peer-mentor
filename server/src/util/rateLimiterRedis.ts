@@ -5,9 +5,9 @@ import { redis } from './redis'
 const limiterOption: IRateLimiterStoreOptions = {
     storeClient: redis,
     keyPrefix: 'limiter',
-    points: 10,
+    points: 20,
     duration: 1,
-    blockDuration: 3
+    blockDuration: 2
 }
 
 const rateLimiter = new RateLimiterRedis(limiterOption)

@@ -3,9 +3,9 @@ import { Request, Response, NextFunction } from "express";
 
 const rateLimiter = new RateLimiterMemory({
     keyPrefix: 'limiter',
-    points: 10,
+    points: 20,
     duration: 1,
-    blockDuration: 3
+    blockDuration: 2
 })
 
 export const rateLimiterMiddleware = (req: Request, res: Response, next: NextFunction) => {
