@@ -46,7 +46,7 @@ export const getHintController = async (req: Request, res: Response): Promise<vo
 	} else if (yearNumber == '62') {
 		hints = await Hint.find({ owner: user })
 	} else {
-		res.status(400).send({ error: 'No hint allow for other year' })
+		res.status(200).send([])
 		return
 	}
 	res.send(toHintRes(hints))
