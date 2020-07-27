@@ -63,9 +63,15 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 	if (!existingUser) {
 		// Get student_id form names collection
 		const nameResult: any = await Name.findOne({ "name" : { $regex: `${name}`, $options: 'i' }})
-		student_id = nameResult.student_id
 		if(!nameResult){
-			done(`${student_id} is not found in names collection`, null)
+			console.log(`${name} is not found in names collection`);
+			done(`${name} is not found in names collection`, null)
+			return
+		}
+		student_id = nameResult.student_id
+		if(student_id == null){
+			console.log(`${name} is not found in names collection`);
+			done(`${name} is not found in names collection`, null)
 			return
 		}
 		// Determine the year and element of the user
