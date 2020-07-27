@@ -16,7 +16,27 @@ export default  Headers = ()=> {
             <link rel='apple-touch-icon' href='/logo.png'/>
             <meta name='theme-color' content='#d4af5f' />
             <link rel='stylesheet'   href='https://cdnjs.cloudflare.com/ajax/libs/antd/3.22.0/antd.min.css' />
-            <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Roboto:wght@100&display=swap" rel="stylesheet"></link>
+            <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Roboto:wght@100&display=swap" rel="stylesheet">
+              </link>
+            <script
+              async
+              src="https://www.googletagmanager.com/gtag/js?id=UA-173061555-1"
+            ></script>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  const gtag = ()=>{
+                    dataLayer.push(arguments);
+                  }
+                  gtag('js', new Date());
+                  gtag('config', 'UA-173061555-1',{
+                    page_path: window.location.pathname,
+                  });
+                  `
+              }}
+            >
+            </script>
             <style>
                 {
                     `.ReactCrop {
