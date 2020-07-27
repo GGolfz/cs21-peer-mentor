@@ -14,10 +14,13 @@
 		"@types/socket.io": "^2.1.8",
 		"backpack-core": "^0.8.4",
 		"body-parser": "^1.19.0",
+		"ddos": "^0.2.1",
 		"express": "^4.17.1",
+		"helmet": "^3.23.3",
 		"socket.io": "^2.3.0"
 	},
 	"devDependencies": {
+		"@types/helmet": "^0.0.47",
 		"ts-loader": "^8.0.0",
 		"typescript": "^3.9.6"
 	}
