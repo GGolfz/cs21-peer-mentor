@@ -17,6 +17,7 @@
 		"ddos": "^0.2.1",
 		"express": "^4.17.1",
 		"helmet": "^3.23.3",
+		"rate-limiter-flexible": "^2.1.9",
 		"socket.io": "^2.3.0"
 	},
 	"devDependencies": {
