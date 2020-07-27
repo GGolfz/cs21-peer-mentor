@@ -5,7 +5,6 @@ import session from 'express-session'
 import mongoose from 'mongoose'
 import cors from 'cors'
 import helmet from 'helmet'
-// import Ddos from 'ddos'
 import { testRouter } from './routers/testRoute'
 import { authRoute } from './routers/authRoute'
 import { profileRoute } from './routers/profileRoute'
@@ -13,6 +12,7 @@ import { hintRoute } from './routers/hintRoute'
 import { badgeRoute } from './routers/badgeRoute'
 import { chatRouter } from './routers/chatRoute'
 import { redis } from './util/redis'
+import { rateLimiterMiddleware } from "./util/rateLimiterRedis";
 const RedisStore = require('connect-redis')(session)
 require('dotenv').config()
 
@@ -45,8 +45,6 @@ const corsOptions: cors.CorsOptions = {
 	credentials: true,
 }
 
-// const ddos = new Ddos()
-
 passport.serializeUser((user, cb) => {
 	cb(null, user)
 })
@@ -55,6 +53,7 @@ passport.deserializeUser((obj, cb) => {
 	cb(null, obj)
 })
 
+app.use(rateLimiterMiddleware)
 app.use(
 	session({
 		store: new RedisStore({ client: redis }),
@@ -68,7 +67,6 @@ app.use(
 app.use(cors(corsOptions))
 app.options('*', cors(corsOptions))
 app.use(helmet())
-// app.use(ddos.express)
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(bodyParser.json())
