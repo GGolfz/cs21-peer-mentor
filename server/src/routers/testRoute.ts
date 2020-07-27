@@ -7,22 +7,20 @@ import { User  } from '../models/user'
 import { verifyAuth } from '../controllers/authController'
 export const testRouter = Router()
 
-testRouter.get('/test', async (req: Request, res: Response) => {
-	// const newUserID = Types.ObjectId()
-	// console.log('hello');
-	// const elements: any = await Element.find({})
-	// console.log(process.env.TEST)
+testRouter.get('/test', async (req:Request, res: Response) => {
 	res.send({
 		hey: 'Nice try :)',
 		please: `Don't hack me please`
 	})
-	// res.send(elements)
 })
 
-testRouter.post('/test', verifyAuth, async (req: Request, res: Response) => {
-	// const user = req.user as String
-	// console.log(user.substring(0, 2))
-	console.log(req)
-	// const element: any = await Element.find()
-	// res.send({ element })
+testRouter.get('/leaderboard', async (req: Request, res: Response) => {
+	const users = await User.find({})
+	let temp:Array<any> = [] 
+	await users.forEach(async (us:any)=>{
+		await temp.push({name:us.name,display_name:us.display_name,profile_img:us.profile_img,bio:us.bio,badge:us.badges.length})
+	})
+	temp = await temp.sort((a,b)=> b.badge - a.badge)
+	temp = await temp.slice(0,5)
+	res.send({temp})
 })
