@@ -1,5 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
+import GoogleAnalytics from 'next-simple-google-analytics'
 export default  Headers = ()=> {
     return(
         <Head>
@@ -18,25 +19,7 @@ export default  Headers = ()=> {
             <link rel='stylesheet'   href='https://cdnjs.cloudflare.com/ajax/libs/antd/3.22.0/antd.min.css' />
             <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Roboto:wght@100&display=swap" rel="stylesheet">
               </link>
-            <script
-              async
-              src="https://www.googletagmanager.com/gtag/js?id=UA-173061555-1"
-            ></script>
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  const gtag = ()=>{
-                    dataLayer.push(arguments);
-                  }
-                  gtag('js', new Date());
-                  gtag('config', 'UA-173061555-1',{
-                    page_path: window.location.pathname,
-                  });
-                  `
-              }}
-            >
-            </script>
+            <GoogleAnalytics id="UA-173061555-1"/>
             <style>
                 {
                     `.ReactCrop {
