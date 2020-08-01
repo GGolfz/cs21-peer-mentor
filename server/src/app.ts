@@ -12,26 +12,15 @@ import { hintRoute } from './routers/hintRoute'
 import { badgeRoute } from './routers/badgeRoute'
 import { chatRouter } from './routers/chatRoute'
 import { redis } from './util/redis'
-import { rateLimiterMiddleware } from "./util/rateLimiterRedis";
+import { rateLimiterMiddleware } from './util/rateLimiterRedis'
 const RedisStore = require('connect-redis')(session)
 require('dotenv').config()
 
 export const app: express.Application = express()
 
-const connectionString =
-	'mongodb://' +
-	process.env.COSMOSDB_HOST +
-	':' +
-	process.env.COSMOSDB_PORT +
-	'/' +
-	process.env.COSMOSDB_DBNAME +
-	'?ssl=true&replicaSet=globaldb&retrywrites=false'
+const connectionString = process.env.MONGO_CONNECTION_STRING as string
 mongoose
 	.connect(connectionString, {
-		auth: {
-			user: process.env.COSMODDB_USER as string,
-			password: process.env.COSMOSDB_PASSWORD as string,
-		},
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		useFindAndModify: false,
