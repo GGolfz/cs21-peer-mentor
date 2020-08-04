@@ -25,7 +25,7 @@ authRoute.get('/logout', verifyAuth, logoutController)
 
 const errorHandler = (req: Request, res: Response, next: NextFunction) => {
 	if(req.query.error){
-		res.redirect(`${process.env.CLIENT_URL}/`)
+		res.redirect(`${process.env.CLIENT_URL}/authsuccess`)
 	}
 	else {
 		next()
