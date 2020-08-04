@@ -1,5 +1,5 @@
 import passport from 'passport'
-import { Router } from 'express'
+import { Router, NextFunction, Response, Request } from 'express'
 import { Strategy as MicrosoftStrategy } from 'passport-microsoft'
 import { authCallbackController, passportCallback, logoutController, verifyAuth } from '../controllers/authController'
 require('dotenv').config()
@@ -22,8 +22,20 @@ authRoute.get('/auth/microsoft', passport.authenticate('microsoft'))
 
 authRoute.get('/logout', verifyAuth, logoutController)
 
+
+const errorHandler = (req: Request, res: Response, next: NextFunction) => {
+	if(req.query.error){
+		res.redirect(`${process.env.CLIENT_URL}/`)
+	}
+	else {
+		next()
+	}
+}
+
 authRoute.get(
 	'/auth/microsoft/callback',
-	passport.authenticate('microsoft', { session: true, failureRedirect: '/login' }),
+	errorHandler,
+	passport.authenticate('microsoft', { session: true, failureRedirect: `${process.env.CLIENT_URL}` }),
 	authCallbackController
 )
+
