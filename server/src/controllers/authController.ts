@@ -56,7 +56,10 @@ export const passportCallback = async (accessToken: String, refreshToken: String
 	}
 
 	// Check if the use is not new
-	const name: String = profile.displayName
+	let name: String = profile.displayName
+	if(name == 'BUNASON'){
+		name = 'BUNASON SUTJARITRUNGSRI'
+	}
 	const existingUser: any = await User.findOne({ "name" : { $regex: `${name}`, $options: 'i' }})
 	let student_id
 	// If use is new
