@@ -28,7 +28,7 @@
 		"passport": "^0.4.1",
 		"passport-microsoft": "^0.1.0",
 		"rate-limiter-flexible": "^2.1.9",
-		"sharp": "^0.25.4"
+		"sharp": "^0.30.5"
 	},
 	"devDependencies": {
 		"@types/cors": "^2.8.6",
